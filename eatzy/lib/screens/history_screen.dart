@@ -8,7 +8,7 @@ class HistoryScreen extends StatelessWidget {
     return const Scaffold(
       body: Center(
         child: Text(
-          "Ini halaman kucing",
+          "Ini halaman Zen",
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         ),
       ),
