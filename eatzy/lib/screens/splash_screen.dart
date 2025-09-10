@@ -36,7 +36,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 textAlign: TextAlign.center,
                 style: const TextStyle(
                   fontSize: 18,
-                  color: Colors.black87,
+                  color: Color.fromARGB(221, 196, 19, 19),
                   fontWeight: FontWeight.w500,
                 ),
               ),
