@@ -7,7 +7,10 @@ class FavoriteScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Scaffold(
       body: Center(
-        child: Text("Ini halaman Favorite"),
+        child: Text(
+          "Ini halaman Nuel",
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        ),
       ),
     );
   }

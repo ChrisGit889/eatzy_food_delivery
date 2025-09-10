@@ -7,7 +7,7 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Scaffold(
       body: Center(
-        child: Text("Ini halaman Home",
+        child: Text("Ini halaman Jeremia",
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
       ),
     );

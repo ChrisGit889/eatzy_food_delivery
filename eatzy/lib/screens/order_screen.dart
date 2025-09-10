@@ -58,8 +58,9 @@ class _OrderScreenState extends State<OrderScreen>
                 labelColor: Colors.white,
                 unselectedLabelColor: Colors.black,
                 indicator: BoxDecoration(
-                  color: Colors.green,
-                  borderRadius: BorderRadius.circular(20),
+                  color: const Color.fromARGB(255, 212, 86, 13),
+                  borderRadius: BorderRadius.circular(10),
+                  
                 ),
                 indicatorSize: TabBarIndicatorSize.label,
                 isScrollable: true,
@@ -175,7 +176,7 @@ class _OrderScreenState extends State<OrderScreen>
           const SizedBox(height: 4),
           Text(
             "Placed on $date",
-            style: TextStyle(color: Colors.grey.shade600),
+            style: TextStyle(color: const Color.fromARGB(255, 106, 106, 106)),
           ),
 
           const SizedBox(height: 12),
@@ -211,8 +212,10 @@ class _OrderScreenState extends State<OrderScreen>
               OutlinedButton(
                 onPressed: () {},
                 style: OutlinedButton.styleFrom(
-                  foregroundColor: Colors.green,
-                  side: const BorderSide(color: Colors.green),
+                  foregroundColor: const Color.fromARGB(255, 230, 144, 16),
+                  side: const BorderSide(
+                    color: Color.fromARGB(255, 223, 153, 13),
+                  ),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
