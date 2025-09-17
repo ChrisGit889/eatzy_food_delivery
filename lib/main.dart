@@ -9,7 +9,7 @@ class EatzyApp extends StatelessWidget {
   const EatzyApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) {   
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Eatzy',
