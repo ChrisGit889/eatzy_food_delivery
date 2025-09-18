@@ -15,7 +15,7 @@ class HomeScreen extends StatelessWidget {
               elevation: 0,
               leading: IconButton(
                 onPressed: () {},
-                icon: const Icon(Icons.sort, size: 30, color: Colors.black),
+                icon: const Icon(Icons  .sort, size: 30, color: Colors.black),
               ),
               actions: [
                 Stack(

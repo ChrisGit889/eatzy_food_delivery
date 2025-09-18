@@ -1,4 +1,4 @@
-import 'package:eatzy/widgets/history_item.dart';
+import 'package:eatzy_food_delivery/widgets/history_item.dart';
 import 'package:flutter/material.dart';
 
 class HistoryScreen extends StatelessWidget {
