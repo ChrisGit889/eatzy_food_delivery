@@ -17,9 +17,9 @@
 | **Nicholas Zaneti Aulivier** | 535240054 | [@NicholasZanetiAulivier](https://github.com/NicholasZanetiAulivier) |
 | **Vivian Carolina** | 535240060 | [@VivianCarolina](https://github.com/VivianCarolina) |
 
-**Kelas:** TI-B  
-**Mata Kuliah:** Mobile Programming 
-**Dosen:** Pak Janson Hendryli 
-**Universitas:** Universitas Tarumanagara
+**Kelas:** TI B <br/>  
+**Mata Kuliah:** Mobile Programming <br/>
+**Dosen:** Pak Janson Hendryli <br/>
+**Universitas:** Universitas Tarumanagara <br/>
 
 ---
