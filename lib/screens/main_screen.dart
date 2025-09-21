@@ -1,3 +1,4 @@
+import 'package:eatzy_food_delivery/screens/TEMP_history_screen.dart';
 import 'package:flutter/material.dart';
 import 'home_screen.dart';
 import 'order_screen.dart';
@@ -19,7 +20,9 @@ class _MainScreenState extends State<MainScreen> {
   final List<Widget> _pages = const [
     HomeScreen(),
     OrderScreen(),
-    HistoryScreen(),
+    //Change
+    TempHistoryScreen(),
+    // HistoryScreen(),
     FavoriteScreen(),
     ProfileScreen(),
   ];
@@ -39,26 +42,17 @@ class _MainScreenState extends State<MainScreen> {
           });
         },
         items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: "Home",
-          ),
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
           BottomNavigationBarItem(
             icon: Icon(Icons.receipt_long),
             label: "Order",
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.history),
-            label: "History",
-          ),
+          BottomNavigationBarItem(icon: Icon(Icons.history), label: "History"),
           BottomNavigationBarItem(
             icon: Icon(Icons.favorite),
             label: "Favorite",
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: "Profile",
-          ),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profile"),
         ],
       ),
     );
