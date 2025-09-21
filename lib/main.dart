@@ -1,7 +1,7 @@
 import 'package:eatzy_food_delivery/firebase_options.dart';
+import 'package:eatzy_food_delivery/screens/auth_gate.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'screens/main_screen.dart';
 
 void main() async {
   //Init Firebase
@@ -23,7 +23,7 @@ class EatzyApp extends StatelessWidget {
         scaffoldBackgroundColor: Colors.white,
         primaryColor: const Color(0xFFFD6C00),
       ),
-      home: const MainScreen(), // masuk ke MainScreen setelah login
+      home: const AuthGate(), // masuk ke Login sebelum ke MainScreen
     );
   }
 }

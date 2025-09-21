@@ -1,4 +1,3 @@
-import 'package:eatzy_food_delivery/screens/TEMP_history_screen.dart';
 import 'package:flutter/material.dart';
 import 'home_screen.dart';
 import 'order_screen.dart';
@@ -20,9 +19,7 @@ class _MainScreenState extends State<MainScreen> {
   final List<Widget> _pages = const [
     HomeScreen(),
     OrderScreen(),
-    //Change
-    TempHistoryScreen(),
-    // HistoryScreen(),
+    HistoryScreen(),
     FavoriteScreen(),
     ProfileScreen(),
   ];
