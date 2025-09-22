@@ -2,8 +2,15 @@ import 'package:eatzy_food_delivery/screens/main_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-class RegisterScreen extends StatelessWidget {
+class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
+
+  @override
+  State<RegisterScreen> createState() => _RegisterScreenState();
+}
+
+class _RegisterScreenState extends State<RegisterScreen> {
+  bool isError = false;
 
   @override
   Widget build(BuildContext context) {
@@ -31,6 +38,12 @@ class RegisterScreen extends StatelessWidget {
               decoration: const InputDecoration(labelText: "Password"),
               obscureText: true,
             ),
+            isError
+                ? Padding(
+                    padding: const EdgeInsets.only(top: 8.0),
+                    child: Text("Please fill in all of the blanks!"),
+                  )
+                : SizedBox(width: 0, height: 0),
             const SizedBox(height: 20),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
@@ -39,6 +52,13 @@ class RegisterScreen extends StatelessWidget {
               ),
               onPressed: () async {
                 //Register function
+                if (nameController.text == '' ||
+                    emailController.text == '' ||
+                    passwordController.text == '') {
+                  setState(() {
+                    isError = true;
+                  });
+                }
 
                 try {
                   await FirebaseAuth.instance.createUserWithEmailAndPassword(
