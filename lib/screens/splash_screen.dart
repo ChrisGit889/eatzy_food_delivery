@@ -1,3 +1,4 @@
+import 'package:eatzy_food_delivery/constants.dart';
 import 'package:flutter/material.dart';
 import 'login_screen.dart';
 
@@ -12,7 +13,7 @@ class _SplashScreenState extends State<SplashScreen> {
   final List<String> texts = [
     "Lapar? Eatzy hadirkan makanan favoritmu, secepat kilat!",
     "Nikmati hidangan lezat tanpa ribet!",
-    "Mulai petualangan rasa sekarang!"
+    "Mulai petualangan rasa sekarang!",
   ];
   int currentIndex = 0;
 
@@ -27,7 +28,7 @@ class _SplashScreenState extends State<SplashScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               // Logo Eatzy
-              Icon(Icons.fastfood, color: const Color(0xFFFD6C00), size: 100),
+              Icon(Icons.fastfood, color: EATZY_ORANGE, size: 100),
               const SizedBox(height: 30),
 
               // Teks utama (langsung tampil, ga ganti2 otomatis lagi)
@@ -46,7 +47,7 @@ class _SplashScreenState extends State<SplashScreen> {
               // Tombol lanjut ke Login
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFFD6C00),
+                  backgroundColor: EATZY_ORANGE,
                   minimumSize: const Size(double.infinity, 50),
                 ),
                 onPressed: () {

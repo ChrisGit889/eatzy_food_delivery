@@ -1,3 +1,4 @@
+import 'package:eatzy_food_delivery/constants.dart';
 import 'package:flutter/material.dart';
 import 'home_screen.dart';
 import 'order_screen.dart';
@@ -30,7 +31,7 @@ class _MainScreenState extends State<MainScreen> {
       body: _pages[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
-        selectedItemColor: const Color(0xFFFD6C00), // Orange Eatzy
+        selectedItemColor: EATZY_ORANGE, // Orange Eatzy
         unselectedItemColor: Colors.grey,
         type: BottomNavigationBarType.fixed,
         onTap: (index) {
