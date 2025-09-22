@@ -46,6 +46,9 @@ class RegisterScreen extends StatelessWidget {
                         email: emailController.text,
                         password: passwordController.text,
                       );
+                  await FirebaseAuth.instance.currentUser!.updateDisplayName(
+                    nameController.text,
+                  );
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(builder: (_) => MainScreen()),

@@ -5,8 +5,17 @@ import 'package:flutter/material.dart';
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
+  Future<User> getUser() async {
+    return FirebaseAuth.instance.currentUser!;
+  }
+
+  Future<String> getUserName(user) async {
+    return (await user).displayName;
+  }
+
   @override
   Widget build(BuildContext context) {
+    var user = getUser();
     return Scaffold(
       backgroundColor: Colors.grey[100],
       body: SafeArea(
@@ -18,9 +27,17 @@ class ProfileScreen extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
-                    "< Profile",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  TextButton(
+                    onPressed: () => {
+                      // Firebase
+                    },
+                    child: const Text(
+                      "< Profile",
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
                   IconButton(
                     onPressed: () async {
@@ -52,9 +69,15 @@ class ProfileScreen extends StatelessWidget {
                     backgroundImage: AssetImage("assets/buatisiprofile.jpg"),
                   ),
                   const SizedBox(height: 12),
-                  const Text(
-                    "Eatzy Genk Keren",
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  FutureBuilder<String>(
+                    future: getUserName(user),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        return Text("${snapshot.data!}");
+                      } else {
+                        return Placeholder();
+                      }
+                    },
                   ),
                 ],
               ),
