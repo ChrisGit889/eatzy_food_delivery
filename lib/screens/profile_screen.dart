@@ -1,9 +1,21 @@
 import 'package:eatzy_food_delivery/screens/auth_gate.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
+
+  @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  Future<bool> isSeller = FirebaseFirestore.instance
+      .collection('sellers')
+      .doc(FirebaseAuth.instance.currentUser!.email!)
+      .get()
+      .then((value) => value.exists);
 
   @override
   Widget build(BuildContext context) {
@@ -84,10 +96,24 @@ class ProfileScreen extends StatelessWidget {
               child: ListView(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 children: [
-                  _buildRoundedBox("Personal Information", onTap: () {}),
-                  _buildRoundedBox("Payment Methods", onTap: () {}),
-                  _buildRoundedBox("About Us", onTap: () {}),
-                  _buildRoundedBox("Contact Us", onTap: () {}),
+                  _paymentMethods(),
+                  _personalInfo(),
+                  FutureBuilder<bool>(
+                    future: isSeller,
+                    builder: (context, snapshot) {
+                      print(snapshot);
+                      if (snapshot.hasData) {
+                        if (snapshot.data!) {
+                          return _isASeller();
+                        } else {
+                          return _notASeller();
+                        }
+                      } else {
+                        return _notASeller();
+                      }
+                    },
+                  ),
+                  _contactUs(),
                 ],
               ),
             ),
@@ -97,6 +123,11 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
+  // ignore: slash_for_doc_comments
+  /*********************
+  Helper Functions
+ *********************/
+  //Function to build rounded boxes
   Widget _buildRoundedBox(String title, {required VoidCallback onTap}) {
     return GestureDetector(
       onTap: onTap,
@@ -122,5 +153,51 @@ class ProfileScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  //Function to build "Personal Information"
+  Widget _personalInfo() {
+    return _buildRoundedBox("Personal Information", onTap: () {});
+  }
+
+  //Function to build "Payment Methods"
+  Widget _paymentMethods() {
+    return _buildRoundedBox("Payment Methods", onTap: () {});
+  }
+
+  //Function to build "Become A Seller" if user isnt a seller
+  Widget _notASeller() {
+    return _buildRoundedBox(
+      "Become A Seller",
+      onTap: () {
+        var db = FirebaseFirestore.instance;
+        var data = <String, dynamic>{
+          "email": FirebaseAuth.instance.currentUser!.email,
+          "store": null,
+        };
+        db
+            .collection('sellers')
+            .doc(FirebaseAuth.instance.currentUser!.email)
+            .set(data)
+            .onError((e, _) => print("Error writing document to seller"));
+        setState(() {
+          isSeller = FirebaseFirestore.instance
+              .collection('sellers')
+              .doc(FirebaseAuth.instance.currentUser!.email!)
+              .get()
+              .then((value) => value.exists);
+        });
+      },
+    );
+  }
+
+  //Function to build "You Are a Seller" if user is a seller
+  Widget _isASeller() {
+    return _buildRoundedBox("You Are a Seller", onTap: () {});
+  }
+
+  //Function to build "Contact Us"
+  Widget _contactUs() {
+    return _buildRoundedBox("Contact Us", onTap: () {});
   }
 }
