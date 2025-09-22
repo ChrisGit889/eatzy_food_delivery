@@ -101,7 +101,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   FutureBuilder<bool>(
                     future: isSeller,
                     builder: (context, snapshot) {
-                      print(snapshot);
                       if (snapshot.hasData) {
                         if (snapshot.data!) {
                           return _isASeller();

@@ -5,12 +5,30 @@ class HistoryItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(20),
-      child: Container(
-        color: Color.fromARGB(255, 184, 184, 184),
-        width: MediaQuery.widthOf(context),
-        height: 100,
+    return Container(
+      width: MediaQuery.widthOf(context),
+      height: 200,
+      child: Padding(
+        padding: const EdgeInsets.only(top: 5, bottom: 5),
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            color: Colors.white10,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey,
+                blurStyle: BlurStyle.outer,
+                blurRadius: 3,
+              ),
+            ],
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(
+              color: Colors.grey,
+              style: BorderStyle.solid,
+              strokeAlign: BorderSide.strokeAlignCenter,
+              width: 1.2,
+            ),
+          ),
+        ),
       ),
     );
   }

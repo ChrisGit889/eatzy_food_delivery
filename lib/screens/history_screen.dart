@@ -11,7 +11,18 @@ class HistoryScreen extends StatelessWidget {
         child: Scaffold(
           body: Padding(
             padding: const EdgeInsets.all(10.0),
-            child: Column(children: [Text("History"), HistoryItem()]),
+            child: Column(
+              children: [
+                Text("History"),
+                Expanded(
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    itemBuilder: (context, index) => HistoryItem(),
+                    itemCount: 10,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

@@ -59,8 +59,10 @@ class _LoginScreenState extends State<LoginScreen> {
                   );
                 } on FirebaseAuthException catch (e) {
                   if (e.code == 'user-not-found') {
+                    // ignore: avoid_print
                     print('No user found for that email.');
                   } else if (e.code == 'wrong-password') {
+                    // ignore: avoid_print
                     print('Wrong password provided for that user.');
                   }
                 }
