@@ -73,9 +73,15 @@ class ProfileScreen extends StatelessWidget {
                     future: getUserName(user),
                     builder: (context, snapshot) {
                       if (snapshot.hasData) {
-                        return Text("${snapshot.data!}");
+                        return Text(
+                          snapshot.data!,
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        );
                       } else {
-                        return Placeholder();
+                        return CircularProgressIndicator();
                       }
                     },
                   ),
