@@ -41,11 +41,10 @@ class RegisterScreen extends StatelessWidget {
                 //Register function
 
                 try {
-                  final credential = await FirebaseAuth.instance
-                      .createUserWithEmailAndPassword(
-                        email: emailController.text,
-                        password: passwordController.text,
-                      );
+                  await FirebaseAuth.instance.createUserWithEmailAndPassword(
+                    email: emailController.text,
+                    password: passwordController.text,
+                  );
                   await FirebaseAuth.instance.currentUser!.updateDisplayName(
                     nameController.text,
                   );

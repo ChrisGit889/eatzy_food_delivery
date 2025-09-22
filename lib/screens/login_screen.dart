@@ -35,11 +35,10 @@ class LoginScreen extends StatelessWidget {
               ),
               onPressed: () async {
                 try {
-                  final credential = await FirebaseAuth.instance
-                      .signInWithEmailAndPassword(
-                        email: emailController.text,
-                        password: passwordController.text,
-                      );
+                  await FirebaseAuth.instance.signInWithEmailAndPassword(
+                    email: emailController.text,
+                    password: passwordController.text,
+                  );
 
                   Navigator.push(
                     context,

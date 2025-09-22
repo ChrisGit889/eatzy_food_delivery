@@ -5,17 +5,8 @@ import 'package:flutter/material.dart';
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
-  Future<User> getUser() async {
-    return FirebaseAuth.instance.currentUser!;
-  }
-
-  Future<String> getUserName(user) async {
-    return (await user).displayName;
-  }
-
   @override
   Widget build(BuildContext context) {
-    var user = getUser();
     return Scaffold(
       backgroundColor: Colors.grey[100],
       body: SafeArea(
@@ -69,21 +60,9 @@ class ProfileScreen extends StatelessWidget {
                     backgroundImage: AssetImage("assets/buatisiprofile.jpg"),
                   ),
                   const SizedBox(height: 12),
-                  FutureBuilder<String>(
-                    future: getUserName(user),
-                    builder: (context, snapshot) {
-                      if (snapshot.hasData) {
-                        return Text(
-                          snapshot.data!,
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        );
-                      } else {
-                        return CircularProgressIndicator();
-                      }
-                    },
+                  Text(
+                    FirebaseAuth.instance.currentUser!.displayName!,
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                 ],
               ),
