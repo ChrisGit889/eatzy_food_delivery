@@ -17,7 +17,12 @@ class HistoryScreen extends StatelessWidget {
                 Expanded(
                   child: ListView.builder(
                     shrinkWrap: true,
-                    itemBuilder: (context, index) => HistoryItem(),
+                    itemBuilder: (context, index) => HistoryItem(
+                      dateBought: DateTime.now(),
+                      productCount: 2,
+                      storeName: "Idontcare",
+                      totalPrice: 100000,
+                    ),
                     itemCount: 10,
                   ),
                 ),
