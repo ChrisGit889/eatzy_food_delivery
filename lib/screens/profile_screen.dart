@@ -55,6 +55,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                         );
                       } catch (e) {
+                        // ignore: avoid_print
                         print(e);
                       }
                     },
@@ -180,9 +181,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
             .collection('sellers')
             .doc(FirebaseAuth.instance.currentUser!.email)
             .set(data)
+            // ignore: avoid_print
             .onError((e, _) => print("Error writing document to seller"));
         setState(() {
-          isSeller = FirebaseFirestore.instance
+          isSeller = db
               .collection('sellers')
               .doc(FirebaseAuth.instance.currentUser!.email!)
               .get()

@@ -1,5 +1,6 @@
 import 'package:eatzy_food_delivery/constants.dart';
 import 'package:eatzy_food_delivery/screens/main_screen.dart';
+import 'package:eatzy_food_delivery/screens/seller_dashboard_screen.dart';
 import 'package:eatzy_food_delivery/screens/seller_profile_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -12,7 +13,7 @@ class SellerScreen extends StatefulWidget {
 
 class _SellerScreenState extends State<SellerScreen> {
   int _selectedIndex = 0;
-  final List<Widget> _pages = [Placeholder(), SellerProfile()];
+  final List<Widget> _pages = [SellerDashboard(), SellerProfile()];
 
   @override
   Widget build(BuildContext context) {

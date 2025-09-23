@@ -60,7 +60,6 @@ class _OrderScreenState extends State<OrderScreen>
                 indicator: BoxDecoration(
                   color: const Color.fromARGB(255, 212, 86, 13),
                   borderRadius: BorderRadius.circular(10),
-                  
                 ),
                 indicatorSize: TabBarIndicatorSize.label,
                 isScrollable: true,
@@ -160,7 +159,7 @@ class _OrderScreenState extends State<OrderScreen>
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
-                  color: statusColor.withOpacity(0.2),
+                  color: statusColor.withAlpha(50),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Text(

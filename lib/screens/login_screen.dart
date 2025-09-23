@@ -79,6 +79,15 @@ class _LoginScreenState extends State<LoginScreen> {
               },
               child: const Text("Belum punya akun? Register"),
             ),
+            TextButton(
+              onPressed: () {
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(builder: (_) => const RegisterScreen()),
+                // );
+              },
+              child: const Text("Fogot password"), //TODO: Add forgot password
+            ),
           ],
         ),
       ),
