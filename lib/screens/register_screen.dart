@@ -1,9 +1,17 @@
+import 'package:eatzy_food_delivery/constants.dart';
 import 'package:eatzy_food_delivery/screens/main_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-class RegisterScreen extends StatelessWidget {
+class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
+
+  @override
+  State<RegisterScreen> createState() => _RegisterScreenState();
+}
+
+class _RegisterScreenState extends State<RegisterScreen> {
+  bool isError = false;
 
   @override
   Widget build(BuildContext context) {
@@ -31,21 +39,36 @@ class RegisterScreen extends StatelessWidget {
               decoration: const InputDecoration(labelText: "Password"),
               obscureText: true,
             ),
+            isError
+                ? Padding(
+                    padding: const EdgeInsets.only(top: 8.0),
+                    child: Text("Please fill in all of the blanks!"),
+                  )
+                : SizedBox(width: 0, height: 0),
             const SizedBox(height: 20),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFFD6C00),
+                backgroundColor: EATZY_ORANGE,
                 minimumSize: const Size(double.infinity, 50),
               ),
               onPressed: () async {
                 //Register function
+                if (nameController.text == '' ||
+                    emailController.text == '' ||
+                    passwordController.text == '') {
+                  setState(() {
+                    isError = true;
+                  });
+                }
 
                 try {
-                  final credential = await FirebaseAuth.instance
-                      .createUserWithEmailAndPassword(
-                        email: emailController.text,
-                        password: passwordController.text,
-                      );
+                  await FirebaseAuth.instance.createUserWithEmailAndPassword(
+                    email: emailController.text,
+                    password: passwordController.text,
+                  );
+                  await FirebaseAuth.instance.currentUser!.updateDisplayName(
+                    nameController.text,
+                  );
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(builder: (_) => MainScreen()),

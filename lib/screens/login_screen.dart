@@ -1,10 +1,18 @@
+import 'package:eatzy_food_delivery/constants.dart';
 import 'package:eatzy_food_delivery/screens/main_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'register_screen.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
+
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  bool isError = false;
 
   @override
   Widget build(BuildContext context) {
@@ -30,16 +38,21 @@ class LoginScreen extends StatelessWidget {
             const SizedBox(height: 20),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFFD6C00),
+                backgroundColor: EATZY_ORANGE,
                 minimumSize: const Size(double.infinity, 50),
               ),
               onPressed: () async {
+                if (passwordController.text == '' ||
+                    emailController.text == '') {
+                  setState(() {
+                    isError = true;
+                  });
+                }
                 try {
-                  final credential = await FirebaseAuth.instance
-                      .signInWithEmailAndPassword(
-                        email: emailController.text,
-                        password: passwordController.text,
-                      );
+                  await FirebaseAuth.instance.signInWithEmailAndPassword(
+                    email: emailController.text,
+                    password: passwordController.text,
+                  );
 
                   Navigator.push(
                     context,
@@ -47,8 +60,10 @@ class LoginScreen extends StatelessWidget {
                   );
                 } on FirebaseAuthException catch (e) {
                   if (e.code == 'user-not-found') {
+                    // ignore: avoid_print
                     print('No user found for that email.');
                   } else if (e.code == 'wrong-password') {
+                    // ignore: avoid_print
                     print('Wrong password provided for that user.');
                   }
                 }
@@ -63,6 +78,15 @@ class LoginScreen extends StatelessWidget {
                 );
               },
               child: const Text("Belum punya akun? Register"),
+            ),
+            TextButton(
+              onPressed: () {
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(builder: (_) => const RegisterScreen()),
+                // );
+              },
+              child: const Text("Fogot password"), //TODO: Add forgot password
             ),
           ],
         ),
