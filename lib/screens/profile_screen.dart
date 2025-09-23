@@ -1,4 +1,5 @@
 import 'package:eatzy_food_delivery/screens/auth_gate.dart';
+import 'package:eatzy_food_delivery/screens/seller_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -47,6 +48,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       try {
                         await FirebaseAuth.instance.signOut();
                         Navigator.pushReplacement(
+                          // ignore: use_build_context_synchronously
                           context,
                           MaterialPageRoute(
                             builder: (context) => const AuthGate(),
@@ -192,7 +194,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   //Function to build "You Are a Seller" if user is a seller
   Widget _isASeller() {
-    return _buildRoundedBox("You Are a Seller", onTap: () {});
+    return _buildRoundedBox(
+      "Manage Seller",
+      onTap: () {
+        Navigator.pushReplacement(
+          // ignore: use_build_context_synchronously
+          context,
+          MaterialPageRoute(builder: (context) => const SellerScreen()),
+        );
+      },
+    );
   }
 
   //Function to build "Contact Us"
