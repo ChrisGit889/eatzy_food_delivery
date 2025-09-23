@@ -13,34 +13,46 @@ class _SellerDashboardState extends State<SellerDashboard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Expanded(
-        child: ListView(
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(top: 10.0, bottom: 10.0, left: 8),
-              child: Text(
-                "Manage Restaurant",
-                style: TextStyle(
-                  fontSize: 32,
-                  fontFamily: "Times New Roman",
-                  fontWeight: FontWeight.bold,
+      body: Column(
+        children: [
+          Expanded(
+            child: ListView(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(
+                    top: 10.0,
+                    bottom: 10.0,
+                    left: 8,
+                  ),
+                  child: Text(
+                    "Manage Restaurant",
+                    style: TextStyle(
+                      fontSize: 32,
+                      fontFamily: "Times New Roman",
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ),
-              ),
-            ),
-            RestaurantButtonRow(),
-            Padding(
-              padding: const EdgeInsets.only(top: 10.0, bottom: 10.0, left: 8),
-              child: Text(
-                "Your Items",
-                style: TextStyle(
-                  fontSize: 32,
-                  fontFamily: "Times New Roman",
-                  fontWeight: FontWeight.bold,
+                RestaurantButtonRow(),
+                Padding(
+                  padding: const EdgeInsets.only(
+                    top: 10.0,
+                    bottom: 10.0,
+                    left: 8,
+                  ),
+                  child: Text(
+                    "Your Items",
+                    style: TextStyle(
+                      fontSize: 32,
+                      fontFamily: "Times New Roman",
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ),
-              ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

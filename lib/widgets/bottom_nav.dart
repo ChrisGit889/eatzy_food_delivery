@@ -17,7 +17,7 @@ class BottomNav extends StatelessWidget {
       onTap: onTap,
       items: const [
         BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-        BottomNavigationBarItem(icon: Icon(Icons.receipt), label: "Order"),
+        BottomNavigationBarItem(icon: Icon(Icons.receipt_long), label: "Order"),
         BottomNavigationBarItem(icon: Icon(Icons.history), label: "History"),
         BottomNavigationBarItem(icon: Icon(Icons.favorite), label: "Favorite"),
         BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profile"),

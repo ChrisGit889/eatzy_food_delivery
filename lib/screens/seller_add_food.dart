@@ -60,7 +60,10 @@ class _AddFoodState extends State<AddFood> {
                 width: MediaQuery.widthOf(context) * 3 / 4,
                 child: TextField(
                   controller: priceController,
-                  keyboardType: TextInputType.numberWithOptions(decimal: true),
+                  keyboardType: TextInputType.numberWithOptions(
+                    decimal: true,
+                    signed: false,
+                  ),
                   decoration: InputDecoration(label: Text("Food Price")),
                 ),
               ),
