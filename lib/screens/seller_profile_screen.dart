@@ -1,0 +1,118 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+
+class SellerProfile extends StatefulWidget {
+  const SellerProfile({super.key});
+
+  @override
+  State<SellerProfile> createState() => _SellerProfileState();
+}
+
+class _SellerProfileState extends State<SellerProfile> {
+  TextEditingController textController = TextEditingController();
+  bool editing = false;
+  bool alert = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final currentUser = FirebaseAuth.instance.currentUser!;
+    var dbData = FirebaseFirestore.instance
+        .collection('sellers')
+        .doc(currentUser.email!)
+        .get()
+        .then((value) => value.data());
+
+    return SafeArea(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              CircleAvatar(
+                radius: 80,
+                backgroundImage: AssetImage(
+                  "assets/buatisiprofile.jpg",
+                ), //TODO: Use firebase for this
+              ),
+              Row(
+                children: [
+                  FutureBuilder(
+                    future: dbData,
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        if (editing) {
+                          return SizedBox(
+                            width: 100,
+                            height: 100,
+                            child: TextField(controller: textController),
+                          );
+                        }
+                        return snapshot.data!["store"] == null
+                            ? Text("No name")
+                            : Text(snapshot.data!["store"]);
+                      } else {
+                        return CircularProgressIndicator();
+                      }
+                    },
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      setState(() {
+                        alert = false;
+                        if (editing) {
+                          if (textController.text.isNotEmpty) {
+                            FirebaseFirestore.instance
+                                .collection('sellers')
+                                .doc(currentUser.email!)
+                                .set({"store": textController.text});
+                            editing = false;
+                          } else {
+                            alert = true;
+                          }
+                        } else {
+                          editing = true;
+                        }
+                      });
+                    },
+                    icon: Icon(Icons.mode_edit_outlined),
+                  ),
+                ],
+              ),
+              alert
+                  ? Text("Type in a valid store name!")
+                  : SizedBox(width: 0, height: 0),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class SellerNameSpot extends StatelessWidget {
+  const SellerNameSpot({super.key, required this.currentUser});
+
+  final User currentUser;
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+      future: FirebaseFirestore.instance
+          .collection('sellers')
+          .doc(currentUser.email!)
+          .get()
+          .then((value) => value.data()),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return snapshot.data!["store"] == null
+              ? Text("No name")
+              : Text(snapshot.data!["store"]);
+        } else {
+          return CircularProgressIndicator();
+        }
+      },
+    );
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "291236394704",
+    "project_id": "eatzy-db",
+    "storage_bucket": "eatzy-db.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:291236394704:android:31c913cfb5ff4adac650d5",
+        "android_client_info": {
+          "package_name": "com.example.eatzy"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBsvkdfTWMUiyKt3cMLgkdIeanzGjdI0JE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

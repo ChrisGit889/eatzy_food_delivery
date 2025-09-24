@@ -1,3 +1,5 @@
+import 'package:eatzy_food_delivery/constants.dart';
+import 'package:eatzy_food_delivery/widgets/bottom_nav.dart';
 import 'package:flutter/material.dart';
 import 'home_screen.dart';
 import 'order_screen.dart';
