@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'login_screen.dart'; // Pastikan file ini ada
+import 'login_screen.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -9,35 +10,28 @@ class OnboardingScreen extends StatefulWidget {
 }
 
 class _OnboardingScreenState extends State<OnboardingScreen> {
-  // Controller untuk PageView
   final PageController _pageController = PageController();
   int _currentPage = 0;
 
-  // Data untuk setiap halaman onboarding
   final List<Map<String, dynamic>> _onboardingData = [
     {
       'color': Colors.blue.shade100,
-      'imagePath':
-          'assets/images/onboarding1.png', // Ganti dengan path gambar Anda
-      'title': 'Find your place',
+      'imagePath': 'assets/images/chat.png',
+      'title': 'Build Trust Together',
       'description':
-          'Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint.',
+          'Enjoy direct interaction with couriers & restaurants in real time',
     },
     {
       'color': Colors.pink.shade100,
-      'imagePath':
-          'assets/images/onboarding2.png', // Ganti dengan path gambar Anda
-      'title': 'Contact us anytime',
-      'description':
-          'Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint.',
+      'imagePath': 'assets/images/fast.png',
+      'title': 'Fast Delivery',
+      'description': 'Fast and safe delivery directly to your location',
     },
     {
-      'color': Colors.purple.shade100,
-      'imagePath':
-          'assets/images/onboarding3.png', // Ganti dengan path gambar Anda
-      'title': 'Pick your food',
-      'description':
-          'Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint.',
+      'color': const Color.fromARGB(255, 1, 247, 255),
+      'imagePath': 'assets/images/pick.png',
+      'title': 'Enjoy The Food',
+      'description': 'Various culinary delights available in 1 application',
     },
   ];
 
@@ -57,23 +51,57 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: PageView.builder(
-        controller: _pageController,
-        itemCount: _onboardingData.length,
-        onPageChanged: (int page) {
-          setState(() {
-            _currentPage = page;
-          });
-        },
-        itemBuilder: (context, index) {
-          return _buildOnboardingPage(
-            color: _onboardingData[index]['color'],
-            imagePath: _onboardingData[index]['imagePath'],
-            title: _onboardingData[index]['title'],
-            description: _onboardingData[index]['description'],
-            isLastPage: index == _onboardingData.length - 1,
-          );
-        },
+      body: Stack(
+        children: [
+          PageView.builder(
+            controller: _pageController,
+            itemCount: _onboardingData.length,
+            onPageChanged: (int page) {
+              setState(() {
+                _currentPage = page;
+              });
+            },
+            itemBuilder: (context, index) {
+              return _buildOnboardingPage(
+                color: _onboardingData[index]['color'],
+                imagePath: _onboardingData[index]['imagePath'],
+                title: _onboardingData[index]['title'],
+                description: _onboardingData[index]['description'],
+                isLastPage: index == _onboardingData.length - 1,
+              );
+            },
+          ),
+          Positioned(
+            bottom: MediaQuery.of(context).size.height * 0.38,
+            left: 0,
+            right: 0,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: _buildPageIndicator(),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  List<Widget> _buildPageIndicator() {
+    List<Widget> list = [];
+    for (int i = 0; i < _onboardingData.length; i++) {
+      list.add(i == _currentPage ? _indicator(true) : _indicator(false));
+    }
+    return list;
+  }
+
+  Widget _indicator(bool isActive) {
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 150),
+      margin: const EdgeInsets.symmetric(horizontal: 6.0),
+      height: 8.0,
+      width: isActive ? 24.0 : 8.0,
+      decoration: BoxDecoration(
+        color: isActive ? Colors.orange.shade700 : Colors.grey.shade400,
+        borderRadius: const BorderRadius.all(Radius.circular(12)),
       ),
     );
   }
@@ -89,7 +117,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       color: color,
       child: Column(
         children: [
-          // Bagian atas untuk gambar
           Expanded(
             flex: 3,
             child: Padding(
@@ -97,7 +124,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               child: Image.asset(imagePath),
             ),
           ),
-          // Bagian bawah untuk kartu putih
           Expanded(
             flex: 2,
             child: Container(
@@ -114,17 +140,21 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 children: [
                   Text(
                     title,
-                    style: const TextStyle(
-                      fontSize: 24,
+                    style: GoogleFonts.poppins(
+                      fontSize: 26,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   const SizedBox(height: 16),
                   Text(
                     description,
-                    style: TextStyle(fontSize: 16, color: Colors.grey.shade600),
+                    style: GoogleFonts.lato(
+                      fontSize: 16,
+                      color: Colors.grey.shade600,
+                      height: 1.5,
+                    ),
                   ),
-                  const Spacer(), // Mendorong tombol ke bawah
+                  const Spacer(),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
