@@ -1,7 +1,11 @@
+import 'dart:async';
+
 import 'package:eatzy_food_delivery/constants.dart';
+import 'package:eatzy_food_delivery/screens/auth_gate.dart';
 import 'package:eatzy_food_delivery/screens/main_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'register_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -21,7 +25,7 @@ class _LoginScreenState extends State<LoginScreen> {
         fit: StackFit.expand,
         children: [
           Image.asset('assets/images/Login_Background.jpg', fit: BoxFit.cover),
-          Container(color: Colors.black.withOpacity(0.4)),
+          Container(color: Colors.black.withAlpha(102)),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: Column(
@@ -116,11 +120,20 @@ class _LoginScreenState extends State<LoginScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          _buildSocialIcon('assets/images/apple_icon.png'),
+                          _buildSocialIcon(
+                            'assets/images/apple_icon.png',
+                            () async {},
+                          ),
                           const SizedBox(width: 20),
-                          _buildSocialIcon('assets/images/google_icon.png'),
+                          _buildSocialIcon(
+                            'assets/images/google_icon.png',
+                            () async {},
+                          ),
                           const SizedBox(width: 20),
-                          _buildSocialIcon('assets/images/facebook_icon.png'),
+                          _buildSocialIcon(
+                            'assets/images/facebook_icon.png',
+                            () async {},
+                          ),
                         ],
                       ),
                     ],
@@ -135,15 +148,18 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget _buildSocialIcon(String assetPath) {
+  Widget _buildSocialIcon(String assetPath, void Function() pressFunc) {
     return Container(
-      padding: const EdgeInsets.all(10.0),
+      padding: const EdgeInsets.all(6.0),
       decoration: BoxDecoration(
         color: Colors.white,
         shape: BoxShape.circle,
         border: Border.all(color: Colors.grey.shade400, width: 1.0),
       ),
-      child: Image.asset(assetPath, height: 24, width: 24),
+      child: IconButton(
+        icon: Image.asset(assetPath, height: 30, width: 30, fit: BoxFit.cover),
+        onPressed: pressFunc,
+      ),
     );
   }
 }
