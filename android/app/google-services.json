@@ -12,7 +12,12 @@
           "package_name": "com.example.eatzy"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "291236394704-npl6k2t541v3nfnnodlipms994ci0j9l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyBsvkdfTWMUiyKt3cMLgkdIeanzGjdI0JE"
@@ -20,7 +25,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "291236394704-npl6k2t541v3nfnnodlipms994ci0j9l.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "291236394704-6rrcrjdckk1pt3dqj6asbadcu41fvjue.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.eatzy"
+              }
+            }
+          ]
         }
       }
     }
