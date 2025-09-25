@@ -1,6 +1,36 @@
 import 'package:eatzy_food_delivery/constants.dart';
 import 'package:eatzy_food_delivery/screens/seller_add_food.dart';
+import 'package:eatzy_food_delivery/utils/seller_utils.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+
+final startingView = [
+  Padding(
+    padding: const EdgeInsets.only(top: 10.0, bottom: 10.0, left: 8),
+    child: Text(
+      "Manage Restaurant",
+      style: TextStyle(
+        fontSize: 32,
+        fontFamily: "Times New Roman",
+        fontWeight: FontWeight.bold,
+      ),
+    ),
+  ),
+  RestaurantButtonRow(),
+  Padding(
+    padding: const EdgeInsets.only(top: 10.0, bottom: 10.0, left: 8),
+    child: Text(
+      "Your Items",
+      style: TextStyle(
+        fontSize: 32,
+        fontFamily: "Times New Roman",
+        fontWeight: FontWeight.bold,
+      ),
+    ),
+  ),
+];
+
+List<Widget> currList = [];
 
 class SellerDashboard extends StatefulWidget {
   const SellerDashboard({super.key});
@@ -13,48 +43,31 @@ class _SellerDashboardState extends State<SellerDashboard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          Expanded(
-            child: ListView(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(
-                    top: 10.0,
-                    bottom: 10.0,
-                    left: 8,
-                  ),
-                  child: Text(
-                    "Manage Restaurant",
-                    style: TextStyle(
-                      fontSize: 32,
-                      fontFamily: "Times New Roman",
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                RestaurantButtonRow(),
-                Padding(
-                  padding: const EdgeInsets.only(
-                    top: 10.0,
-                    bottom: 10.0,
-                    left: 8,
-                  ),
-                  child: Text(
-                    "Your Items",
-                    style: TextStyle(
-                      fontSize: 32,
-                      fontFamily: "Times New Roman",
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
+      body: FutureBuilder(
+        future: getSellerItems(FirebaseAuth.instance.currentUser!.email!),
+        builder: (context, snapshot) {
+          currList = [];
+          for (var i in startingView) {
+            currList.add(i);
+          }
+          if (snapshot.hasData) {
+            for (var i in snapshot.data!) {
+              currList.add(Text("$i"));
+            }
+          }
+          return DashboardColumn();
+        },
       ),
     );
+  }
+}
+
+class DashboardColumn extends StatelessWidget {
+  const DashboardColumn({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(children: currList);
   }
 }
 
