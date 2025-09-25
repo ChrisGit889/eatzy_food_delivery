@@ -55,12 +55,7 @@ class LoginScreen extends StatelessWidget {
                     children: [
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color.fromARGB(
-                            255,
-                            232,
-                            114,
-                            3,
-                          ),
+                          backgroundColor: const Color.fromARGB(255, 232, 114, 3),
                           minimumSize: const Size(double.infinity, 55),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(16),
