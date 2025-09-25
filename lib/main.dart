@@ -24,7 +24,7 @@ class EatzyApp extends StatelessWidget {
         scaffoldBackgroundColor: Colors.white,
         primaryColor: EATZY_ORANGE,
       ),
-      home: const AuthGate(),
+      home: const AuthGate(), // masuk ke Login sebelum ke MainScreen
     );
   }
 }

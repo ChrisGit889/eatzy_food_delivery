@@ -2,7 +2,6 @@ import 'package:eatzy_food_delivery/constants.dart';
 import 'package:eatzy_food_delivery/screens/main_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'main_screen.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -13,7 +12,6 @@ class RegisterScreen extends StatefulWidget {
 
 class _RegisterScreenState extends State<RegisterScreen> {
   bool _isPasswordVisible = false;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -178,6 +176,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 setState(() {
                   _isPasswordVisible = !_isPasswordVisible;
                 });
+
               },
             ),
           ),
