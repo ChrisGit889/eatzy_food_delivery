@@ -1,8 +1,10 @@
 import 'package:eatzy_food_delivery/constants.dart';
+import 'package:eatzy_food_delivery/screens/auth_gate.dart';
 import 'package:eatzy_food_delivery/screens/login_screen.dart';
 import 'package:eatzy_food_delivery/screens/main_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -13,6 +15,13 @@ class RegisterScreen extends StatefulWidget {
 
 class _RegisterScreenState extends State<RegisterScreen> {
   bool _isPasswordVisible = false;
+  bool isError = false;
+  TextEditingController firstNameController = TextEditingController();
+  TextEditingController lastNameController = TextEditingController();
+  TextEditingController phoneNumberController = TextEditingController();
+  TextEditingController dobNumberController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +65,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         borderRadius: BorderRadius.circular(20.0),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withAlpha(26),
             blurRadius: 10,
             offset: const Offset(0, 5),
           ),
@@ -125,16 +134,58 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 borderRadius: BorderRadius.circular(12),
               ),
             ),
-            onPressed: () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (_) => const MainScreen()),
-              );
-            },
-            child: const Text(
+            child: Text(
               "Register",
-              style: TextStyle(fontSize: 18, color: Colors.white),
+              style: TextStyle(color: Color(isError ? 0xFF000000 : 0xFFFFFFFF)),
             ),
+            onPressed: () async {
+              //Register function
+              if (firstNameController.text == '' ||
+                  emailController.text == '' ||
+                  passwordController.text == '') {
+                setState(() {
+                  isError = true;
+                });
+              }
+
+              try {
+                await FirebaseAuth.instance.createUserWithEmailAndPassword(
+                  email: emailController.text,
+                  password: passwordController.text,
+                );
+                await FirebaseAuth.instance.currentUser!.updateDisplayName(
+                  firstNameController.text,
+                );
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (_) => AuthGate()),
+                );
+              } on FirebaseException catch (e) {
+                if (e.code == 'weak-password') {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('The password provided is too weak.'),
+                    ),
+                    snackBarAnimationStyle: AnimationStyle(
+                      curve: ElasticInCurve(),
+                    ),
+                  );
+                } else if (e.code == 'email-already-in-use') {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(
+                        'The account already exists for that email.',
+                      ),
+                    ),
+                    snackBarAnimationStyle: AnimationStyle(
+                      curve: ElasticInCurve(),
+                    ),
+                  );
+                }
+              } catch (e) {
+                print(e);
+              }
+            },
           ),
         ],
       ),
@@ -146,21 +197,33 @@ class _RegisterScreenState extends State<RegisterScreen> {
       children: [
         Row(
           children: [
-            Expanded(child: _buildTextField(label: "First Name")),
+            Expanded(
+              child: _buildTextField(
+                label: "First Name",
+                controller: firstNameController,
+              ),
+            ),
             const SizedBox(width: 16),
-            Expanded(child: _buildTextField(label: "Last Name")),
+            Expanded(
+              child: _buildTextField(
+                label: "Last Name",
+                controller: lastNameController,
+              ),
+            ),
           ],
         ),
         const SizedBox(height: 16),
-        _buildTextField(label: "Email"),
+        _buildTextField(label: "Email", controller: emailController),
         const SizedBox(height: 16),
         _buildTextField(
           label: "Birth of date",
           suffixIcon: Icons.calendar_today_outlined,
+          controller: dobNumberController,
         ),
         const SizedBox(height: 16),
         _buildTextField(
           label: "Phone Number",
+          controller: phoneNumberController,
           prefixIcon: const Padding(
             padding: EdgeInsets.symmetric(horizontal: 8.0),
             child: Row(
@@ -175,6 +238,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         const SizedBox(height: 16),
         TextFormField(
           obscureText: !_isPasswordVisible,
+          controller: passwordController,
           decoration: InputDecoration(
             labelText: "Set Password",
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
@@ -196,10 +260,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   Widget _buildTextField({
     required String label,
+    required TextEditingController controller,
     IconData? suffixIcon,
     Widget? prefixIcon,
   }) {
     return TextFormField(
+      controller: controller,
       decoration: InputDecoration(
         labelText: label,
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
