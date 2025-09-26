@@ -1,7 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:eatzy_food_delivery/widgets/category_cell.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  int selectedCategoryIndex = 0;
+
+  List categories = [
+    {"name": "Pizza", "iconPath": "assets/images/pick.png"},
+    {"name": "Burger", "iconPath": "assets/images/pick.png"},
+    {"name": "Hotdog", "iconPath": "assets/images/pick.png"},
+    {"name": "Drink", "iconPath": "assets/images/pick.png"},
+    {"name": "Donut", "iconPath": "assets/images/pick.png"},
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -109,6 +125,30 @@ class HomeScreen extends StatelessWidget {
                     onPressed: () {},
                   ),
                 ),
+              ),
+            ),
+
+            const SizedBox(height: 15),
+
+            // Category List
+            SizedBox(
+              height: 200,
+              child: ListView.builder(
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                itemCount: categories.length,
+                scrollDirection: Axis.horizontal,
+                itemBuilder: (context, index) {
+                  final category = categories[index];
+                  return CategoryCell(
+                    categories: category,
+                    isSelected: index == selectedCategoryIndex,
+                    onPressed: () {
+                      setState(() {
+                        selectedCategoryIndex = index;
+                      });
+                    },
+                  );
+                },
               ),
             ),
           ],
