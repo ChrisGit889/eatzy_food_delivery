@@ -1,10 +1,7 @@
-import 'package:eatzy_food_delivery/constants.dart';
 import 'package:eatzy_food_delivery/screens/auth_gate.dart';
 import 'package:eatzy_food_delivery/screens/login_screen.dart';
-import 'package:eatzy_food_delivery/screens/main_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
