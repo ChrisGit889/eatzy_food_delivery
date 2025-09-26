@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:eatzy_food_delivery/widgets/category_cell.dart';
+import 'package:eatzy_food_delivery/widgets/restaurant_rows.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -17,6 +18,27 @@ class _HomeScreenState extends State<HomeScreen> {
     {"name": "Hotdog", "iconPath": "assets/images/pick.png"},
     {"name": "Drink", "iconPath": "assets/images/pick.png"},
     {"name": "Donut", "iconPath": "assets/images/pick.png"},
+  ];
+
+  List popularRestaurants = [
+    {
+      "name": "Pizza Hut",
+      "imagePath": "assets/images/pick.png",
+      "rating": 4.5,
+      "address": "123 Main St",
+    },
+    {
+      "name": "Burger King",
+      "imagePath": "assets/images/pick.png",
+      "rating": 4.0,
+      "address": "456 Elm St",
+    },
+    {
+      "name": "Subway",
+      "imagePath": "assets/images/pick.png",
+      "rating": 4.2,
+      "address": "789 Oak St",
+    },
   ];
 
   @override
@@ -69,6 +91,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
 
+            // Deliver to Text
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: const Text(
@@ -79,6 +102,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
             const SizedBox(height: 10),
 
+            // Location Row
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Row(
@@ -101,6 +125,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
             const SizedBox(height: 20),
 
+            // Search Bar
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 20),
               decoration: BoxDecoration(
@@ -149,6 +174,34 @@ class _HomeScreenState extends State<HomeScreen> {
                     },
                   );
                 },
+              ),
+            ),
+
+            const SizedBox(height: 20),
+
+            // Popular Section
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: const Text(
+                "Popular Restaurants",
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'Roboto',
+                ),
+              ),
+            ),
+            const SizedBox(height: 10),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Column(
+                children: popularRestaurants.map((restaurant) {
+                  return RestaurantRows(
+                    restaurant: restaurant,
+                    onPressed: () {
+                    },
+                  );
+                }).toList(),
               ),
             ),
           ],
