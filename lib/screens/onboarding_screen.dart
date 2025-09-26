@@ -19,19 +19,21 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       'imagePath': 'assets/images/chat.png',
       'title': 'Build Trust Together',
       'description':
-          'Enjoy direct interaction with couriers & restaurants in real time',
+          'Build trust through clear communication. Connect directly with couriers and restaurants in real time to ensure your order goes smoothly.',
     },
     {
       'color': Colors.pink.shade100,
       'imagePath': 'assets/images/fast.png',
       'title': 'Fast Delivery',
-      'description': 'Fast and safe delivery directly to your location',
+      'description':
+          'We prioritize speed without sacrificing security. Your order is delivered directly to its destination.',
     },
     {
       'color': const Color.fromARGB(255, 1, 247, 255),
       'imagePath': 'assets/images/pick.png',
       'title': 'Enjoy The Food',
-      'description': 'Various culinary delights available in 1 application',
+      'description':
+          'From local snacks to international dishes, find everything you want in one app.',
     },
   ];
 
@@ -136,7 +138,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 ),
               ),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
                     title,
@@ -155,6 +157,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     ),
                   ),
                   const Spacer(),
+
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
