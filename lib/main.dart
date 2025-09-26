@@ -25,7 +25,7 @@ class EatzyApp extends StatelessWidget {
         scaffoldBackgroundColor: Colors.white,
         primaryColor: EATZY_ORANGE,
       ),
-      home: const OnboardingScreen(),
+      home: AuthGate(whereToGo: OnboardingScreen()),
     );
   }
 }
