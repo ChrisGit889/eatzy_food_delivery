@@ -10,11 +10,74 @@ class OrderScreen extends StatefulWidget {
 class _OrderScreenState extends State<OrderScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  // 1. Controller untuk mengelola input teks pada search bar
+  final TextEditingController _searchController = TextEditingController();
+
+  // 2. Daftar untuk menyimpan semua data pesanan (data asli)
+  final List<Map<String, dynamic>> _allOrders = [
+    {
+      "orderId": "#EAT6925",
+      "date": "Sep 25, 2025",
+      "service": "Special Care Wash",
+      "items": "7 items • 2 loads",
+      "delivery": "June 30, 2025",
+      "status": "Pending",
+      "steps": 3,
+    },
+    {
+      "orderId": "#FP78923",
+      "date": "Sep 24, 2025",
+      "service": "Ironing Service",
+      "items": "10 items • 3 loads",
+      "delivery": "June 27, 2025",
+      "status": "Completed",
+      "steps": 4,
+    },
+    {
+      "orderId": "#FP78922",
+      "date": "Sep 23n , 2025",
+      "service": "Dry Cleaning",
+      "items": "3 items • 1 load",
+      "delivery": "June 25, 2025",
+      "status": "Cancelled",
+      "steps": 1,
+    },
+  ];
+
+  // 3. Daftar untuk menampilkan pesanan yang sudah difilter
+  late List<Map<String, dynamic>> _filteredOrders;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 4, vsync: this);
+
+    // Saat awal, daftar yang difilter berisi semua pesanan
+    _filteredOrders = _allOrders;
+
+    // Menambahkan listener, sehingga fungsi _filterOrders akan terpanggil setiap kali ada perubahan teks
+    _searchController.addListener(_filterOrders);
+  }
+
+  @override
+  void dispose() {
+    // 4. Jangan lupa dispose controller untuk menghindari memory leaks
+    _searchController.removeListener(_filterOrders);
+    _searchController.dispose();
+    _tabController.dispose();
+    super.dispose();
+  }
+
+  // 5. Fungsi utama untuk logika filtering
+  void _filterOrders() {
+    String query = _searchController.text.toLowerCase();
+    setState(() {
+      _filteredOrders = _allOrders.where((order) {
+        final orderId = order['orderId']!.toLowerCase();
+        final service = order['service']!.toLowerCase();
+        return orderId.contains(query) || service.contains(query);
+      }).toList();
+    });
   }
 
   @override
@@ -22,37 +85,17 @@ class _OrderScreenState extends State<OrderScreen>
     return Scaffold(
       appBar: AppBar(
         title: const Text("Order History"),
+        centerTitle: true,
         backgroundColor: Colors.white,
         foregroundColor: Colors.black,
         elevation: 0,
-        actions: const [
-          Padding(
-            padding: EdgeInsets.only(right: 16),
-            child: Icon(Icons.notifications_none, color: Colors.black),
-          ),
-        ],
+        automaticallyImplyLeading: false,
         bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(100),
+          preferredSize: const Size.fromHeight(120),
           child: Column(
             children: [
-              // Search bar
-              Padding(
-                padding: const EdgeInsets.all(12),
-                child: TextField(
-                  decoration: InputDecoration(
-                    hintText: "Search orders",
-                    prefixIcon: const Icon(Icons.search),
-                    filled: true,
-                    fillColor: Colors.grey.shade200,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30),
-                      borderSide: BorderSide.none,
-                    ),
-                  ),
-                ),
-              ),
-
-              // TabBar filter
+              // Mengirim search controller ke widget _OrderSearchBar
+              _OrderSearchBar(controller: _searchController),
               TabBar(
                 controller: _tabController,
                 labelColor: Colors.white,
@@ -61,11 +104,11 @@ class _OrderScreenState extends State<OrderScreen>
                   color: const Color.fromARGB(255, 212, 86, 13),
                   borderRadius: BorderRadius.circular(10),
                 ),
-                indicatorSize: TabBarIndicatorSize.label,
-                isScrollable: true,
+                indicatorSize: TabBarIndicatorSize.tab,
+                isScrollable: false,
                 tabs: const [
                   Tab(text: "All orders"),
-                  Tab(text: "Processing"),
+                  Tab(text: "Process"),
                   Tab(text: "Completed"),
                   Tab(text: "Cancelled"),
                 ],
@@ -75,49 +118,53 @@ class _OrderScreenState extends State<OrderScreen>
           ),
         ),
       ),
-
-      // Tab content
+      // NOTE: Logika TabBarView perlu disesuaikan agar bisa bekerja dengan filter
+      // Untuk saat ini, kita tampilkan hasil filter di semua tab
       body: TabBarView(
         controller: _tabController,
         children: [
           buildOrderList(), // All
-          buildOrderList(status: "Processing"),
-          buildOrderList(status: "Completed"),
-          buildOrderList(status: "Cancelled"),
+          buildOrderList(), // Processing (perlu logika filter tambahan berdasarkan status)
+          buildOrderList(), // Completed (perlu logika filter tambahan berdasarkan status)
+          buildOrderList(), // Cancelled (perlu logika filter tambahan berdasarkan status)
         ],
       ),
     );
   }
 
-  // Card list builder
-  Widget buildOrderList({String status = "All"}) {
-    return ListView(
+  // 6. Widget builder sekarang menggunakan _filteredOrders
+  Widget buildOrderList() {
+    if (_filteredOrders.isEmpty) {
+      return const Center(
+        child: Text(
+          "Pesanan tidak ditemukan.",
+          style: TextStyle(fontSize: 18, color: Colors.grey),
+        ),
+      );
+    }
+
+    return ListView.builder(
       padding: const EdgeInsets.all(16),
-      children: [
-        buildOrderCard(
-          orderId: "#FP78924",
-          date: "June 25, 2023",
-          service: "Special Care Wash",
-          items: "7 items • 2 loads",
-          delivery: "June 30, 2025",
-          status: "Pending",
-          steps: 3,
-        ),
-        const SizedBox(height: 16),
-        buildOrderCard(
-          orderId: "#FP78923",
-          date: "June 22, 2023",
-          service: "Ironing Service",
-          items: "10 items • 3 loads",
-          delivery: "June 27, 2025",
-          status: "Completed",
-          steps: 4,
-        ),
-      ],
+      itemCount: _filteredOrders.length,
+      itemBuilder: (context, index) {
+        final order = _filteredOrders[index];
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 16.0),
+          child: buildOrderCard(
+            orderId: order['orderId']!,
+            date: order['date']!,
+            service: order['service']!,
+            items: order['items']!,
+            delivery: order['delivery']!,
+            status: order['status']!,
+            steps: order['steps']!,
+          ),
+        );
+      },
     );
   }
 
-  // Order card UI
+  // Widget untuk UI card (tidak ada perubahan)
   Widget buildOrderCard({
     required String orderId,
     required String date,
@@ -127,7 +174,14 @@ class _OrderScreenState extends State<OrderScreen>
     required String status,
     required int steps,
   }) {
-    Color statusColor = status == "Completed" ? Colors.green : Colors.orange;
+    Color statusColor;
+    if (status == "Completed") {
+      statusColor = Colors.green;
+    } else if (status == "Pending") {
+      statusColor = Colors.orange;
+    } else {
+      statusColor = Colors.red;
+    }
 
     return Container(
       padding: const EdgeInsets.all(16),
@@ -145,7 +199,6 @@ class _OrderScreenState extends State<OrderScreen>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Top row
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -175,12 +228,9 @@ class _OrderScreenState extends State<OrderScreen>
           const SizedBox(height: 4),
           Text(
             "Placed on $date",
-            style: TextStyle(color: const Color.fromARGB(255, 106, 106, 106)),
+            style: const TextStyle(color: Color.fromARGB(255, 106, 106, 106)),
           ),
-
           const SizedBox(height: 12),
-
-          // Service
           Row(
             children: [
               const Icon(
@@ -223,10 +273,7 @@ class _OrderScreenState extends State<OrderScreen>
               ),
             ],
           ),
-
           const SizedBox(height: 16),
-
-          // Step indicator
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -236,7 +283,7 @@ class _OrderScreenState extends State<OrderScreen>
               buildLine(),
               buildStep("Handover", steps >= 3),
               buildLine(),
-              buildStep("Delivered", steps >= 4),
+              buildStep("Finish", steps >= 4),
             ],
           ),
         ],
@@ -266,5 +313,44 @@ class _OrderScreenState extends State<OrderScreen>
 
   Widget buildLine() {
     return Expanded(child: Container(height: 2, color: Colors.grey.shade300));
+  }
+}
+
+// Widget untuk Search Bar (terpisah)
+class _OrderSearchBar extends StatelessWidget {
+  final TextEditingController controller;
+  const _OrderSearchBar({required this.controller});
+
+  @override
+  Widget build(BuildContext context) {
+    const themeColor = Color.fromARGB(255, 212, 86, 13);
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.2),
+            spreadRadius: 1,
+            blurRadius: 5,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: TextField(
+        controller: controller, // Menggunakan controller dari state
+        decoration: InputDecoration(
+          hintText: "Search by ID or name",
+          border: InputBorder.none,
+          contentPadding: const EdgeInsets.all(15),
+          prefixIcon: const Icon(Icons.search, color: themeColor),
+          suffixIcon: IconButton(
+            icon: const Icon(Icons.filter_list, color: themeColor),
+            onPressed: () {},
+          ),
+        ),
+      ),
+    );
   }
 }

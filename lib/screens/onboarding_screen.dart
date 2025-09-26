@@ -15,21 +15,30 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   final List<Map<String, dynamic>> _onboardingData = [
     {
-      'color': Colors.blue.shade100,
+      'colors': [
+        const Color.fromARGB(255, 154, 212, 254),
+        const Color.fromARGB(255, 2, 132, 238),
+      ],
       'imagePath': 'assets/images/chat.png',
       'title': 'Build Trust Together',
       'description':
           'Build trust through clear communication. Connect directly with couriers and restaurants in real time to ensure your order goes smoothly.',
     },
     {
-      'color': Colors.pink.shade100,
+      'colors': [
+        const Color.fromRGBO(252, 228, 236, 1),
+        const Color.fromRGBO(244, 143, 177, 1),
+      ],
       'imagePath': 'assets/images/fast.png',
       'title': 'Fast Delivery',
       'description':
           'We prioritize speed without sacrificing security. Your order is delivered directly to its destination.',
     },
     {
-      'color': const Color.fromARGB(255, 1, 247, 255),
+      'colors': [
+        const Color.fromARGB(255, 255, 253, 210),
+        const Color.fromARGB(255, 217, 199, 0),
+      ],
       'imagePath': 'assets/images/pick.png',
       'title': 'Enjoy The Food',
       'description':
@@ -53,36 +62,23 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          PageView.builder(
-            controller: _pageController,
-            itemCount: _onboardingData.length,
-            onPageChanged: (int page) {
-              setState(() {
-                _currentPage = page;
-              });
-            },
-            itemBuilder: (context, index) {
-              return _buildOnboardingPage(
-                color: _onboardingData[index]['color'],
-                imagePath: _onboardingData[index]['imagePath'],
-                title: _onboardingData[index]['title'],
-                description: _onboardingData[index]['description'],
-                isLastPage: index == _onboardingData.length - 1,
-              );
-            },
-          ),
-          Positioned(
-            bottom: MediaQuery.of(context).size.height * 0.38,
-            left: 0,
-            right: 0,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: _buildPageIndicator(),
-            ),
-          ),
-        ],
+      body: PageView.builder(
+        controller: _pageController,
+        itemCount: _onboardingData.length,
+        onPageChanged: (int page) {
+          setState(() {
+            _currentPage = page;
+          });
+        },
+        itemBuilder: (context, index) {
+          return _buildOnboardingPage(
+            colors: _onboardingData[index]['colors'],
+            imagePath: _onboardingData[index]['imagePath'],
+            title: _onboardingData[index]['title'],
+            description: _onboardingData[index]['description'],
+            isLastPage: index == _onboardingData.length - 1,
+          );
+        },
       ),
     );
   }
@@ -109,14 +105,20 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   }
 
   Widget _buildOnboardingPage({
-    required Color color,
+    required List<Color> colors,
     required String imagePath,
     required String title,
     required String description,
     required bool isLastPage,
   }) {
     return Container(
-      color: color,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: colors,
+        ),
+      ),
       child: Column(
         children: [
           Expanded(
@@ -129,7 +131,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           Expanded(
             flex: 2,
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 30),
+              padding: const EdgeInsets.fromLTRB(40, 30, 40, 20),
               decoration: const BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.only(
@@ -142,6 +144,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 children: [
                   Text(
                     title,
+                    textAlign: TextAlign.center,
                     style: GoogleFonts.poppins(
                       fontSize: 26,
                       fontWeight: FontWeight.bold,
@@ -150,6 +153,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   const SizedBox(height: 16),
                   Text(
                     description,
+                    textAlign: TextAlign.center,
                     style: GoogleFonts.lato(
                       fontSize: 16,
                       color: Colors.grey.shade600,
@@ -157,7 +161,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     ),
                   ),
                   const Spacer(),
-
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -193,6 +196,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         ),
                       ),
                     ],
+                  ),
+                  const SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: _buildPageIndicator(),
                   ),
                 ],
               ),
