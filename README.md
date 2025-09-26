@@ -11,7 +11,7 @@
 
 | Nama | NIM | GitHub |
 |------|-----|--------|
-| **Jeremia Pinnywan Immanuel** | 535210095 | [@ChrisGit889](https://github.com/ChrisGit889) |
+| **Jeremia Pinnywan Immanuel** | 535210095 | [@Nikanzz](https://github.com/Nikanzz) |
 | **Annuel Galliano Bun** | 535240048 | [@NuelGB](https://github.com/NuelGB) |
 | **Christio Hermawan** | 535240050 | [@ChrisGit889](https://github.com/ChrisGit889) |
 | **Nicholas Zaneti Aulivier** | 535240054 | [@NicholasZanetiAulivier](https://github.com/NicholasZanetiAulivier) |

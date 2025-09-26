@@ -1,7 +1,45 @@
 import 'package:flutter/material.dart';
+import 'package:eatzy_food_delivery/widgets/category_cell.dart';
+import 'package:eatzy_food_delivery/widgets/restaurant_rows.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  int selectedCategoryIndex = 0;
+
+  List categories = [
+    {"name": "Pizza", "iconPath": "assets/images/pick.png"},
+    {"name": "Burger", "iconPath": "assets/images/pick.png"},
+    {"name": "Hotdog", "iconPath": "assets/images/pick.png"},
+    {"name": "Drink", "iconPath": "assets/images/pick.png"},
+    {"name": "Donut", "iconPath": "assets/images/pick.png"},
+  ];
+
+  List popularRestaurants = [
+    {
+      "name": "Pizza Hut",
+      "imagePath": "assets/images/pick.png",
+      "rating": 4.5,
+      "address": "123 Main St",
+    },
+    {
+      "name": "Burger King",
+      "imagePath": "assets/images/pick.png",
+      "rating": 4.0,
+      "address": "456 Elm St",
+    },
+    {
+      "name": "Subway",
+      "imagePath": "assets/images/pick.png",
+      "rating": 4.2,
+      "address": "789 Oak St",
+    },
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -53,6 +91,7 @@ class HomeScreen extends StatelessWidget {
               ],
             ),
 
+            // Deliver to Text
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: const Text(
@@ -63,6 +102,7 @@ class HomeScreen extends StatelessWidget {
 
             const SizedBox(height: 10),
 
+            // Location Row
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Row(
@@ -85,6 +125,7 @@ class HomeScreen extends StatelessWidget {
 
             const SizedBox(height: 20),
 
+            // Search Bar
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 20),
               decoration: BoxDecoration(
@@ -109,6 +150,58 @@ class HomeScreen extends StatelessWidget {
                     onPressed: () {},
                   ),
                 ),
+              ),
+            ),
+
+            const SizedBox(height: 15),
+
+            // Category List
+            SizedBox(
+              height: 200,
+              child: ListView.builder(
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                itemCount: categories.length,
+                scrollDirection: Axis.horizontal,
+                itemBuilder: (context, index) {
+                  final category = categories[index];
+                  return CategoryCell(
+                    categories: category,
+                    isSelected: index == selectedCategoryIndex,
+                    onPressed: () {
+                      setState(() {
+                        selectedCategoryIndex = index;
+                      });
+                    },
+                  );
+                },
+              ),
+            ),
+
+            const SizedBox(height: 20),
+
+            // Popular Section
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: const Text(
+                "Popular Restaurants",
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'Roboto',
+                ),
+              ),
+            ),
+            const SizedBox(height: 10),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Column(
+                children: popularRestaurants.map((restaurant) {
+                  return RestaurantRows(
+                    restaurant: restaurant,
+                    onPressed: () {
+                    },
+                  );
+                }).toList(),
               ),
             ),
           ],
