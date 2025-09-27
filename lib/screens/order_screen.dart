@@ -17,7 +17,7 @@ class _OrderScreenState extends State<OrderScreen>
     {
       "orderId": "#EAT6925",
       "date": "Sep 25, 2025",
-      "service": "Special Care Wash",
+      "service": "KFC",
       "items": "7 items • 2 loads",
       "delivery": "June 30, 2025",
       "status": "Pending",
@@ -26,7 +26,7 @@ class _OrderScreenState extends State<OrderScreen>
     {
       "orderId": "#FP78923",
       "date": "Sep 24, 2025",
-      "service": "Ironing Service",
+      "service": "Nasi Goreng Pak Dea",
       "items": "10 items • 3 loads",
       "delivery": "June 27, 2025",
       "status": "Completed",
@@ -35,7 +35,7 @@ class _OrderScreenState extends State<OrderScreen>
     {
       "orderId": "#FP78922",
       "date": "Sep 23n , 2025",
-      "service": "Dry Cleaning",
+      "service": "Ayam Bakar Manis",
       "items": "3 items • 1 load",
       "delivery": "June 25, 2025",
       "status": "Cancelled",
@@ -185,8 +185,7 @@ class _OrderScreenState extends State<OrderScreen>
                 ),
               ),
               Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
                   color: statusColor.withAlpha(50),
                   borderRadius: BorderRadius.circular(12),
@@ -226,8 +225,10 @@ class _OrderScreenState extends State<OrderScreen>
                         fontSize: 16,
                       ),
                     ),
-                    Text(order['items'],
-                        style: TextStyle(color: Colors.grey.shade600)),
+                    Text(
+                      order['items'],
+                      style: TextStyle(color: Colors.grey.shade600),
+                    ),
                     Text(
                       "Delivery • ${order['delivery']}",
                       style: TextStyle(color: Colors.grey.shade600),

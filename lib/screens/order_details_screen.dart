@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
+import 'chat_screen.dart';
 
 class OrderDetailsScreen extends StatefulWidget {
   const OrderDetailsScreen({super.key});
@@ -36,12 +37,18 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          icon: const Icon(
+            Icons.arrow_back,
+            color: Colors.black,
+          ), // Warna ikon diubah agar terlihat
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: const Text(
           "Order Details",
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(
+            color: Colors.black,
+            fontWeight: FontWeight.bold,
+          ), // Warna teks diubah
         ),
       ),
       body: Stack(
@@ -137,37 +144,16 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
             // Bagian Atas(Ikon dan Teks)
             Row(
               children: [
-                Container(
-                  width: 40,
-                  height: 40,
-                  decoration: const BoxDecoration(
-                    shape: BoxShape.circle,
-                    gradient: LinearGradient(
-                      colors: [
-                        Color.fromARGB(255, 237, 148, 4),
-                        Color(0xFF8E2DE2),
-                      ],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    ),
-                  ),
-                  child: const Center(
-                    child: Text(
-                      "G",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20,
-                      ),
-                    ),
-                  ),
+                const CircleAvatar(
+                  radius: 20,
+                  backgroundImage: AssetImage('assets/images/driver.png'),
                 ),
                 const SizedBox(width: 12),
                 const Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Budi MAN",
+                      "Budi is MAN", // Nama diubah sesuai permintaan sebelumnya
                       style: TextStyle(
                         color: Colors.black87,
                         fontWeight: FontWeight.bold,
@@ -188,38 +174,50 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
               children: [
                 // Tombol Chat
                 Expanded(
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 12,
-                      horizontal: 16,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(30),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.1),
-                          spreadRadius: 1,
-                          blurRadius: 5,
+                  child: InkWell(
+                    // <-- WIDGET INKWELL DITAMBAHKAN DI SINI
+                    onTap: () {
+                      // <-- AKSI ONTAP DITAMBAHKAN
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const ChatScreen(),
                         ),
-                      ],
-                    ),
-                    child: const Row(
-                      children: [
-                        Icon(
-                          Icons.chat_bubble_outline,
-                          color: Colors.black54,
-                          size: 20,
-                        ),
-                        SizedBox(width: 8),
-                        Text(
-                          "Chat with Support",
-                          style: TextStyle(
-                            color: Colors.black87,
-                            fontWeight: FontWeight.w500,
+                      );
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 12,
+                        horizontal: 16,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(30),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.1),
+                            spreadRadius: 1,
+                            blurRadius: 5,
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
+                      child: const Row(
+                        children: [
+                          Icon(
+                            Icons.chat_bubble_outline,
+                            color: Colors.black54,
+                            size: 20,
+                          ),
+                          SizedBox(width: 8),
+                          Text(
+                            "Chat with Driver",
+                            style: TextStyle(
+                              color: Colors.black87,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
