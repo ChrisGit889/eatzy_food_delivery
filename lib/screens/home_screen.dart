@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:eatzy_food_delivery/widgets/category_cell.dart';
 import 'package:eatzy_food_delivery/widgets/restaurant_rows.dart';
+import 'cart_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -39,15 +40,34 @@ class _HomeScreenState extends State<HomeScreen> {
       "rating": 4.2,
       "address": "789 Oak St",
     },
+    {
+      "name": "KFC",
+      "imagePath": "assets/images/pick.png",
+      "rating": 4.3,
+      "address": "101 Pine St",
+    },
+    {
+      "name": "Starbucks",
+      "imagePath": "assets/images/pick.png",
+      "rating": 4.6,
+      "address": "202 Maple St",
+    },
+    {
+      "name": "Domino's",
+      "imagePath": "assets/images/pick.png",
+      "rating": 4.4,
+      "address": "303 Birch St",
+    },
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
+      body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Top Screen Bar
             AppBar(
               backgroundColor: Colors.white,
               elevation: 0,
@@ -60,7 +80,13 @@ class _HomeScreenState extends State<HomeScreen> {
                   alignment: Alignment.topRight,
                   children: [
                     IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute<void>(
+                            builder: (context) => const CartScreen(),
+                          ),
+                        );
+                      },
                       icon: const Icon(
                         Icons.shopping_bag_outlined,
                         size: 30,
@@ -159,7 +185,10 @@ class _HomeScreenState extends State<HomeScreen> {
             SizedBox(
               height: 200,
               child: ListView.builder(
-                padding: const EdgeInsets.symmetric(vertical: 10),
+                padding: const EdgeInsets.symmetric(
+                  vertical: 10,
+                  horizontal: 10,
+                ),
                 itemCount: categories.length,
                 scrollDirection: Axis.horizontal,
                 itemBuilder: (context, index) {
@@ -198,8 +227,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: popularRestaurants.map((restaurant) {
                   return RestaurantRows(
                     restaurant: restaurant,
-                    onPressed: () {
-                    },
+                    onPressed: () {},
                   );
                 }).toList(),
               ),
