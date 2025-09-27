@@ -15,28 +15,28 @@ class _OrderScreenState extends State<OrderScreen>
 
   final List<Map<String, dynamic>> _allOrders = [
     {
-      "orderId": "#EAT6925",
+      "orderId": "#4782-FP78924",
       "date": "Sep 25, 2025",
       "service": "KFC",
-      "items": "7 items • 2 loads",
+      "items": "7 items",
       "delivery": "June 30, 2025",
       "status": "Pending",
       "steps": 3,
     },
     {
-      "orderId": "#FP78923",
+      "orderId": "#4782-FP78925",
       "date": "Sep 24, 2025",
       "service": "Nasi Goreng Pak Dea",
-      "items": "10 items • 3 loads",
+      "items": "2 items",
       "delivery": "June 27, 2025",
       "status": "Completed",
       "steps": 4,
     },
     {
-      "orderId": "#FP78922",
-      "date": "Sep 23n , 2025",
+      "orderId": "#4782-FP78926",
+      "date": "Sep 23, 2025",
       "service": "Ayam Bakar Manis",
-      "items": "3 items • 1 load",
+      "items": "3 items",
       "delivery": "June 25, 2025",
       "status": "Cancelled",
       "steps": 1,
@@ -209,9 +209,9 @@ class _OrderScreenState extends State<OrderScreen>
           Row(
             children: [
               const Icon(
-                Icons.local_laundry_service,
+                Icons.restaurant_menu,
                 size: 40,
-                color: Colors.black54,
+                color: Color.fromARGB(255, 255, 136, 0),
               ),
               const SizedBox(width: 12),
               Expanded(

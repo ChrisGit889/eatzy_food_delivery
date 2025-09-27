@@ -87,7 +87,7 @@ class _ChatScreenState extends State<ChatScreen> {
         margin: const EdgeInsets.symmetric(vertical: 4),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         decoration: BoxDecoration(
-          color: isMe ? const Color(0xFF6A1B9A) : Colors.white,
+          color: isMe ? const Color.fromARGB(255, 127, 91, 0) : Colors.white,
           borderRadius: BorderRadius.only(
             topLeft: const Radius.circular(20),
             topRight: const Radius.circular(20),
@@ -148,14 +148,19 @@ class _ChatScreenState extends State<ChatScreen> {
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(30),
-                    borderSide: const BorderSide(color: Color(0xFF6A1B9A)),
+                    borderSide: const BorderSide(
+                      color: Color.fromARGB(255, 255, 200, 0),
+                    ),
                   ),
                 ),
               ),
             ),
             const SizedBox(width: 8),
             IconButton(
-              icon: const Icon(Icons.send, color: Color(0xFF6A1B9A)),
+              icon: const Icon(
+                Icons.send,
+                color: Color.fromARGB(255, 255, 162, 0),
+              ),
               onPressed: () {
                 // Fungsi untuk mengirim pesan akan ditambahkan di sini
               },
