@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:eatzy_food_delivery/widgets/category_cell.dart';
 import 'package:eatzy_food_delivery/widgets/restaurant_rows.dart';
 import 'cart_screen.dart';
+import 'restaurant_detail_view.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -233,7 +234,15 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: popularRestaurants.map((restaurant) {
                   return RestaurantRows(
                     restaurant: restaurant,
-                    onPressed: () {},
+                    onPressed: () {
+                      // Handle restaurant tap
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => RestaurantDetailView(restaurant: restaurant),
+                        ),
+                      );
+                    },
                   );
                 }).toList(),
               ),
