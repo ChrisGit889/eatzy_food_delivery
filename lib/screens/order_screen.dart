@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'order_details_screen.dart'; // 1. IMPORT DITAMBAHKAN DI SINI
 
 class OrderScreen extends StatefulWidget {
   const OrderScreen({super.key});
@@ -10,10 +11,8 @@ class OrderScreen extends StatefulWidget {
 class _OrderScreenState extends State<OrderScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
-  // 1. Controller untuk mengelola input teks pada search bar
   final TextEditingController _searchController = TextEditingController();
 
-  // 2. Daftar untuk menyimpan semua data pesanan (data asli)
   final List<Map<String, dynamic>> _allOrders = [
     {
       "orderId": "#EAT6925",
@@ -44,31 +43,24 @@ class _OrderScreenState extends State<OrderScreen>
     },
   ];
 
-  // 3. Daftar untuk menampilkan pesanan yang sudah difilter
   late List<Map<String, dynamic>> _filteredOrders;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 4, vsync: this);
-
-    // Saat awal, daftar yang difilter berisi semua pesanan
     _filteredOrders = _allOrders;
-
-    // Menambahkan listener, sehingga fungsi _filterOrders akan terpanggil setiap kali ada perubahan teks
     _searchController.addListener(_filterOrders);
   }
 
   @override
   void dispose() {
-    // 4. Jangan lupa dispose controller untuk menghindari memory leaks
     _searchController.removeListener(_filterOrders);
     _searchController.dispose();
     _tabController.dispose();
     super.dispose();
   }
 
-  // 5. Fungsi utama untuk logika filtering
   void _filterOrders() {
     String query = _searchController.text.toLowerCase();
     setState(() {
@@ -94,7 +86,6 @@ class _OrderScreenState extends State<OrderScreen>
           preferredSize: const Size.fromHeight(120),
           child: Column(
             children: [
-              // Mengirim search controller ke widget _OrderSearchBar
               _OrderSearchBar(controller: _searchController),
               TabBar(
                 controller: _tabController,
@@ -118,21 +109,18 @@ class _OrderScreenState extends State<OrderScreen>
           ),
         ),
       ),
-      // NOTE: Logika TabBarView perlu disesuaikan agar bisa bekerja dengan filter
-      // Untuk saat ini, kita tampilkan hasil filter di semua tab
       body: TabBarView(
         controller: _tabController,
         children: [
-          buildOrderList(), // All
-          buildOrderList(), // Processing (perlu logika filter tambahan berdasarkan status)
-          buildOrderList(), // Completed (perlu logika filter tambahan berdasarkan status)
-          buildOrderList(), // Cancelled (perlu logika filter tambahan berdasarkan status)
+          buildOrderList(),
+          buildOrderList(),
+          buildOrderList(),
+          buildOrderList(),
         ],
       ),
     );
   }
 
-  // 6. Widget builder sekarang menggunakan _filteredOrders
   Widget buildOrderList() {
     if (_filteredOrders.isEmpty) {
       return const Center(
@@ -148,32 +136,19 @@ class _OrderScreenState extends State<OrderScreen>
       itemCount: _filteredOrders.length,
       itemBuilder: (context, index) {
         final order = _filteredOrders[index];
+        // 2. MENGIRIM DATA PESANAN KE WIDGET buildOrderCard
         return Padding(
           padding: const EdgeInsets.only(bottom: 16.0),
-          child: buildOrderCard(
-            orderId: order['orderId']!,
-            date: order['date']!,
-            service: order['service']!,
-            items: order['items']!,
-            delivery: order['delivery']!,
-            status: order['status']!,
-            steps: order['steps']!,
-          ),
+          child: buildOrderCard(order: order),
         );
       },
     );
   }
 
-  // Widget untuk UI card (tidak ada perubahan)
-  Widget buildOrderCard({
-    required String orderId,
-    required String date,
-    required String service,
-    required String items,
-    required String delivery,
-    required String status,
-    required int steps,
-  }) {
+  Widget buildOrderCard({required Map<String, dynamic> order}) {
+    final String status = order['status'];
+    final int steps = order['steps'];
+
     Color statusColor;
     if (status == "Completed") {
       statusColor = Colors.green;
@@ -203,14 +178,15 @@ class _OrderScreenState extends State<OrderScreen>
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                "Order $orderId",
+                "Order ${order['orderId']}",
                 style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 16,
                 ),
               ),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
                   color: statusColor.withAlpha(50),
                   borderRadius: BorderRadius.circular(12),
@@ -227,7 +203,7 @@ class _OrderScreenState extends State<OrderScreen>
           ),
           const SizedBox(height: 4),
           Text(
-            "Placed on $date",
+            "Placed on ${order['date']}",
             style: const TextStyle(color: Color.fromARGB(255, 106, 106, 106)),
           ),
           const SizedBox(height: 12),
@@ -244,22 +220,34 @@ class _OrderScreenState extends State<OrderScreen>
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      service,
+                      order['service'],
                       style: const TextStyle(
                         fontWeight: FontWeight.w600,
                         fontSize: 16,
                       ),
                     ),
-                    Text(items, style: TextStyle(color: Colors.grey.shade600)),
+                    Text(order['items'],
+                        style: TextStyle(color: Colors.grey.shade600)),
                     Text(
-                      "Delivery • $delivery",
+                      "Delivery • ${order['delivery']}",
                       style: TextStyle(color: Colors.grey.shade600),
                     ),
                   ],
                 ),
               ),
               OutlinedButton(
-                onPressed: () {},
+                // 3. BAGIAN INI YANG DIUBAH
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const OrderDetailsScreen(
+                        // Anda bisa mengirim data jika diperlukan, contoh:
+                        // orderData: order,
+                      ),
+                    ),
+                  );
+                },
                 style: OutlinedButton.styleFrom(
                   foregroundColor: const Color.fromARGB(255, 230, 144, 16),
                   side: const BorderSide(
@@ -316,7 +304,6 @@ class _OrderScreenState extends State<OrderScreen>
   }
 }
 
-// Widget untuk Search Bar (terpisah)
 class _OrderSearchBar extends StatelessWidget {
   final TextEditingController controller;
   const _OrderSearchBar({required this.controller});
@@ -339,7 +326,7 @@ class _OrderSearchBar extends StatelessWidget {
         ],
       ),
       child: TextField(
-        controller: controller, // Menggunakan controller dari state
+        controller: controller,
         decoration: InputDecoration(
           hintText: "Search by ID or name",
           border: InputBorder.none,
