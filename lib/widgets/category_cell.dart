@@ -18,7 +18,7 @@ class CategoryCell extends StatelessWidget {
       child: Container(
         width: 150,
         margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-        padding: const EdgeInsets.all(12.0),
+        padding: const EdgeInsets.all(5.0),
         decoration: BoxDecoration(
           color: isSelected ? Colors.orange : Colors.white,
           borderRadius: BorderRadius.circular(35),
@@ -35,16 +35,16 @@ class CategoryCell extends StatelessWidget {
           children: [
             Image.asset(
               categories['iconPath'],
-              width: 70,
-              height: 70,
+              width: 90,
+              height: 90,
               fit: BoxFit.contain,
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 8),
             Text(
               categories['name'],
               style: TextStyle(
                 color: isSelected ? Colors.white : Colors.black,
-                fontSize: 16,
+                fontSize: 18,
                 fontWeight: FontWeight.bold,
               ),
             ),

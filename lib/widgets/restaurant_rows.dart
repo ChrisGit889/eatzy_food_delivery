@@ -40,19 +40,24 @@ class RestaurantRows extends StatelessWidget {
                   const SizedBox(height: 8),
                   Row(
                     children: [
+                      Icon(Icons.location_on, color: Colors.grey, size: 16),
+                      const SizedBox(width: 4),
+                      Text(
+                        restaurant['address'].toString(),
+                        style: const TextStyle(color: Colors.grey),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      Icon(Icons.star, color: Colors.orange, size: 16),
+                      Icon(Icons.star, color: Colors.orange, size: 16),
+                      Icon(Icons.star, color: Colors.orange, size: 16),
                       Icon(Icons.star, color: Colors.orange, size: 16),
                       const SizedBox(width: 4),
                       Text('${restaurant['rating']}'),
-                      const SizedBox(width: 16),
-                      Icon(Icons.location_on, color: Colors.grey, size: 16),
-                      const SizedBox(width: 4),
-                      Expanded(
-                        child: Text(
-                          restaurant['address'],
-                          overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(color: Colors.grey),
-                        ),
-                      ),
+                      Text(' (${restaurant['reviews']} reviews)'),
                     ],
                   ),
                 ],
