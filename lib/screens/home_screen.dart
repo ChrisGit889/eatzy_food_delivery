@@ -3,6 +3,9 @@ import 'package:eatzy_food_delivery/widgets/category_cell.dart';
 import 'package:eatzy_food_delivery/widgets/restaurant_rows.dart';
 import 'cart_screen.dart';
 import 'restaurant_detail_view.dart';
+import 'package:provider/provider.dart';
+import 'package:eatzy_food_delivery/data/models/cart_model.dart';
+import 'package:eatzy_food_delivery/data/dummy/dummy_data.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -13,59 +16,8 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int selectedCategoryIndex = 0;
-
-  List categories = [
-    {"name": "Pizza", "iconPath": "assets/images/pick.png"},
-    {"name": "Burger", "iconPath": "assets/images/pick.png"},
-    {"name": "Hotdog", "iconPath": "assets/images/pick.png"},
-    {"name": "Drink", "iconPath": "assets/images/pick.png"},
-    {"name": "Donut", "iconPath": "assets/images/pick.png"},
-  ];
-
-  List popularRestaurants = [
-    {
-      "name": "Pizza Hut",
-      "imagePath": "assets/images/pick.png",
-      "rating": 4.5,
-      "reviews": 200,
-      "address": "123 Main St",
-    },
-    {
-      "name": "Burger King",
-      "imagePath": "assets/images/pick.png",
-      "rating": 4.0,
-      "reviews": 120,
-      "address": "456 Elm St",
-    },
-    {
-      "name": "Subway",
-      "imagePath": "assets/images/pick.png",
-      "rating": 4.2,
-      "reviews": 150,
-      "address": "789 Oak St",
-    },
-    {
-      "name": "KFC",
-      "imagePath": "assets/images/pick.png",
-      "rating": 4.3,
-      "reviews": 180,
-      "address": "101 Pine St",
-    },
-    {
-      "name": "Starbucks",
-      "imagePath": "assets/images/pick.png",
-      "rating": 4.6,
-      "reviews": 250,
-      "address": "202 Maple St",
-    },
-    {
-      "name": "Domino's",
-      "imagePath": "assets/images/pick.png",
-      "rating": 4.4,
-      "reviews": 70,
-      "address": "303 Birch St",
-    },
-  ];
+  List categories = DummyData().categories;
+  List popularRestaurants = DummyData().popularRestaurants;
 
   @override
   Widget build(BuildContext context) {
@@ -83,43 +35,51 @@ class _HomeScreenState extends State<HomeScreen> {
                 icon: const Icon(Icons.sort, size: 30, color: Colors.black),
               ),
               actions: [
-                Stack(
-                  alignment: Alignment.topRight,
-                  children: [
-                    IconButton(
-                      onPressed: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute<void>(
-                            builder: (context) => const CartScreen(),
+                Consumer<CartModel>(
+                  builder: (context, cart, child) {
+                    return Stack(
+                      alignment: Alignment.topRight,
+                      children: [
+                        IconButton(
+                          onPressed: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute<void>(
+                                builder: (context) => const CartScreen(),
+                              ),
+                            );
+                          },
+                          icon: const Icon(
+                            Icons.shopping_bag_outlined,
+                            size: 30,
+                            color: Colors.black,
                           ),
-                        );
-                      },
-                      icon: const Icon(
-                        Icons.shopping_bag_outlined,
-                        size: 30,
-                        color: Colors.black,
-                      ),
-                    ),
-                    Positioned(
-                      right: 0,
-                      child: Container(
-                        padding: const EdgeInsets.all(2),
-                        decoration: BoxDecoration(
-                          color: Colors.red,
-                          borderRadius: BorderRadius.circular(6),
                         ),
-                        constraints: const BoxConstraints(
-                          minWidth: 12,
-                          minHeight: 12,
-                        ),
-                        child: const Text(
-                          '3',
-                          style: TextStyle(color: Colors.white, fontSize: 10),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    ),
-                  ],
+                        if (!cart.isEmpty)
+                          Positioned(
+                            right: 0,
+                            child: Container(
+                              padding: const EdgeInsets.all(2),
+                              decoration: BoxDecoration(
+                                color: Colors.red,
+                                borderRadius: BorderRadius.circular(6),
+                              ),
+                              constraints: const BoxConstraints(
+                                minWidth: 12,
+                                minHeight: 12,
+                              ),
+                              child: Text(
+                                '${cart.items.length}',
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 10,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ),
+                      ],
+                    );
+                  },
                 ),
               ],
             ),
@@ -239,7 +199,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => RestaurantDetailView(restaurant: restaurant),
+                          builder: (context) =>
+                              RestaurantDetailView(restaurant: restaurant),
                         ),
                       );
                     },
