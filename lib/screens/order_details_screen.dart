@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
+import 'chat_screen.dart';
+import 'call_screen.dart';
 
 class OrderDetailsScreen extends StatefulWidget {
   const OrderDetailsScreen({super.key});
@@ -36,17 +38,24 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          icon: const Icon(
+            Icons.arrow_back,
+            color: Color.fromARGB(255, 255, 255, 255),
+          ),
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: const Text(
           "Order Details",
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(
+            color: Color.fromARGB(255, 255, 255, 255),
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
       body: Stack(
         children: [
           Container(
+            height: 270,
             decoration: const BoxDecoration(
               gradient: LinearGradient(
                 colors: [
@@ -64,10 +73,14 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                 buildSupportCard(),
                 Expanded(
                   child: Container(
-                    padding: const EdgeInsets.all(20),
+                    padding: const EdgeInsets.fromLTRB(
+                      20,
+                      20,
+                      20,
+                      0,
+                    ),
                     margin: const EdgeInsets.only(top: 10),
                     decoration: const BoxDecoration(
-                      color: Colors.white,
                       borderRadius: BorderRadius.vertical(
                         top: Radius.circular(30),
                       ),
@@ -99,20 +112,31 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                           const SizedBox(height: 20),
                           buildLocationInfo(
                             "Pick-Up Point",
-                            "49 Featherstone Street, EC1Y 8SY, UK.",
-                            Icons.location_on,
+                            "KFC, Jl. Raya Lenteng Agung No. 25",
+                            Icons.storefront,
                           ),
                           buildLocationInfo(
                             "Delivery Point",
                             "2/4-Brucfield Street, EC1Y 8, London.",
                             Icons.flag,
                           ),
-                          const SizedBox(height: 30),
-                          buildCancelButton(),
+                          const Divider(height: 30),
+                          buildItemDetails(),
+                          const Divider(height: 30),
+                          buildPaymentSummary(),
+                          const Divider(height: 30),
+                          buildOrderInfo(),
+                          const SizedBox(
+                            height: 20,
+                          ),
                         ],
                       ),
                     ),
                   ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 10, 20, 20),
+                  child: buildCancelButton(),
                 ),
               ],
             ),
@@ -130,44 +154,21 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
         decoration: BoxDecoration(
           color: Colors.white.withOpacity(0.9),
           borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: Colors.white.withOpacity(0.5)),
         ),
         child: Column(
           children: [
-            // Bagian Atas(Ikon dan Teks)
             Row(
               children: [
-                Container(
-                  width: 40,
-                  height: 40,
-                  decoration: const BoxDecoration(
-                    shape: BoxShape.circle,
-                    gradient: LinearGradient(
-                      colors: [
-                        Color.fromARGB(255, 237, 148, 4),
-                        Color(0xFF8E2DE2),
-                      ],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    ),
-                  ),
-                  child: const Center(
-                    child: Text(
-                      "G",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20,
-                      ),
-                    ),
-                  ),
+                const CircleAvatar(
+                  radius: 20,
+                  backgroundImage: AssetImage('assets/images/driver.png'),
                 ),
                 const SizedBox(width: 12),
                 const Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Budi MAN",
+                      "Budi is MAN",
                       style: TextStyle(
                         color: Colors.black87,
                         fontWeight: FontWeight.bold,
@@ -183,19 +184,70 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
               ],
             ),
             const SizedBox(height: 12),
-            // Bagian Bawah (Tombol Chat & Telepon)
             Row(
               children: [
-                // Tombol Chat
                 Expanded(
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 12,
-                      horizontal: 16,
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const ChatScreen(),
+                        ),
+                      );
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 12,
+                        horizontal: 16,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(30),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.1),
+                            spreadRadius: 1,
+                            blurRadius: 5,
+                          ),
+                        ],
+                      ),
+                      child: const Row(
+                        children: [
+                          Icon(
+                            Icons.chat_bubble_outline,
+                            color: Colors.black54,
+                            size: 20,
+                          ),
+                          SizedBox(width: 8),
+                          Text(
+                            "Chat with Driver",
+                            style: TextStyle(
+                              color: Colors.black87,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const CallScreen(),
+                      ),
+                    );
+                  },
+                  borderRadius: BorderRadius.circular(30),
+                  child: Container(
+                    padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
                       color: Colors.white,
-                      borderRadius: BorderRadius.circular(30),
+                      shape: BoxShape.circle,
                       boxShadow: [
                         BoxShadow(
                           color: Colors.grey.withOpacity(0.1),
@@ -204,41 +256,11 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                         ),
                       ],
                     ),
-                    child: const Row(
-                      children: [
-                        Icon(
-                          Icons.chat_bubble_outline,
-                          color: Colors.black54,
-                          size: 20,
-                        ),
-                        SizedBox(width: 8),
-                        Text(
-                          "Chat with Support",
-                          style: TextStyle(
-                            color: Colors.black87,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ],
+                    child: const Icon(
+                      Icons.call_outlined,
+                      color: Colors.black54,
                     ),
                   ),
-                ),
-                const SizedBox(width: 8),
-                // Tombol Telepon (Ukuran tetap)
-                Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.1),
-                        spreadRadius: 1,
-                        blurRadius: 5,
-                      ),
-                    ],
-                  ),
-                  child: const Icon(Icons.call_outlined, color: Colors.black54),
                 ),
               ],
             ),
@@ -272,25 +294,59 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
     ],
   );
 
-  Widget buildTrackerTimeline() => const Row(
-    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    children: [
-      Text(
-        "Picked",
-        style: TextStyle(color: Colors.purple, fontWeight: FontWeight.bold),
+  Widget _buildStep(String label, bool isCompleted) {
+    final color = isCompleted ? Colors.green : Colors.grey;
+    return Column(
+      children: [
+        Icon(
+          isCompleted ? Icons.check_circle : Icons.radio_button_unchecked,
+          color: color,
+        ),
+        const SizedBox(height: 8),
+        Text(
+          label,
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontSize: 12,
+            color: isCompleted ? Colors.black87 : Colors.grey,
+          ),
+        ),
+      ],
+    );
+  }
+  
+  Widget _buildLine(bool isCompleted) {
+    return Expanded(
+      child: Divider(
+        color: isCompleted ? Colors.green : Colors.grey,
+        thickness: 2,
       ),
-      Text("Washing", style: TextStyle(color: Colors.grey)),
-      Text("Out for delivery", style: TextStyle(color: Colors.grey)),
-      Text("Delivered", style: TextStyle(color: Colors.grey)),
-    ],
-  );
+    );
+  }
+
+  Widget buildTrackerTimeline() {
+    int currentStep = 3;
+
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(child: _buildStep("Order", currentStep >= 1)),
+        _buildLine(currentStep > 1),
+        Expanded(child: _buildStep("Cooking", currentStep >= 2)),
+        _buildLine(currentStep > 2),
+        Expanded(child: _buildStep("Delivered", currentStep >= 3)),
+        _buildLine(currentStep > 3),
+        Expanded(child: _buildStep("Finished", currentStep >= 4)),
+      ],
+    );
+  }
 
   Widget buildLocationInfo(String title, String address, IconData icon) =>
       Padding(
         padding: const EdgeInsets.only(bottom: 15.0),
         child: Row(
           children: [
-            Icon(icon, color: Colors.purple),
+            Icon(icon, color: const Color.fromARGB(255, 255, 162, 0)),
             const SizedBox(width: 15),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -306,17 +362,119 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
         ),
       );
 
+  Widget buildItemDetails() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          "Detail Item",
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 10),
+        _buildItemRow("1x", "Super Big Package 1", "Rp 35.500"),
+        _buildItemRow("2x", "Cream Soup", "Rp 14.000"),
+        _buildItemRow("1x", "French Fries (Large)", "Rp 22.000"),
+      ],
+    );
+  }
+
+  Widget _buildItemRow(String qty, String name, String price) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      child: Row(
+        children: [
+          Text(qty, style: const TextStyle(color: Colors.black54)),
+          const SizedBox(width: 8),
+          Expanded(child: Text(name)),
+          Text(price),
+        ],
+      ),
+    );
+  }
+
+  Widget buildPaymentSummary() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          "Payment Details",
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 10),
+        _buildPaymentRow("Subtotal", "Rp 71.500"),
+        _buildPaymentRow("Delivery Fee", "Rp 16.000"),
+        const SizedBox(height: 8),
+        const Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              "Total",
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            ),
+            Text(
+              "Rp 87.500",
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildPaymentRow(String title, String amount) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(title, style: const TextStyle(color: Colors.black54)),
+          Text(amount),
+        ],
+      ),
+    );
+  }
+
+  Widget buildOrderInfo() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          "Order Info",
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 10),
+        _buildInfoRow("Order No.", "#4782-FP78924"),
+        _buildInfoRow("Payment Methods", "Eatpay"),
+        _buildInfoRow("Note", "Sausnya tolong dibanyakin ya, terima kasih."),
+      ],
+    );
+  }
+
+  Widget _buildInfoRow(String title, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(title, style: const TextStyle(color: Colors.black54)),
+          const SizedBox(width: 16),
+          Flexible(child: Text(value, textAlign: TextAlign.end)),
+        ],
+      ),
+    );
+  }
+
   Widget buildCancelButton() => SizedBox(
     width: double.infinity,
     child: ElevatedButton(
       onPressed: () {},
       style: ElevatedButton.styleFrom(
-        backgroundColor: const Color(0xFF6A1B9A),
+        backgroundColor: const Color.fromARGB(255, 255, 153, 0),
         padding: const EdgeInsets.symmetric(vertical: 16),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
       ),
       child: const Text(
-        "CANCEL ORDER",
+        "FINISH ORDER",
         style: TextStyle(color: Colors.white, fontSize: 16),
       ),
     ),

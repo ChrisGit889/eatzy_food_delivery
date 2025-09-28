@@ -15,28 +15,28 @@ class _OrderScreenState extends State<OrderScreen>
 
   final List<Map<String, dynamic>> _allOrders = [
     {
-      "orderId": "#EAT6925",
+      "orderId": "#4782-FP78924",
       "date": "Sep 25, 2025",
-      "service": "Special Care Wash",
-      "items": "7 items • 2 loads",
+      "service": "KFC",
+      "items": "7 items",
       "delivery": "June 30, 2025",
       "status": "Pending",
       "steps": 3,
     },
     {
-      "orderId": "#FP78923",
+      "orderId": "#4782-FP78925",
       "date": "Sep 24, 2025",
-      "service": "Ironing Service",
-      "items": "10 items • 3 loads",
+      "service": "Nasi Goreng Pak Dea",
+      "items": "2 items",
       "delivery": "June 27, 2025",
       "status": "Completed",
       "steps": 4,
     },
     {
-      "orderId": "#FP78922",
-      "date": "Sep 23n , 2025",
-      "service": "Dry Cleaning",
-      "items": "3 items • 1 load",
+      "orderId": "#4782-FP78926",
+      "date": "Sep 23, 2025",
+      "service": "Ayam Bakar Manis",
+      "items": "3 items",
       "delivery": "June 25, 2025",
       "status": "Cancelled",
       "steps": 1,
@@ -185,8 +185,7 @@ class _OrderScreenState extends State<OrderScreen>
                 ),
               ),
               Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
                   color: statusColor.withAlpha(50),
                   borderRadius: BorderRadius.circular(12),
@@ -210,9 +209,9 @@ class _OrderScreenState extends State<OrderScreen>
           Row(
             children: [
               const Icon(
-                Icons.local_laundry_service,
+                Icons.restaurant_menu,
                 size: 40,
-                color: Colors.black54,
+                color: Color.fromARGB(255, 255, 136, 0),
               ),
               const SizedBox(width: 12),
               Expanded(
@@ -226,8 +225,10 @@ class _OrderScreenState extends State<OrderScreen>
                         fontSize: 16,
                       ),
                     ),
-                    Text(order['items'],
-                        style: TextStyle(color: Colors.grey.shade600)),
+                    Text(
+                      order['items'],
+                      style: TextStyle(color: Colors.grey.shade600),
+                    ),
                     Text(
                       "Delivery • ${order['delivery']}",
                       style: TextStyle(color: Colors.grey.shade600),
