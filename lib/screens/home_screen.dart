@@ -6,6 +6,7 @@ import 'restaurant_detail_view.dart';
 import 'package:provider/provider.dart';
 import 'package:eatzy_food_delivery/data/models/cart_model.dart';
 import 'package:eatzy_food_delivery/data/dummy/dummy_data.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -18,6 +19,11 @@ class _HomeScreenState extends State<HomeScreen> {
   int selectedCategoryIndex = 0;
   List categories = DummyData().categories;
   List popularRestaurants = DummyData().popularRestaurants;
+  List banner = [
+    'assets/images/promo_banner_2.jpg',
+    'assets/images/promo_banner_2.jpg',
+    'assets/images/promo_banner_2.jpg',
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -146,7 +152,31 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
 
+            // Promo Banner (Carousel)
             const SizedBox(height: 15),
+            CarouselSlider(
+              options: CarouselOptions(
+                height: 150.0,
+                autoPlay: true,
+                autoPlayInterval: Duration(seconds: 3),
+                enlargeCenterPage: true,
+              ),
+              items: banner.map((i) {
+                return Builder(
+                  builder: (BuildContext context) {
+                    return Container(
+                      width: MediaQuery.of(context).size.width,
+                      margin: const EdgeInsets.symmetric(horizontal: 5.0),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: Image.asset(i, fit: BoxFit.cover),
+                      ),
+                    );
+                  },
+                );
+              }).toList(),
+            ),
+            const SizedBox(height: 10),
 
             // Category List
             SizedBox(
@@ -188,26 +218,138 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             const SizedBox(height: 10),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Column(
-                children: popularRestaurants.map((restaurant) {
-                  return RestaurantRows(
-                    restaurant: restaurant,
-                    onPressed: () {
-                      // Handle restaurant tap
+            SizedBox(
+              height: 220,
+              width: MediaQuery.of(context).size.width,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                shrinkWrap: true,
+                itemCount: popularRestaurants.length,
+                itemBuilder: (context, index) {
+                  return InkWell(
+                    onTap: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) =>
-                              RestaurantDetailView(restaurant: restaurant),
+                          builder: (context) => RestaurantDetailView(
+                            restaurant: popularRestaurants[index],
+                          ),
                         ),
                       );
                     },
+                    child: Container(
+                      margin: const EdgeInsets.only(
+                        left: 20,
+                        right: 10,
+                        bottom: 10,
+                      ),
+                      width: MediaQuery.of(context).size.width / 2,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black12,
+                            blurRadius: 4,
+                            spreadRadius: 2,
+                          ),
+                        ],
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          ClipRRect(
+                            borderRadius: const BorderRadius.only(
+                              topLeft: Radius.circular(10),
+                              topRight: Radius.circular(10),
+                            ),
+                            child: Image.asset(
+                              popularRestaurants[index]['imagePath'],
+                              height: 120,
+                              width: MediaQuery.of(context).size.width / 2,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(
+                              left: 10,
+                              right: 10,
+                              bottom: 10,
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      popularRestaurants[index]['name'],
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 5),
+                                    Text(
+                                      popularRestaurants[index]['address'],
+                                      style: const TextStyle(
+                                        fontSize: 12,
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 5),
+                                    Row(
+                                      children: [
+                                        const Icon(
+                                          Icons.star,
+                                          color: Colors.orange,
+                                          size: 14,
+                                        ),
+                                        const SizedBox(width: 5),
+                                        Text(
+                                          popularRestaurants[index]['rating']
+                                              .toString(),
+                                          style: const TextStyle(fontSize: 12),
+                                        ),
+                                        const SizedBox(width: 5),
+                                        Text(
+                                          '(${popularRestaurants[index]['reviews']} reviews)',
+                                          style: const TextStyle(fontSize: 12),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   );
-                }).toList(),
+                },
               ),
             ),
+            // Container(
+            //   padding: const EdgeInsets.symmetric(horizontal: 20),
+            //   child: Column(
+            //     children: popularRestaurants.map((restaurant) {
+            //       return RestaurantRows(
+            //         restaurant: restaurant,
+            //         onPressed: () {
+            //           // Handle restaurant tap
+            //           Navigator.push(
+            //             context,
+            //             MaterialPageRoute(
+            //               builder: (context) =>
+            //                   RestaurantDetailView(restaurant: restaurant),
+            //             ),
+            //           );
+            //         },
+            //       );
+            //     }).toList(),
+            //   ),
+            // ),
           ],
         ),
       ),

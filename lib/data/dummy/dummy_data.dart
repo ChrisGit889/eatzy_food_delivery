@@ -16,17 +16,17 @@ class DummyData {
   ];
 
   List categories = [
-    {"name": "Pizza", "iconPath": "assets/images/pick.png"},
-    {"name": "Burger", "iconPath": "assets/images/pick.png"},
-    {"name": "Hotdog", "iconPath": "assets/images/pick.png"},
-    {"name": "Drink", "iconPath": "assets/images/pick.png"},
-    {"name": "Donut", "iconPath": "assets/images/pick.png"},
+    {"name": "Pizza", "iconPath": "assets/images/Pizza.png"},
+    {"name": "Burger", "iconPath": "assets/images/Burger.png"},
+    {"name": "Snacks", "iconPath": "assets/images/Snacks.png"},
+    {"name": "Drink", "iconPath": "assets/images/Water.png"},
+    {"name": "Donut", "iconPath": "assets/images/Donut.png"},
   ];
 
   List popularRestaurants = [
     {
       "name": "Pizza Hut",
-      "imagePath": "assets/images/pick.png",
+      "imagePath": "assets/images/Pizza-hut.png",
       "rating": 4.5,
       "reviews": 200,
       "address": "123 Main St",
@@ -62,7 +62,7 @@ class DummyData {
     },
     {
       "name": "Burger King",
-      "imagePath": "assets/images/pick.png",
+      "imagePath": "assets/images/Burger-king.png",
       "rating": 4.0,
       "reviews": 120,
       "address": "456 Elm St",
@@ -101,7 +101,7 @@ class DummyData {
     },
     {
       "name": "Subway",
-      "imagePath": "assets/images/pick.png",
+      "imagePath": "assets/images/Subway.png",
       "rating": 4.2,
       "reviews": 150,
       "address": "789 Oak St",
@@ -138,7 +138,7 @@ class DummyData {
     },
     {
       "name": "KFC",
-      "imagePath": "assets/images/pick.png",
+      "imagePath": "assets/images/Kfc.png",
       "rating": 4.3,
       "reviews": 180,
       "address": "101 Pine St",
@@ -176,7 +176,7 @@ class DummyData {
     },
     {
       "name": "Starbucks",
-      "imagePath": "assets/images/pick.png",
+      "imagePath": "assets/images/Starbucks.png",
       "rating": 4.6,
       "reviews": 250,
       "address": "202 Maple St",
@@ -214,7 +214,7 @@ class DummyData {
     },
     {
       "name": "Domino's",
-      "imagePath": "assets/images/pick.png",
+      "imagePath": "assets/images/Dominos-pizza.png",
       "rating": 4.4,
       "reviews": 70,
       "address": "303 Birch St",
