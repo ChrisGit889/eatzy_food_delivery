@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:eatzy_food_delivery/data/models/cart_model.dart';
-import 'cart_screen.dart';
+import '../cart/cart_screen.dart';
 
 class RestaurantDetailView extends StatefulWidget {
   final Map restaurant;

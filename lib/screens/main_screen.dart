@@ -1,11 +1,11 @@
 import 'package:eatzy_food_delivery/constants.dart';
 import 'package:eatzy_food_delivery/widgets/bottom_nav.dart';
 import 'package:flutter/material.dart';
-import 'home_screen.dart';
-import 'order_screen.dart';
-import 'history_screen.dart';
-import 'favorite_screen.dart';
-import 'profile_screen.dart';
+import 'home/home_screen.dart';
+import 'order/order_screen.dart';
+import 'history/history_screen.dart';
+import 'favorite/favorite_screen.dart';
+import 'profile/profile_screen.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
