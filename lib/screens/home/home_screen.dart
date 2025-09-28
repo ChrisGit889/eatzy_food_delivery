@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:eatzy_food_delivery/widgets/category_cell.dart';
-import 'package:eatzy_food_delivery/widgets/restaurant_rows.dart';
-import 'cart_screen.dart';
-import 'restaurant_detail_view.dart';
+import '../cart/cart_screen.dart';
+import '../restaurant/restaurant_detail_view.dart';
 import 'package:provider/provider.dart';
 import 'package:eatzy_food_delivery/data/models/cart_model.dart';
 import 'package:eatzy_food_delivery/data/dummy/dummy_data.dart';
@@ -330,26 +329,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 },
               ),
             ),
-            // Container(
-            //   padding: const EdgeInsets.symmetric(horizontal: 20),
-            //   child: Column(
-            //     children: popularRestaurants.map((restaurant) {
-            //       return RestaurantRows(
-            //         restaurant: restaurant,
-            //         onPressed: () {
-            //           // Handle restaurant tap
-            //           Navigator.push(
-            //             context,
-            //             MaterialPageRoute(
-            //               builder: (context) =>
-            //                   RestaurantDetailView(restaurant: restaurant),
-            //             ),
-            //           );
-            //         },
-            //       );
-            //     }).toList(),
-            //   ),
-            // ),
           ],
         ),
       ),

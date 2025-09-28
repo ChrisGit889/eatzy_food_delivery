@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'login_screen.dart';
+import '../auth/login_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class OnboardingScreen extends StatefulWidget {

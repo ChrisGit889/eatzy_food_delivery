@@ -1,5 +1,5 @@
 import 'package:eatzy_food_delivery/constants.dart';
-import 'package:eatzy_food_delivery/screens/seller_add_food.dart';
+import 'package:eatzy_food_delivery/screens/seller/seller_add_food.dart';
 import 'package:flutter/material.dart';
 
 class SellerDashboard extends StatefulWidget {

@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eatzy_food_delivery/constants.dart';
-import 'package:eatzy_food_delivery/screens/seller_screen.dart';
+import 'package:eatzy_food_delivery/screens/seller/seller_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
