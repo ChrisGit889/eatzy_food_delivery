@@ -17,8 +17,9 @@ dependencies:
   firebase_auth: ^6.0.2
   provider: ^6.1.5+1
   google_sign_in: ^6.3.0
-  google_fonts: ^6.2.1
+  google_fonts: ^6.2.1 
   video_player: ^2.8.6
+  shared_preferences: ^2.3.2
   
 dev_dependencies:
   flutter_launcher_icons: ^0.13.1

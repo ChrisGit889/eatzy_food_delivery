@@ -4,6 +4,8 @@ import 'package:eatzy_food_delivery/screens/auth_gate.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'screens/onboarding_screen.dart';
+import 'package:provider/provider.dart';
+import 'data/models/cart_model.dart';
 
 void main() async {
   //Init Firebase
@@ -17,15 +19,22 @@ class EatzyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Eatzy',
-      theme: ThemeData(
-        brightness: Brightness.light,
-        scaffoldBackgroundColor: Colors.white,
-        primaryColor: EATZY_ORANGE,
+    return ChangeNotifierProvider(
+      create: (context) {
+        CartModel cartModel = CartModel();
+        cartModel.loadCartFromPrefs();
+        return cartModel;
+      },
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Eatzy',
+        theme: ThemeData(
+          brightness: Brightness.light,
+          scaffoldBackgroundColor: Colors.white,
+          primaryColor: EATZY_ORANGE,
+        ),
+        home: const OnboardingScreen(),
       ),
-      home: const OnboardingScreen(),
     );
   }
 }
