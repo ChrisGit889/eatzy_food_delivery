@@ -224,7 +224,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                             ),
                           ),
                           Text(
-                            '\$2',
+                            '\$0',
                             style: TextStyle(
                               color: primaryText,
                               fontSize: 13,
@@ -256,6 +256,30 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                           ),
                         ],
                       ),
+                      const SizedBox(height: 8),
+                      Divider(),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "Total",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: primaryText,
+                              fontSize: 13,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          Text(
+                            '\$${cart.totalPrice.toStringAsFixed(2)}',
+                            style: TextStyle(
+                              color: primaryText,
+                              fontSize: 15,
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
+                        ],
+                      ),
                     ],
                   ),
                 ),
@@ -269,6 +293,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 ),
                 child: InkWell(
                   onTap: () {},
+                  borderRadius: BorderRadius.circular(28),
                   child: Container(
                     height: 60,
                     alignment: Alignment.center,

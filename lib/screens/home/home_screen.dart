@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:eatzy_food_delivery/data/models/cart_model.dart';
 import 'package:eatzy_food_delivery/data/dummy/dummy_data.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:eatzy_food_delivery/screens/cart/change_address_view.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -114,8 +115,23 @@ class _HomeScreenState extends State<HomeScreen> {
                   const SizedBox(width: 10),
 
                   const Text(
-                    "Deliver to",
+                    '123 Main Street. Bekasi, Indonesia',
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+
+                  IconButton(
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute<void>(
+                          builder: (context) => const ChangeAddressView(),
+                        ),
+                      );
+                    },
+                    icon: Icon(
+                      Icons.arrow_drop_down,
+                      size: 30,
+                      color: Colors.black,
+                    ),
                   ),
                 ],
               ),
