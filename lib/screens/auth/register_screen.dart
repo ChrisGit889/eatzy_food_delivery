@@ -158,7 +158,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 );
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (_) => AuthGate()),
+                  MaterialPageRoute(
+                    builder: (_) => AuthGate(whereToGo: LoginScreen()),
+                  ),
                 );
               } on FirebaseException catch (e) {
                 if (e.code == 'weak-password') {

@@ -1,4 +1,5 @@
 import 'package:eatzy_food_delivery/screens/auth/auth_gate.dart';
+import 'package:eatzy_food_delivery/screens/auth/login_screen.dart';
 import 'package:eatzy_food_delivery/screens/seller/seller_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -51,7 +52,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           // ignore: use_build_context_synchronously
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const AuthGate(),
+                            builder: (context) =>
+                                const AuthGate(whereToGo: LoginScreen()),
                           ),
                         );
                       } catch (e) {
