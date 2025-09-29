@@ -1,7 +1,5 @@
-import 'package:eatzy_food_delivery/constants.dart';
 import 'package:eatzy_food_delivery/screens/auth/auth_gate.dart';
 import 'package:eatzy_food_delivery/screens/auth/login_screen.dart';
-import 'package:eatzy_food_delivery/screens/main_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

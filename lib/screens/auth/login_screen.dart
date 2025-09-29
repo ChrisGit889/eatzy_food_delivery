@@ -1,7 +1,4 @@
-import 'dart:async';
-import 'package:eatzy_food_delivery/constants.dart';
 import 'package:eatzy_food_delivery/screens/main_screen.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'register_screen.dart';
 
