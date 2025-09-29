@@ -4,6 +4,7 @@ import 'change_address_view.dart';
 import 'package:eatzy_food_delivery/data/dummy/dummy_data.dart';
 import 'package:provider/provider.dart';
 import 'package:eatzy_food_delivery/data/models/cart_model.dart';
+import 'checkout_message_screen.dart';
 
 class CheckoutScreen extends StatefulWidget {
   const CheckoutScreen({super.key});
@@ -286,28 +287,42 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               ),
 
               // Send Order Button
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 20,
-                  vertical: 25,
-                ),
-                child: InkWell(
-                  onTap: () {},
-                  borderRadius: BorderRadius.circular(28),
-                  child: Container(
-                    height: 60,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      border: Border.all(color: EATZY_ORANGE, width: 1),
-                      color: EATZY_ORANGE,
-                      borderRadius: BorderRadius.circular(28),
-                    ),
-                    child: Text(
-                      'Send Order',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w800,
+              Consumer<CartModel>(
+                builder: (context, cart, child) => Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 25,
+                  ),
+                  child: InkWell(
+                    onTap: () {
+                      cart.clearCart();
+                      showModalBottomSheet(
+                        context: context,
+                        backgroundColor: Colors.transparent,
+                        isScrollControlled: true,
+                        isDismissible: false,
+                        enableDrag: false,
+                        builder: (BuildContext context) {
+                          return CheckoutMessageScreen();
+                        },
+                      );
+                    },
+                    borderRadius: BorderRadius.circular(28),
+                    child: Container(
+                      height: 60,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        border: Border.all(color: EATZY_ORANGE, width: 1),
+                        color: EATZY_ORANGE,
+                        borderRadius: BorderRadius.circular(28),
+                      ),
+                      child: Text(
+                        'Send Order',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w800,
+                        ),
                       ),
                     ),
                   ),

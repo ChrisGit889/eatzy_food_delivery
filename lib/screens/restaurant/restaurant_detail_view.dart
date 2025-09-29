@@ -23,7 +23,7 @@ class _RestaurantDetailViewState extends State<RestaurantDetailView> {
             pinned: true,
             flexibleSpace: FlexibleSpaceBar(
               background: Image.asset(
-                'assets/images/pick.png',
+                widget.restaurant['imagePath'],
                 fit: BoxFit.cover,
               ),
             ),
@@ -208,7 +208,9 @@ class _RestaurantDetailViewState extends State<RestaurantDetailView> {
                                         color: Colors.white,
                                       ),
                                       SizedBox(width: 8),
-                                      Text('Dish ${index + 1} added to cart'),
+                                      Text(
+                                        '${widget.restaurant['menus'][index]['name']} added to cart',
+                                      ),
                                     ],
                                   ),
                                   duration: Duration(seconds: 2),
@@ -216,7 +218,12 @@ class _RestaurantDetailViewState extends State<RestaurantDetailView> {
                                     label: 'View Cart',
                                     textColor: Colors.orange,
                                     onPressed: () {
-                                      Navigator.pushNamed(context, '/cart');
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => CartScreen(),
+                                        ),
+                                      );
                                     },
                                   ),
                                 ),
