@@ -7,6 +7,12 @@ class DummyData {
     'https://images.unsplash.com/photo-1525610553991-2bede1a236e2',
   ];
 
+  List paymentArr = [
+    {"name": "Cash on delivery", "icon": "assets/images/pick.png"},
+    {"name": "**** **** **** 2187", "icon": "assets/images/pick.png"},
+    {"name": "test@gmail.com", "icon": "assets/images/pick.png"},
+  ];
+
   List<String> foodImages = [
     'https://images.unsplash.com/photo-1504674900247-0877df9cc836',
     'https://images.unsplash.com/photo-1555992336-03a23c4f1e1c',
