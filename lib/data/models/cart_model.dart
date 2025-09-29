@@ -9,6 +9,9 @@ class CartModel extends ChangeNotifier {
   double get totalPrice =>
       _items.fold(0, (sum, item) => sum + item['price'] * item['quantity']);
 
+  double get totalQuantity =>
+      _items.fold(0, (sum, item) => sum + item['quantity']);
+
   void addItem(Map<String, dynamic> item) {
     int index = _items.indexWhere((element) => element['id'] == item['id']);
     if (index != -1) {
