@@ -9,25 +9,23 @@ class HistoryScreen extends StatelessWidget {
     return Scaffold(
       body: SafeArea(
         child: Scaffold(
-          body: Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Column(
-              children: [
-                Text("History"),
-                Expanded(
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    itemBuilder: (context, index) => HistoryItem(
-                      dateBought: DateTime.now(),
-                      productCount: 2,
-                      storeName: "Idontcare",
-                      totalPrice: 100000,
-                    ),
-                    itemCount: 10,
+          appBar: AppBar(centerTitle: true, title: Text("History")),
+          body: Column(
+            children: [
+              Expanded(
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  itemBuilder: (context, index) => HistoryItem(
+                    dateBought: DateTime.now(),
+                    productCount: 2,
+                    storeName: "Idontcare",
+                    totalPrice: 99999999,
+                    productName: "PlaceHolderFood Long name",
                   ),
+                  itemCount: 10,
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),

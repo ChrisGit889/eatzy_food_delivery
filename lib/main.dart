@@ -1,9 +1,9 @@
 import 'package:eatzy_food_delivery/constants.dart';
+import 'package:eatzy_food_delivery/screens/onboarding/onboarding_screen.dart';
 import 'package:eatzy_food_delivery/services/firebase_options.dart';
 import 'package:eatzy_food_delivery/screens/auth/auth_gate.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'screens/onboarding/onboarding_screen.dart';
 import 'package:provider/provider.dart';
 import 'data/models/cart_model.dart';
 
@@ -33,7 +33,7 @@ class EatzyApp extends StatelessWidget {
           scaffoldBackgroundColor: Colors.white,
           primaryColor: EATZY_ORANGE,
         ),
-        home: const OnboardingScreen(),
+        home: AuthGate(whereToGo: OnboardingScreen()),
       ),
     );
   }
