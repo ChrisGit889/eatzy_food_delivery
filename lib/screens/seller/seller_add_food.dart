@@ -1,7 +1,6 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eatzy_food_delivery/constants.dart';
 import 'package:eatzy_food_delivery/screens/seller/seller_screen.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:eatzy_food_delivery/utils/utils_seller.dart';
 import 'package:flutter/material.dart';
 
 class AddFood extends StatefulWidget {
@@ -74,52 +73,22 @@ class _AddFoodState extends State<AddFood> {
                 onPressed: () async {
                   setState(() {
                     isError = false;
-                    if (nameController.text.isEmpty) {
-                      isError = true;
-                      errorMessage = "Please input a name";
-                      return;
-                    }
-                    if (descriptionController.text.isEmpty) {
-                      isError = true;
-                      errorMessage = "Please add a description";
-                      return;
-                    }
-                    if (priceController.text.isEmpty) {
-                      isError = true;
-                      errorMessage = "Please input a price!";
-                      return;
-                    } else if (int.tryParse(priceController.text) == null) {
-                      isError = true;
-                      errorMessage = "Please input a valid number!";
-                      return;
-                    } else if (int.parse(priceController.text) < 0) {
-                      isError = true;
-                      errorMessage = "Please input a positive number!";
-                      return;
-                    }
+                    errorCheckInput();
                   });
                   if (!isError) {
-                    var currentDoc = FirebaseFirestore.instance
-                        .collection("seller-food")
-                        .doc(FirebaseAuth.instance.currentUser!.email!);
-                    var tempData = [];
-                    await currentDoc.get().then((value) {
-                      if (value.exists) {
-                        tempData = value.data()!["foods"];
-                      }
-                    });
-                    var newItem = {
-                      "name": nameController.text,
-                      "description": descriptionController.text,
-                      "price": int.parse(priceController.text),
-                    };
-                    tempData.add(newItem);
-                    await currentDoc.set({"foods": tempData});
+                    var res = await makeNewSellerItem(
+                      nameController.text,
+                      descriptionController.text,
+                      priceController.text,
+                    );
+                    if (res) {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (context) => SellerScreen()),
+                      );
+                    }
                   }
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) => SellerScreen()),
-                  );
+                  return;
                 },
                 style: ButtonStyle(
                   backgroundColor: WidgetStateProperty.resolveWith((states) {
@@ -136,5 +105,31 @@ class _AddFoodState extends State<AddFood> {
         ],
       ),
     );
+  }
+
+  void errorCheckInput() {
+    if (nameController.text.isEmpty) {
+      isError = true;
+      errorMessage = "Please input a name";
+      return;
+    }
+    if (descriptionController.text.isEmpty) {
+      isError = true;
+      errorMessage = "Please add a description";
+      return;
+    }
+    if (priceController.text.isEmpty) {
+      isError = true;
+      errorMessage = "Please input a price!";
+      return;
+    } else if (int.tryParse(priceController.text) == null) {
+      isError = true;
+      errorMessage = "Please input a valid number!";
+      return;
+    } else if (int.parse(priceController.text) < 0) {
+      isError = true;
+      errorMessage = "Please input a positive number!";
+      return;
+    }
   }
 }

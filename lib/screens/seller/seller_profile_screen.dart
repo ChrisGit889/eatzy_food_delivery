@@ -1,4 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:eatzy_food_delivery/utils/utils_seller.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -16,12 +16,7 @@ class _SellerProfileState extends State<SellerProfile> {
 
   @override
   Widget build(BuildContext context) {
-    final currentUser = FirebaseAuth.instance.currentUser!;
-    var dbData = FirebaseFirestore.instance
-        .collection('sellers')
-        .doc(currentUser.email!)
-        .get()
-        .then((value) => value.data());
+    var dbData = getSellerData();
 
     return SafeArea(
       child: Row(
@@ -63,10 +58,7 @@ class _SellerProfileState extends State<SellerProfile> {
                         alert = false;
                         if (editing) {
                           if (textController.text.isNotEmpty) {
-                            FirebaseFirestore.instance
-                                .collection('sellers')
-                                .doc(currentUser.email!)
-                                .set({"store": textController.text});
+                            setSellerStoreName(textController.text);
                             editing = false;
                           } else {
                             alert = true;
@@ -99,11 +91,7 @@ class SellerNameSpot extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: FirebaseFirestore.instance
-          .collection('sellers')
-          .doc(currentUser.email!)
-          .get()
-          .then((value) => value.data()),
+      future: getSellerData(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           return snapshot.data!["store"] == null

@@ -1,5 +1,5 @@
 import 'package:eatzy_food_delivery/constants.dart';
-import 'package:eatzy_food_delivery/utils.dart';
+import 'package:eatzy_food_delivery/utils/utils.dart';
 import 'package:flutter/material.dart';
 
 class SellerItem extends StatelessWidget {
