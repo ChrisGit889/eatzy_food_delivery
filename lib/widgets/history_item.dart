@@ -1,4 +1,5 @@
 import 'package:eatzy_food_delivery/constants.dart';
+import 'package:eatzy_food_delivery/screens/history/history_detail_screen.dart';
 import 'package:eatzy_food_delivery/utils/utils.dart';
 import 'package:flutter/material.dart';
 
@@ -23,45 +24,53 @@ class HistoryItem extends StatelessWidget {
   Widget build(BuildContext context) {
     bool productShorten = productName.length > 16 ? true : false;
     bool storeShorten = storeName.length > 16 ? true : false;
-    return SizedBox(
-      width: MediaQuery.widthOf(context),
-      height: 100,
-      child: Padding(
-        padding: const EdgeInsets.only(top: 5, left: 5, right: 5, bottom: 5),
-        child: DecoratedBox(
-          decoration: BoxDecoration(
-            color: Colors.white10,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey,
-                blurStyle: BlurStyle.outer,
-                blurRadius: 1,
-              ),
-            ],
-            borderRadius: BorderRadius.circular(10),
-            border: Border.all(
-              color: Colors.grey,
-              style: BorderStyle.solid,
-              strokeAlign: BorderSide.strokeAlignCenter,
-              width: 1.2,
-            ),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.only(left: 15),
-            child: Row(
-              children: [
-                Icon(Icons.shopping_cart_sharp),
-                SizedBox(width: 20),
-                HistoryProductInfo(
-                  storeName: storeName,
-                  storeShorten: storeShorten,
-                  dateBought: dateBought,
-                  productName: productName,
-                  productShorten: productShorten,
-                  productCount: productCount,
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const HistoryDetailScreen()),
+        );
+      },
+      child: SizedBox(
+        width: MediaQuery.widthOf(context),
+        height: 100,
+        child: Padding(
+          padding: const EdgeInsets.only(top: 5, left: 5, right: 5, bottom: 5),
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              color: Colors.white10,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey,
+                  blurStyle: BlurStyle.outer,
+                  blurRadius: 1,
                 ),
-                HistoryProductPrice(totalPrice: totalPrice),
               ],
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(
+                color: Colors.grey,
+                style: BorderStyle.solid,
+                strokeAlign: BorderSide.strokeAlignCenter,
+                width: 1.2,
+              ),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.only(left: 15),
+              child: Row(
+                children: [
+                  Icon(Icons.shopping_cart_sharp),
+                  SizedBox(width: 20),
+                  HistoryProductInfo(
+                    storeName: storeName,
+                    storeShorten: storeShorten,
+                    dateBought: dateBought,
+                    productName: productName,
+                    productShorten: productShorten,
+                    productCount: productCount,
+                  ),
+                  HistoryProductPrice(totalPrice: totalPrice),
+                ],
+              ),
             ),
           ),
         ),

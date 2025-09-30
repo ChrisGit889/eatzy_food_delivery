@@ -58,7 +58,7 @@ class RestaurantButtonRow extends StatelessWidget {
           Expanded(
             child: TextButton(
               onPressed: () {
-                Navigator.pushReplacement(
+                Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => const AddFood()),
                 );

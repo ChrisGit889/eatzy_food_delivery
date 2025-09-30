@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:eatzy_food_delivery/utils/utils_firebase.dart';
+import 'package:eatzy_food_delivery/utils/utils_user.dart';
 
 Future<List> getSellerItems(String sellerEmail) async {
   final fb = FirebaseFirestore.instance;
