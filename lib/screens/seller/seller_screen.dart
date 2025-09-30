@@ -1,5 +1,4 @@
 import 'package:eatzy_food_delivery/constants.dart';
-import 'package:eatzy_food_delivery/screens/main_screen.dart';
 import 'package:eatzy_food_delivery/screens/seller/seller_dashboard_screen.dart';
 import 'package:eatzy_food_delivery/screens/seller/seller_profile_screen.dart';
 import 'package:flutter/material.dart';

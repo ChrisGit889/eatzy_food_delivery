@@ -22,6 +22,9 @@ class _SellerDashboardState extends State<SellerDashboard> {
             future: getSellerItems(FirebaseAuth.instance.currentUser!.email!),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
+                if (snapshot.data!.isEmpty) {
+                  return Expanded(child: Text("You have no items"));
+                }
                 List<Widget> currList = [];
                 for (var i in snapshot.data!) {
                   currList.add(
@@ -39,18 +42,13 @@ class _SellerDashboardState extends State<SellerDashboard> {
               return CircularProgressIndicator();
             },
           ),
-          RestaurantButtonRow(),
+          _buildButton(),
         ],
       ),
     );
   }
-}
 
-class RestaurantButtonRow extends StatelessWidget {
-  const RestaurantButtonRow({super.key});
-
-  @override
-  Widget build(BuildContext context) {
+  Widget _buildButton() {
     return Padding(
       padding: const EdgeInsets.all(8),
       child: Row(
@@ -61,7 +59,9 @@ class RestaurantButtonRow extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => const AddFood()),
-                );
+                ).then((_) {
+                  setState(() {});
+                });
               },
               style: ButtonStyle(
                 backgroundColor: WidgetStateProperty.resolveWith((states) {
