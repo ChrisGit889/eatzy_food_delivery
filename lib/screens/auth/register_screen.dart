@@ -1,8 +1,7 @@
 import 'package:eatzy_food_delivery/screens/auth/auth_gate.dart';
 import 'package:eatzy_food_delivery/screens/auth/login_screen.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:eatzy_food_delivery/utils/utils_user.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -137,53 +136,24 @@ class _RegisterScreenState extends State<RegisterScreen> {
               style: TextStyle(color: Color(isError ? 0xFF000000 : 0xFFFFFFFF)),
             ),
             onPressed: () async {
-              //Register function
-              if (firstNameController.text == '' ||
-                  emailController.text == '' ||
-                  passwordController.text == '') {
-                setState(() {
-                  isError = true;
-                });
-              }
+              bool res = await createNewUser(
+                firstNameController.text,
+                emailController.text,
+                passwordController.text,
+                context,
+              );
 
-              try {
-                await FirebaseAuth.instance.createUserWithEmailAndPassword(
-                  email: emailController.text,
-                  password: passwordController.text,
-                );
-                await FirebaseAuth.instance.currentUser!.updateDisplayName(
-                  firstNameController.text,
-                );
+              if (res) {
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
                     builder: (_) => AuthGate(whereToGo: LoginScreen()),
                   ),
                 );
-              } on FirebaseException catch (e) {
-                if (e.code == 'weak-password') {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('The password provided is too weak.'),
-                    ),
-                    snackBarAnimationStyle: AnimationStyle(
-                      curve: ElasticInCurve(),
-                    ),
-                  );
-                } else if (e.code == 'email-already-in-use') {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(
-                        'The account already exists for that email.',
-                      ),
-                    ),
-                    snackBarAnimationStyle: AnimationStyle(
-                      curve: ElasticInCurve(),
-                    ),
-                  );
-                }
-              } catch (e) {
-                print(e);
+              } else {
+                setState(() {
+                  isError = true;
+                });
               }
             },
           ),
