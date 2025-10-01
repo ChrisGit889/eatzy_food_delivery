@@ -1,6 +1,7 @@
 import 'package:eatzy_food_delivery/data/models/cart_model.dart';
 import 'package:eatzy_food_delivery/data/models/favorit_model.dart';
 import 'package:eatzy_food_delivery/screens/cart/cart_screen.dart';
+import 'package:eatzy_food_delivery/screens/main_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -20,7 +21,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Makanan Favorit Anda")),
+      appBar: AppBar(title: const Text("Favorite")),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -31,7 +32,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                 Expanded(
                   child: TextField(
                     decoration: const InputDecoration(
-                      hintText: "Cari makanan favorit anda",
+                      hintText: "Find your favorite food",
                     ),
                   ),
                 ),
@@ -93,7 +94,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                         ZtoA = false;
                       });
                     },
-                    child: const Text("Termurah"),
+                    child: const Text("Cheapest"),
                   ),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
@@ -108,7 +109,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                         ZtoA = false;
                       });
                     },
-                    child: const Text("Termahal"),
+                    child: const Text("Most Expensive"),
                   ),
                 ],
               ),
@@ -144,10 +145,39 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                   }
 
                   if (sortedFavorites.isEmpty) {
-                    return const Center(
-                      child: Text(
-                        "Belum ada makanan favorit",
-                        style: TextStyle(fontSize: 16, color: Colors.grey),
+                    return Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Text(
+                            "You don't have a favorite food yet",
+                            style: TextStyle(fontSize: 16, color: Colors.grey),
+                          ),
+                          const SizedBox(height: 20),
+                          ElevatedButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      const MainScreen(initialIndex: 0),
+                                ),
+                              );
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.orange,
+                              foregroundColor: Colors.white,
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 24,
+                                vertical: 12,
+                              ),
+                            ),
+                            child: const Text(
+                              "Find Food",
+                              style: TextStyle(fontSize: 16),
+                            ),
+                          ),
+                        ],
                       ),
                     );
                   }
@@ -184,7 +214,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                             children: [
                               IconButton(
                                 icon: const Icon(
-                                  Icons.delete,
+                                  Icons.remove_circle,
                                   color: Colors.red,
                                 ),
                                 onPressed: () {
@@ -193,7 +223,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                                   );
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(
-                                      content: Text("Dihapus dari favorit"),
+                                      content: Text("Removed from favorites"),
                                     ),
                                   );
                                 },
