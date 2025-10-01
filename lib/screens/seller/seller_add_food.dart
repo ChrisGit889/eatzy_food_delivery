@@ -67,10 +67,9 @@ class _AddFoodState extends State<AddFood> {
                   : SizedBox(),
               TextButton(
                 onPressed: () async {
-                  setState(() {
-                    isError = false;
-                    errorCheckInput();
-                  });
+                  isError = false;
+                  await errorCheckInput();
+                  setState(() {});
                   if (!isError) {
                     var res = await makeNewSellerItem(
                       nameController.text,
@@ -100,7 +99,11 @@ class _AddFoodState extends State<AddFood> {
     );
   }
 
-  void errorCheckInput() {
+  Future<void> errorCheckInput() async {
+    if (await itemExistsFromName(nameController.text)) {
+      isError = true;
+      errorMessage = "Use a unique name!";
+    }
     if (nameController.text.isEmpty) {
       isError = true;
       errorMessage = "Please input a name";

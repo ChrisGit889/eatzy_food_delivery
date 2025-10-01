@@ -23,7 +23,12 @@ class _SellerDashboardState extends State<SellerDashboard> {
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 if (snapshot.data!.isEmpty) {
-                  return Expanded(child: Text("You have no items"));
+                  return Expanded(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [Text("You have no items")],
+                    ),
+                  );
                 }
                 List<Widget> currList = [];
                 for (var i in snapshot.data!) {
@@ -32,6 +37,9 @@ class _SellerDashboardState extends State<SellerDashboard> {
                       name: i["name"],
                       desc: i["description"],
                       price: int.tryParse(i["price"].toString())!,
+                      thenDo: () {
+                        setState(() {});
+                      },
                     ),
                   );
                 }

@@ -10,10 +10,12 @@ class SellerItem extends StatelessWidget {
     required this.price,
     required this.name,
     required this.desc,
+    required this.thenDo,
   });
   final int price;
   final String name;
   final String desc;
+  final Function() thenDo;
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +45,12 @@ class SellerItem extends StatelessWidget {
             ),
             child: Padding(
               padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-              child: SellerItemContent(name: name, price: price, desc: desc),
+              child: SellerItemContent(
+                name: name,
+                price: price,
+                desc: desc,
+                thenDo: thenDo,
+              ),
             ),
           ),
         ),
@@ -58,11 +65,13 @@ class SellerItemContent extends StatelessWidget {
     required this.name,
     required this.price,
     required this.desc,
+    required this.thenDo,
   });
 
   final String name;
   final int price;
   final String desc;
+  final Function() thenDo;
 
   @override
   Widget build(BuildContext context) {
@@ -121,7 +130,9 @@ class SellerItemContent extends StatelessWidget {
                             builder: (context) =>
                                 SellerDeleteFood(foodIdentifier: name),
                           ),
-                        );
+                        ).then((_) {
+                          thenDo();
+                        });
                       },
                       icon: Icon(
                         Icons.delete_forever_outlined,
@@ -136,7 +147,9 @@ class SellerItemContent extends StatelessWidget {
                             builder: (context) =>
                                 SellerEditFood(foodIdentifier: name),
                           ),
-                        );
+                        ).then((_) {
+                          thenDo();
+                        });
                       },
                       icon: Icon(Icons.edit_square, color: EATZY_ORANGE),
                     ),

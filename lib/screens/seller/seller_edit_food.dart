@@ -125,7 +125,8 @@ class _SellerEditFoodState extends State<SellerEditFood> {
   }
 
   Future<void> errorCheckInput() async {
-    if (await itemExistsFromName(nameController.text)) {
+    if (await itemExistsFromName(nameController.text) &&
+        nameController.text != widget.foodIdentifier) {
       isError = true;
       errorMessage = "Use a unique name!";
     }
