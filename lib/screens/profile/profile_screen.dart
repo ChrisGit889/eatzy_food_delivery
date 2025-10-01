@@ -1,115 +1,117 @@
-import 'package:eatzy_food_delivery/screens/auth/auth_gate.dart';
-import 'package:eatzy_food_delivery/screens/auth/auth_screen.dart';
-import 'package:eatzy_food_delivery/screens/seller/seller_screen.dart';
-import 'package:eatzy_food_delivery/utils/utils_seller.dart';
-import 'package:eatzy_food_delivery/utils/utils_user.dart';
 import 'package:flutter/material.dart';
 
-class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({super.key});
-
-  @override
-  State<ProfileScreen> createState() => _ProfileScreenState();
+void main() {
+  runApp(const MyApp());
 }
 
-class _ProfileScreenState extends State<ProfileScreen> {
-  Future<bool> isSeller = getSellerStatus();
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: ProfileScreen(),
+    );
+  }
+}
+
+class ProfileScreen extends StatelessWidget {
+  const ProfileScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[100],
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  TextButton(
-                    onPressed: () => {
-                      // Firebase
-                    },
-                    child: const Text(
-                      "< Profile",
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
+            Stack(
+              clipBehavior: Clip.none,
+              children: [
+                ClipPath(
+                  clipper: TopHalfCircleClipper(),
+                  child: Container(
+                    height: 150,
+                    width: double.infinity,
+                    color: const Color(0xFFFD6C00),
+                    alignment: Alignment.center,
+                    child: Image.asset(
+                      "assets/images/diprofilebackground.png",
+                      height: 80,
+                      fit: BoxFit.contain,
                     ),
                   ),
-                  IconButton(
-                    onPressed: () async {
-                      var res = await signUserOut(context);
-                      if (res) {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                const AuthGate(whereToGo: AuthScreen()),
-                          ),
-                        );
-                      }
-                    },
-                    icon: const Icon(Icons.logout, color: Colors.black87),
+                ),
+                const Positioned(
+                  bottom: -50,
+                  left: 0,
+                  right: 0,
+                  child: CircleAvatar(
+                    radius: 50,
+                    backgroundImage: AssetImage("images/buatisiprofile.jpg"),
                   ),
-                ],
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 60),
+
+            const Text(
+              "Username",
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const Text(
+              "Email",
+              style: TextStyle(color: Colors.grey),
+            ),
+
+            const SizedBox(height: 20),
+
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  "Setting",
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
               ),
             ),
 
             const SizedBox(height: 10),
 
-            Center(
-              child: Column(
-                children: [
-                  const CircleAvatar(
-                    radius: 80,
-                    backgroundImage: AssetImage("assets/buatisiprofile.jpg"),
-                  ),
-                  const SizedBox(height: 12),
-                  Text(
-                    getUserName(),
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
-                ],
-              ),
-            ),
-
-            const SizedBox(height: 30),
-
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16),
-              child: Text(
-                "Account Settings",
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-              ),
-            ),
-
-            const SizedBox(height: 16),
-
             Expanded(
               child: ListView(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 children: [
-                  _paymentMethods(),
-                  _personalInfo(),
-                  FutureBuilder<bool>(
-                    future: isSeller,
-                    builder: (context, snapshot) {
-                      if (snapshot.hasData) {
-                        if (snapshot.data!) {
-                          return _isASeller();
-                        } else {
-                          return _notASeller();
-                        }
-                      } else {
-                        return _notASeller();
-                      }
-                    },
+                  _buildMenuItem(Icons.person, "My Info", () {}),
+                  _buildMenuItem(Icons.store, "My Store", () {}),
+                  _buildMenuItem(Icons.payment, "My Payment", () {}),
+                  _buildMenuItem(Icons.lock, "Change Password", () {}),
+                  _buildMenuItem(Icons.support_agent, "Help and Support", () {}),
+
+                  const SizedBox(height: 20),
+
+                  OutlinedButton(
+                    style: OutlinedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      side: const BorderSide(color: Color(0xFFFD6C00)),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    onPressed: () {},
+                    child: const Text(
+                      "Logout",
+                      style: TextStyle(color: Color(0xFFFD6C00), fontSize: 16),
+                    ),
                   ),
-                  _contactUs(),
+
+                  const SizedBox(height: 20),
                 ],
               ),
             ),
@@ -119,77 +121,49 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  // ignore: slash_for_doc_comments
-  /*********************
-  Helper Functions
- *********************/
-  //Function to build rounded boxes
-  Widget _buildRoundedBox(String title, {required VoidCallback onTap}) {
+  static Widget _buildMenuItem(IconData icon, String title, VoidCallback onTap) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
         margin: const EdgeInsets.only(bottom: 12),
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
         decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(30),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black12,
-              blurRadius: 4,
-              offset: Offset(0, 2),
-            ),
-          ],
+          color: Colors.grey[100],
+          borderRadius: BorderRadius.circular(12),
         ),
         child: Row(
           children: [
-            Expanded(child: Text(title, style: const TextStyle(fontSize: 16))),
+            Icon(icon, color: Colors.black54),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                title,
+                style: const TextStyle(fontSize: 16),
+              ),
+            ),
             const Icon(Icons.arrow_forward_ios, size: 18, color: Colors.grey),
           ],
         ),
       ),
     );
   }
+}
 
-  //Function to build "Personal Information"
-  Widget _personalInfo() {
-    return _buildRoundedBox("Personal Information", onTap: () {});
+class TopHalfCircleClipper extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    Path path = Path();
+
+    path.addOval(Rect.fromLTWH(
+      -size.width * 0.25,
+      -size.height,
+      size.width * 1.5,
+      size.height * 2,
+    ));
+
+    return path;
   }
 
-  //Function to build "Payment Methods"
-  Widget _paymentMethods() {
-    return _buildRoundedBox("Payment Methods", onTap: () {});
-  }
-
-  //Function to build "Become A Seller" if user isnt a seller
-  Widget _notASeller() {
-    return _buildRoundedBox(
-      "Become A Seller",
-      onTap: () async {
-        makeSeller();
-        setState(() {
-          isSeller = getSellerStatus();
-        });
-      },
-    );
-  }
-
-  //Function to build "You Are a Seller" if user is a seller
-  Widget _isASeller() {
-    return _buildRoundedBox(
-      "Manage Seller",
-      onTap: () {
-        Navigator.push(
-          // ignore: use_build_context_synchronously
-          context,
-          MaterialPageRoute(builder: (context) => const SellerScreen()),
-        );
-      },
-    );
-  }
-
-  //Function to build "Contact Us"
-  Widget _contactUs() {
-    return _buildRoundedBox("Contact Us", onTap: () {});
-  }
+  @override
+  bool shouldReclip(covariant CustomClipper<Path> oldClipper) => false;
 }
