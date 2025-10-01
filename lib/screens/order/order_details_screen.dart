@@ -460,7 +460,14 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
   Widget buildCancelButton() => SizedBox(
     width: double.infinity,
     child: ElevatedButton(
-      onPressed: () {},
+      onPressed: () {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return const SuccessDialog();
+          },
+        );
+      },
       style: ElevatedButton.styleFrom(
         backgroundColor: const Color.fromARGB(255, 255, 153, 0),
         padding: const EdgeInsets.symmetric(vertical: 16),
@@ -472,4 +479,97 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
       ),
     ),
   );
+}
+
+class SuccessDialog extends StatelessWidget {
+  const SuccessDialog({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+      elevation: 0,
+      backgroundColor: Colors.transparent,
+      child: contentBox(context),
+    );
+  }
+
+  void _navigateBack(BuildContext context) {
+    Navigator.of(context).pop();
+    Navigator.of(context).pop();
+  }
+
+  Widget contentBox(BuildContext context) {
+    return Stack(
+      children: <Widget>[
+        Container(
+          padding: const EdgeInsets.only(
+            left: 20,
+            top: 65,
+            right: 20,
+            bottom: 20,
+          ),
+          margin: const EdgeInsets.only(top: 45),
+          decoration: BoxDecoration(
+            shape: BoxShape.rectangle,
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(20),
+            boxShadow: const [
+              BoxShadow(
+                color: Colors.black12,
+                offset: Offset(0, 10),
+                blurRadius: 10,
+              ),
+            ],
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              const Text(
+                "Enjoy your meal! 😋",
+                style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
+              ),
+              const SizedBox(height: 15),
+              const Text(
+                "Your order is in hand. Time to eat!",
+                style: TextStyle(fontSize: 14),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 22),
+              Align(
+                alignment: Alignment.center,
+                child: SizedBox(
+                  width: 120,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      _navigateBack(context);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color.fromARGB(255, 255, 153, 0),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(50),
+                      ),
+                    ),
+                    child: const Text(
+                      "Okay",
+                      style: TextStyle(fontSize: 18, color: Colors.white),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        const Positioned(
+          left: 20,
+          right: 20,
+          child: CircleAvatar(
+            backgroundColor: Color(0xFF46D1A7),
+            radius: 45,
+            child: Icon(Icons.check, color: Colors.white, size: 50),
+          ),
+        ),
+      ],
+    );
+  }
 }

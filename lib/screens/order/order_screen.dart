@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'order_details_screen.dart'; // 1. IMPORT DITAMBAHKAN DI SINI
+import 'order_details_screen.dart';
 
 class OrderScreen extends StatefulWidget {
   const OrderScreen({super.key});
@@ -43,37 +43,64 @@ class _OrderScreenState extends State<OrderScreen>
     },
   ];
 
-  late List<Map<String, dynamic>> _filteredOrders;
-
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 4, vsync: this);
-    _filteredOrders = _allOrders;
-    _searchController.addListener(_filterOrders);
+
+    _searchController.addListener(() => setState(() {}));
+    _tabController.addListener(() => setState(() {}));
   }
 
   @override
   void dispose() {
-    _searchController.removeListener(_filterOrders);
+    _searchController.removeListener(() => setState(() {}));
+    _tabController.removeListener(() => setState(() {}));
     _searchController.dispose();
     _tabController.dispose();
     super.dispose();
   }
 
-  void _filterOrders() {
-    String query = _searchController.text.toLowerCase();
-    setState(() {
-      _filteredOrders = _allOrders.where((order) {
-        final orderId = order['orderId']!.toLowerCase();
-        final service = order['service']!.toLowerCase();
-        return orderId.contains(query) || service.contains(query);
-      }).toList();
-    });
+  List<Map<String, dynamic>> _getFilteredOrders() {
+    List<Map<String, dynamic>> tabFilteredList;
+    switch (_tabController.index) {
+      case 1:
+        tabFilteredList = _allOrders
+            .where((order) => order['status'] == 'Pending')
+            .toList();
+        break;
+      case 2:
+        tabFilteredList = _allOrders
+            .where((order) => order['status'] == 'Completed')
+            .toList();
+        break;
+      case 3:
+        tabFilteredList = _allOrders
+            .where((order) => order['status'] == 'Cancelled')
+            .toList();
+        break;
+      case 0:
+      default:
+        tabFilteredList = List.from(_allOrders);
+        break;
+    }
+
+    final query = _searchController.text.toLowerCase();
+    if (query.isEmpty) {
+      return tabFilteredList;
+    }
+
+    return tabFilteredList.where((order) {
+      final orderId = order['orderId']!.toLowerCase();
+      final service = order['service']!.toLowerCase();
+      return orderId.contains(query) || service.contains(query);
+    }).toList();
   }
 
   @override
   Widget build(BuildContext context) {
+    final filteredOrders = _getFilteredOrders();
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("Order History"),
@@ -112,17 +139,17 @@ class _OrderScreenState extends State<OrderScreen>
       body: TabBarView(
         controller: _tabController,
         children: [
-          buildOrderList(),
-          buildOrderList(),
-          buildOrderList(),
-          buildOrderList(),
+          buildOrderList(filteredOrders),
+          buildOrderList(filteredOrders),
+          buildOrderList(filteredOrders),
+          buildOrderList(filteredOrders),
         ],
       ),
     );
   }
 
-  Widget buildOrderList() {
-    if (_filteredOrders.isEmpty) {
+  Widget buildOrderList(List<Map<String, dynamic>> orders) {
+    if (orders.isEmpty) {
       return const Center(
         child: Text(
           "Pesanan tidak ditemukan.",
@@ -133,10 +160,9 @@ class _OrderScreenState extends State<OrderScreen>
 
     return ListView.builder(
       padding: const EdgeInsets.all(16),
-      itemCount: _filteredOrders.length,
+      itemCount: orders.length,
       itemBuilder: (context, index) {
-        final order = _filteredOrders[index];
-        // 2. MENGIRIM DATA PESANAN KE WIDGET buildOrderCard
+        final order = orders[index];
         return Padding(
           padding: const EdgeInsets.only(bottom: 16.0),
           child: buildOrderCard(order: order),
@@ -237,15 +263,11 @@ class _OrderScreenState extends State<OrderScreen>
                 ),
               ),
               OutlinedButton(
-                // 3. BAGIAN INI YANG DIUBAH
                 onPressed: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const OrderDetailsScreen(
-                        // Anda bisa mengirim data jika diperlukan, contoh:
-                        // orderData: order,
-                      ),
+                      builder: (context) => const OrderDetailsScreen(),
                     ),
                   );
                 },
