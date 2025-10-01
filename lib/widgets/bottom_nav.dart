@@ -23,7 +23,6 @@ class CustomBottomNav extends StatelessWidget {
   static const List<NavItem> _navItems = [
     NavItem(icon: Icons.home, label: "Home"),
     NavItem(icon: Icons.receipt_long, label: "Order"),
-    NavItem(icon: Icons.history, label: "History"),
     NavItem(icon: Icons.favorite, label: "Favorite"),
     NavItem(icon: Icons.person, label: "Profile"),
   ];
@@ -79,13 +78,9 @@ class CustomBottomNav extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(
-              item.icon,
-              color: isSelected ? Colors.white : secondaryText,
-            ),
+            Icon(item.icon, color: isSelected ? Colors.white : secondaryText),
             // Tampilkan teks hanya jika item terpilih
-            if (isSelected)
-              const SizedBox(width: 8),
+            if (isSelected) const SizedBox(width: 8),
             if (isSelected)
               Text(
                 item.label,

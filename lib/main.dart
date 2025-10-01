@@ -6,7 +6,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'data/models/cart_model.dart';
-import 'package:eatzy_food_delivery/screens/auth/auth_screen.dart';
 
 void main() async {
   //Init Firebase
@@ -39,4 +38,3 @@ class EatzyApp extends StatelessWidget {
     );
   }
 }
- 

@@ -1,4 +1,3 @@
-import 'package:eatzy_food_delivery/screens/auth/auth_screen.dart';
 import 'package:eatzy_food_delivery/screens/main_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart' hide EmailAuthProvider;
 import 'package:flutter/material.dart';

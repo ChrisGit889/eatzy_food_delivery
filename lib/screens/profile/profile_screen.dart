@@ -49,7 +49,9 @@ class ProfileScreen extends StatelessWidget {
                   right: 0,
                   child: CircleAvatar(
                     radius: 50,
-                    backgroundImage: AssetImage("images/buatisiprofile.jpg"),
+                    backgroundImage: AssetImage(
+                      "assets/images/buatisiprofile.jpg",
+                    ),
                   ),
                 ),
               ],
@@ -59,15 +61,9 @@ class ProfileScreen extends StatelessWidget {
 
             const Text(
               "Username",
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
-            const Text(
-              "Email",
-              style: TextStyle(color: Colors.grey),
-            ),
+            const Text("Email", style: TextStyle(color: Colors.grey)),
 
             const SizedBox(height: 20),
 
@@ -92,7 +88,11 @@ class ProfileScreen extends StatelessWidget {
                   _buildMenuItem(Icons.store, "My Store", () {}),
                   _buildMenuItem(Icons.payment, "My Payment", () {}),
                   _buildMenuItem(Icons.lock, "Change Password", () {}),
-                  _buildMenuItem(Icons.support_agent, "Help and Support", () {}),
+                  _buildMenuItem(
+                    Icons.support_agent,
+                    "Help and Support",
+                    () {},
+                  ),
 
                   const SizedBox(height: 20),
 
@@ -121,7 +121,11 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  static Widget _buildMenuItem(IconData icon, String title, VoidCallback onTap) {
+  static Widget _buildMenuItem(
+    IconData icon,
+    String title,
+    VoidCallback onTap,
+  ) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -135,12 +139,7 @@ class ProfileScreen extends StatelessWidget {
           children: [
             Icon(icon, color: Colors.black54),
             const SizedBox(width: 12),
-            Expanded(
-              child: Text(
-                title,
-                style: const TextStyle(fontSize: 16),
-              ),
-            ),
+            Expanded(child: Text(title, style: const TextStyle(fontSize: 16))),
             const Icon(Icons.arrow_forward_ios, size: 18, color: Colors.grey),
           ],
         ),
@@ -154,12 +153,14 @@ class TopHalfCircleClipper extends CustomClipper<Path> {
   Path getClip(Size size) {
     Path path = Path();
 
-    path.addOval(Rect.fromLTWH(
-      -size.width * 0.25,
-      -size.height,
-      size.width * 1.5,
-      size.height * 2,
-    ));
+    path.addOval(
+      Rect.fromLTWH(
+        -size.width * 0.25,
+        -size.height,
+        size.width * 1.5,
+        size.height * 2,
+      ),
+    );
 
     return path;
   }
