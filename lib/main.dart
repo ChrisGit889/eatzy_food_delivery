@@ -1,4 +1,5 @@
 import 'package:eatzy_food_delivery/constants.dart';
+import 'package:eatzy_food_delivery/data/models/favorit_model.dart';
 import 'package:eatzy_food_delivery/screens/onboarding/onboarding_screen.dart';
 import 'package:eatzy_food_delivery/services/firebase_options.dart';
 import 'package:eatzy_food_delivery/screens/auth/auth_gate.dart';
@@ -19,12 +20,23 @@ class EatzyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) {
-        CartModel cartModel = CartModel();
-        cartModel.loadCartFromPrefs();
-        return cartModel;
-      },
+    return MultiProvider( 
+      providers: [
+        ChangeNotifierProvider(
+          create: (context) {
+            CartModel cartModel = CartModel();
+            cartModel.loadCartFromPrefs();
+            return cartModel;
+          },
+        ),
+        ChangeNotifierProvider(
+          create: (context) {
+            FavoriteModel favModel = FavoriteModel();
+            favModel.loadFavorites(); 
+            return favModel;
+          },
+        ),
+      ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Eatzy',
