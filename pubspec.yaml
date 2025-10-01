@@ -34,7 +34,6 @@ flutter:
   uses-material-design: true
 
   assets:
-    - assets/buatisiprofile.jpg
     - assets/images/
     - assets/videos/kfc.mp4
     - assets/
