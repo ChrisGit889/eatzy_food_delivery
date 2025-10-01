@@ -1,4 +1,8 @@
+import 'package:eatzy_food_delivery/data/models/cart_model.dart';
+import 'package:eatzy_food_delivery/data/models/favorit_model.dart';
+import 'package:eatzy_food_delivery/screens/cart/cart_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class FavoriteScreen extends StatefulWidget {
   const FavoriteScreen({super.key});
@@ -13,14 +17,6 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
   bool Cheapest = false;
   bool Expensive = false;
 
-  List<Map<String, dynamic>> foods = [
-    {"name": "Nasi Goreng", "price": 15000},
-    {"name": "Sate Ayam", "price": 20000},
-    {"name": "Bakso", "price": 12000},
-    {"name": "Mie Ayam", "price": 10000},
-    {"name": "Ayam Geprek", "price": 18000},
-  ];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,29 +25,27 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
+            // Search bar
             Row(
               children: [
-                // Kolom input
                 Expanded(
                   child: TextField(
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       hintText: "Cari makanan favorit anda",
                     ),
                   ),
                 ),
                 const SizedBox(width: 10),
                 IconButton(
-                  onPressed: () {
-                    //pas tombol ditekan muncul apa ??
-                  },
+                  onPressed: () {},
                   icon: const Icon(Icons.search),
                   color: Colors.black,
                   iconSize: 32,
                 ),
               ],
             ),
-
             const SizedBox(height: 30),
+
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Row(
@@ -67,12 +61,10 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                         ZtoA = false;
                         Expensive = false;
                         Cheapest = false;
-                        foods.sort((a, b) => a["name"].compareTo(b["name"]));
                       });
                     },
                     child: const Text("A-Z"),
                   ),
-
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: ZtoA ? Colors.orange : Colors.white,
@@ -84,12 +76,10 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                         AtoZ = false;
                         Expensive = false;
                         Cheapest = false;
-                        foods.sort((a, b) => b["name"].compareTo(a["name"]));
                       });
                     },
                     child: const Text("Z-A"),
                   ),
-
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Cheapest ? Colors.orange : Colors.white,
@@ -101,12 +91,10 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                         Expensive = false;
                         AtoZ = false;
                         ZtoA = false;
-                        foods.sort((a, b) => a["price"].compareTo(b["price"]));
                       });
                     },
                     child: const Text("Termurah"),
                   ),
-
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Expensive ? Colors.orange : Colors.white,
@@ -118,7 +106,6 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                         Cheapest = false;
                         AtoZ = false;
                         ZtoA = false;
-                        foods.sort((a, b) => b["price"].compareTo(a["price"]));
                       });
                     },
                     child: const Text("Termahal"),
@@ -126,36 +113,158 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                 ],
               ),
             ),
-           
+            const SizedBox(height: 20),
 
             Expanded(
-              child: ListView.builder(
-                itemCount: foods.length,
-                itemBuilder: (context, index) {
-                  final food = foods[index];
-                  return Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            food["name"],
-                            style: const TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Text(
-                            "Rp ${food["price"]}",
-                            style: const TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                             
-                            ),
-                          ),
-                        ],
+              child: Consumer<FavoriteModel>(
+                builder: (context, favModel, child) {
+                  List<Map> sortedFavorites = List.from(favModel.favorites);
+
+                  if (AtoZ) {
+                    sortedFavorites.sort(
+                      (a, b) => (a['name'] ?? '').compareTo(b['name'] ?? ''),
+                    );
+                  }
+                  if (ZtoA) {
+                    sortedFavorites.sort(
+                      (a, b) => (b['name'] ?? '').compareTo(a['name'] ?? ''),
+                    );
+                  }
+                  if (Cheapest) {
+                    sortedFavorites.sort(
+                      (a, b) =>
+                          (a['price'] ?? 0.0).compareTo(b['price'] ?? 0.0),
+                    );
+                  }
+                  if (Expensive) {
+                    sortedFavorites.sort(
+                      (a, b) =>
+                          (b['price'] ?? 0.0).compareTo(a['price'] ?? 0.0),
+                    );
+                  }
+
+                  if (sortedFavorites.isEmpty) {
+                    return const Center(
+                      child: Text(
+                        "Belum ada makanan favorit",
+                        style: TextStyle(fontSize: 16, color: Colors.grey),
                       ),
-                    ],
+                    );
+                  }
+
+                  return ListView.builder(
+                    itemCount: sortedFavorites.length,
+                    itemBuilder: (context, index) {
+                      final food = sortedFavorites[index];
+
+                      return Card(
+                        margin: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 6,
+                        ),
+                        child: ListTile(
+                          leading: food.containsKey('imagePath')
+                              ? Image.asset(
+                                  food['imagePath'],
+                                  width: 50,
+                                  height: 50,
+                                  fit: BoxFit.cover,
+                                )
+                              : const Icon(Icons.fastfood, size: 50),
+                          title: Text(food['name'] ?? "Unknown"),
+                          subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text("${food['restaurant'] ?? '-'}"),
+                              Text("Price: \$${food['price'] ?? 0.0}"),
+                            ],
+                          ),
+                          trailing: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              IconButton(
+                                icon: const Icon(
+                                  Icons.delete,
+                                  color: Colors.red,
+                                ),
+                                onPressed: () {
+                                  favModel.toggleFav(
+                                    Map<String, dynamic>.from(food),
+                                  );
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text("Dihapus dari favorit"),
+                                    ),
+                                  );
+                                },
+                              ),
+                              Consumer<CartModel>(
+                                builder: (context, cart, child) {
+                                  return Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.orange,
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    child: IconButton(
+                                      icon: const Icon(
+                                        Icons.add,
+                                        color: Colors.white,
+                                      ),
+                                      onPressed: () {
+                                        cart.addItem({
+                                          'id': food['id'],
+                                          'name': food['name'],
+                                          'price': food['price'],
+                                          'quantity': 1,
+                                        });
+
+                                        ScaffoldMessenger.of(
+                                          context,
+                                        ).showSnackBar(
+                                          SnackBar(
+                                            content: Row(
+                                              children: [
+                                                const Icon(
+                                                  Icons.check_circle,
+                                                  color: Colors.white,
+                                                ),
+                                                const SizedBox(width: 8),
+                                                Text(
+                                                  '${food['name']} added to cart',
+                                                ),
+                                              ],
+                                            ),
+                                            duration: const Duration(
+                                              seconds: 2,
+                                            ),
+                                            action: SnackBarAction(
+                                              label: 'View Cart',
+                                              textColor: Colors.orange,
+                                              onPressed: () {
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        CartScreen(),
+                                                  ),
+                                                );
+                                              },
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  );
+                                },
+                              ),
+                            ],
+                          ),
+                          onTap: () {
+                            _showDishDetails(context, food);
+                          },
+                        ),
+                      );
+                    },
                   );
                 },
               ),
@@ -165,4 +274,72 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
       ),
     );
   }
+}
+
+void _showDishDetails(BuildContext context, Map food) {
+  showDialog(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: Text(food['name'] ?? 'Unknown'),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          if (food.containsKey('imagePath'))
+            ClipRRect(
+              borderRadius: BorderRadius.circular(15),
+              child: Image.asset(
+                food['imagePath'],
+                width: 150,
+                height: 150,
+                fit: BoxFit.cover,
+              ),
+            )
+          else
+            const Icon(Icons.fastfood, size: 100),
+          const SizedBox(height: 16),
+          Text("${food['description'] ?? '-'}", textAlign: TextAlign.center),
+          const SizedBox(height: 8),
+          Text(
+            "Price: \$${food['price'] ?? 0.0}",
+            textAlign: TextAlign.right,
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 18,
+              color: Colors.orange,
+            ),
+          ),
+        ],
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: const Text('Close'),
+        ),
+        Consumer<CartModel>(
+          builder: (context, cart, child) {
+            return ElevatedButton(
+              onPressed: () {
+                cart.addItem({
+                  'id': food['id'],
+                  'name': food['name'],
+                  'price': food['price'],
+                  'quantity': 1,
+                });
+                Navigator.pop(context);
+                ScaffoldMessenger.of(
+                  context,
+                ).showSnackBar(SnackBar(content: Text('added to cart!')));
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.orange,
+                foregroundColor: Colors.white,
+              ),
+              child: const Text('Add to Cart'),
+            );
+          },
+        ),
+      ],
+    ),
+  );
 }
