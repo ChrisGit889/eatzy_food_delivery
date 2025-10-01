@@ -18,7 +18,7 @@ class _OrderScreenState extends State<OrderScreen>
       "orderId": "#4782-FP78924",
       "date": "Sep 25, 2025",
       "service": "KFC",
-      "items": "7 items",
+      "items": "3 items",
       "delivery": "June 30, 2025",
       "status": "Pending",
       "steps": 3,

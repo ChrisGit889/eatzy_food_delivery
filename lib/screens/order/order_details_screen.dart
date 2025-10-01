@@ -73,12 +73,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                 buildSupportCard(),
                 Expanded(
                   child: Container(
-                    padding: const EdgeInsets.fromLTRB(
-                      20,
-                      20,
-                      20,
-                      0,
-                    ),
+                    padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
                     margin: const EdgeInsets.only(top: 10),
                     decoration: const BoxDecoration(
                       borderRadius: BorderRadius.vertical(
@@ -126,9 +121,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                           buildPaymentSummary(),
                           const Divider(height: 30),
                           buildOrderInfo(),
-                          const SizedBox(
-                            height: 20,
-                          ),
+                          const SizedBox(height: 20),
                         ],
                       ),
                     ),
@@ -281,7 +274,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
           ),
           Text(
-            "Order #4782 • 4 kg • Delivery in 2 hr",
+            "Order #4782 • 1 kg • Delivery in 10 m",
             style: TextStyle(color: Colors.grey),
           ),
         ],
@@ -314,7 +307,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
       ],
     );
   }
-  
+
   Widget _buildLine(bool isCompleted) {
     return Expanded(
       child: Divider(
@@ -371,9 +364,9 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 10),
-        _buildItemRow("1x", "Super Big Package 1", "Rp 35.500"),
-        _buildItemRow("2x", "Cream Soup", "Rp 14.000"),
-        _buildItemRow("1x", "French Fries (Large)", "Rp 22.000"),
+        _buildItemRow("1x", "Winger Bucket", "Rp 90.000"),
+        _buildItemRow("1x", "Super Family", "Rp 118.182"),
+        _buildItemRow("1x", "French Fries", "Rp 19.091"),
       ],
     );
   }
@@ -401,8 +394,8 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 10),
-        _buildPaymentRow("Subtotal", "Rp 71.500"),
-        _buildPaymentRow("Delivery Fee", "Rp 16.000"),
+        _buildPaymentRow("Subtotal", "Rp 227.273"),
+        _buildPaymentRow("Delivery Fee", "Rp 8.000"),
         const SizedBox(height: 8),
         const Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -412,7 +405,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
             ),
             Text(
-              "Rp 87.500",
+              "Rp 235.273",
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
             ),
           ],

@@ -36,7 +36,7 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: _pages[_selectedIndex],
-      bottomNavigationBar: BottomNav(
+      bottomNavigationBar: CustomBottomNav(
         currentIndex: _selectedIndex,
         onTap: (index) => setState(() {
           _selectedIndex = index;

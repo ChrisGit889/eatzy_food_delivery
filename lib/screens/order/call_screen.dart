@@ -57,7 +57,7 @@ class _CallScreenState extends State<CallScreen> {
                   ),
                   SizedBox(height: 8),
                   Text(
-                    '55:25',
+                    '1:25',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 18,
