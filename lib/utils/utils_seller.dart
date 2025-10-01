@@ -36,7 +36,7 @@ Future<bool> getSellerStatus() {
       .then((value) => value.exists);
 }
 
-Future<bool> makeNewSellerItem(name, desc, price) async {
+Future<bool> makeNewSellerItem(name, desc, price, type) async {
   try {
     var currentDoc = FirebaseFirestore.instance
         .collection("seller-food")
@@ -51,6 +51,7 @@ Future<bool> makeNewSellerItem(name, desc, price) async {
       "name": name,
       "description": desc,
       "price": int.parse(price),
+      "type": type,
     };
     tempData.add(newItem);
     await currentDoc.set({"foods": tempData});
@@ -106,6 +107,7 @@ Future changeFoodItemFromName(
   newName,
   newDesc,
   newPrice,
+  type,
 ) async {
   try {
     var currentDoc = FirebaseFirestore.instance
@@ -122,6 +124,7 @@ Future changeFoodItemFromName(
         i["name"] = newName;
         i["description"] = newDesc;
         i["price"] = newPrice;
+        i["type"] = type;
       }
     }
     await currentDoc.set({"foods": tempData});

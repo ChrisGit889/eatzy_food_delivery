@@ -11,11 +11,13 @@ class SellerItem extends StatelessWidget {
     required this.name,
     required this.desc,
     required this.thenDo,
+    required this.type,
   });
   final int price;
   final String name;
   final String desc;
   final Function() thenDo;
+  final String type;
 
   @override
   Widget build(BuildContext context) {
@@ -27,8 +29,9 @@ class SellerItem extends StatelessWidget {
           height: 200,
           child: DecoratedBox(
             decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(20)),
               border: BoxBorder.all(
-                color: Colors.black,
+                color: Colors.transparent,
                 width: 1,
                 style: BorderStyle.solid,
               ),
@@ -38,8 +41,8 @@ class SellerItem extends StatelessWidget {
                   blurRadius: 5,
                   color: Colors.black12,
                   blurStyle: BlurStyle.normal,
-                  spreadRadius: 5,
-                  offset: Offset(1, 1),
+                  spreadRadius: 2,
+                  offset: Offset(0, 3),
                 ),
               ],
             ),
@@ -49,6 +52,7 @@ class SellerItem extends StatelessWidget {
                 name: name,
                 price: price,
                 desc: desc,
+                type: type,
                 thenDo: thenDo,
               ),
             ),
@@ -66,12 +70,14 @@ class SellerItemContent extends StatelessWidget {
     required this.price,
     required this.desc,
     required this.thenDo,
+    required this.type,
   });
 
   final String name;
   final int price;
   final String desc;
   final Function() thenDo;
+  final String type;
 
   @override
   Widget build(BuildContext context) {
@@ -83,16 +89,35 @@ class SellerItemContent extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SizedBox(
-                height: 150,
-                width: 150,
-                child: DecoratedBox(
-                  decoration: BoxDecoration(),
-                  child: Image.asset(
-                    "assets/images/Water.png",
-                    fit: BoxFit.cover,
+              Stack(
+                children: [
+                  SizedBox(
+                    height: 150,
+                    width: 150,
+                    child: DecoratedBox(
+                      decoration: BoxDecoration(),
+                      child: Image.asset(
+                        "assets/images/Water.png",
+                        fit: BoxFit.cover,
+                      ),
+                    ),
                   ),
-                ),
+                  SizedBox(
+                    width: 30,
+                    height: 30,
+                    child: DecoratedBox(
+                      decoration: BoxDecoration(
+                        color: Colors.white.withAlpha(200),
+                      ),
+                      child: Icon(
+                        type == "food"
+                            ? Icons.fastfood
+                            : Icons.emoji_food_beverage,
+                        color: EATZY_ORANGE,
+                      ),
+                    ),
+                  ),
+                ],
               ),
               Text(
                 numToRupiah(price),

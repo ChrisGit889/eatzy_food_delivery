@@ -17,10 +17,15 @@ class _AddFoodState extends State<AddFood> {
   bool isError = false;
   String errorMessage = "";
 
+  String dropDownValue = "food";
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        foregroundColor: Colors.white,
         leading: IconButton(
           onPressed: () {
             Navigator.pop(context);
@@ -32,9 +37,60 @@ class _AddFoodState extends State<AddFood> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Column(
-            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text("Input food information"),
+              SizedBox(
+                height: 250,
+                width: MediaQuery.widthOf(context),
+                child: DecoratedBox(
+                  decoration: BoxDecoration(color: EATZY_ORANGE),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Text(
+                        "Creating a new food item",
+                        style: TextStyle(
+                          fontSize: 32,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Text(
+                          "Input food information",
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              SizedBox(height: 20),
+              SizedBox(
+                width: MediaQuery.widthOf(context) * 1 / 4,
+                child: DropdownButton(
+                  value: dropDownValue,
+                  onChanged: (value) {
+                    setState(() {
+                      dropDownValue = value!;
+                    });
+                  },
+                  items: [
+                    DropdownMenuItem<String>(
+                      value: "food",
+                      child: Text("Food"),
+                    ),
+                    DropdownMenuItem<String>(
+                      value: "drinks",
+                      child: Text("Drinks"),
+                    ),
+                  ],
+                ),
+              ),
               SizedBox(
                 width: MediaQuery.widthOf(context) * 3 / 4,
                 child: TextField(
@@ -65,31 +121,35 @@ class _AddFoodState extends State<AddFood> {
               isError
                   ? Text(errorMessage, style: TextStyle(color: Colors.red))
                   : SizedBox(),
-              TextButton(
-                onPressed: () async {
-                  isError = false;
-                  await errorCheckInput();
-                  setState(() {});
-                  if (!isError) {
-                    var res = await makeNewSellerItem(
-                      nameController.text,
-                      descriptionController.text,
-                      priceController.text,
-                    );
-                    if (res) {
-                      Navigator.pop(context);
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextButton(
+                  onPressed: () async {
+                    isError = false;
+                    await errorCheckInput();
+                    setState(() {});
+                    if (!isError) {
+                      var res = await makeNewSellerItem(
+                        nameController.text,
+                        descriptionController.text,
+                        priceController.text,
+                        dropDownValue,
+                      );
+                      if (res) {
+                        Navigator.pop(context);
+                      }
                     }
-                  }
-                  return;
-                },
-                style: ButtonStyle(
-                  backgroundColor: WidgetStateProperty.resolveWith((states) {
-                    return EATZY_ORANGE;
-                  }),
-                ),
-                child: const Text(
-                  "Submit",
-                  style: TextStyle(color: Color(0xFFFFFFFF)),
+                    return;
+                  },
+                  style: ButtonStyle(
+                    backgroundColor: WidgetStateProperty.resolveWith((states) {
+                      return EATZY_ORANGE;
+                    }),
+                  ),
+                  child: const Text(
+                    "Submit",
+                    style: TextStyle(color: Color(0xFFFFFFFF)),
+                  ),
                 ),
               ),
             ],
