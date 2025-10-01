@@ -36,7 +36,7 @@ class _SellerDashboardState extends State<SellerDashboard> {
                     SellerItem(
                       name: i["name"],
                       desc: i["description"],
-                      price: int.tryParse(i["price"].toString())!,
+                      price: double.tryParse(i["price"].toString())!,
                       type: i["type"],
                       thenDo: () {
                         setState(() {});

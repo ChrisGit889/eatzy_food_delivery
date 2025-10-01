@@ -13,7 +13,7 @@ class SellerItem extends StatelessWidget {
     required this.thenDo,
     required this.type,
   });
-  final int price;
+  final double price;
   final String name;
   final String desc;
   final Function() thenDo;
@@ -74,7 +74,7 @@ class SellerItemContent extends StatelessWidget {
   });
 
   final String name;
-  final int price;
+  final double price;
   final String desc;
   final Function() thenDo;
   final String type;
@@ -120,7 +120,7 @@ class SellerItemContent extends StatelessWidget {
                 ],
               ),
               Text(
-                numToRupiah(price),
+                numToDollar(price),
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
             ],

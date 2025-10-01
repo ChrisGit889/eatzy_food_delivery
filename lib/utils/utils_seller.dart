@@ -50,7 +50,7 @@ Future<bool> makeNewSellerItem(name, desc, price, type) async {
     var newItem = {
       "name": name,
       "description": desc,
-      "price": int.parse(price),
+      "price": double.parse(price),
       "type": type,
     };
     tempData.add(newItem);

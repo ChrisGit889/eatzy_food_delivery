@@ -178,11 +178,12 @@ class _AddFoodState extends State<AddFood> {
       isError = true;
       errorMessage = "Please input a price!";
       return;
-    } else if (int.tryParse(priceController.text) == null) {
+    } else if (double.tryParse(priceController.text) == null) {
+      print(priceController.text);
       isError = true;
       errorMessage = "Please input a valid number!";
       return;
-    } else if (int.parse(priceController.text) < 0) {
+    } else if (double.parse(priceController.text) < 0) {
       isError = true;
       errorMessage = "Please input a positive number!";
       return;

@@ -144,7 +144,6 @@ class _SellerEditFoodState extends State<SellerEditFood> {
                             onPressed: () async {
                               isError = false;
                               await errorCheckInput();
-                              setState(() {});
                               if (!isError) {
                                 var res = await changeFoodItemFromName(
                                   context,
@@ -158,6 +157,7 @@ class _SellerEditFoodState extends State<SellerEditFood> {
                                   Navigator.pop(context);
                                 }
                               }
+                              setState(() {});
                               return;
                             },
                             style: ButtonStyle(
@@ -206,11 +206,11 @@ class _SellerEditFoodState extends State<SellerEditFood> {
       isError = true;
       errorMessage = "Please input a price!";
       return;
-    } else if (int.tryParse(priceController.text) == null) {
+    } else if (double.tryParse(priceController.text) == null) {
       isError = true;
       errorMessage = "Please input a valid number!";
       return;
-    } else if (int.parse(priceController.text) < 0) {
+    } else if (double.parse(priceController.text) < 0) {
       isError = true;
       errorMessage = "Please input a positive number!";
       return;

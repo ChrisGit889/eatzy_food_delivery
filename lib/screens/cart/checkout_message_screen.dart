@@ -61,7 +61,7 @@ class _CheckoutMessageScreenState extends State<CheckoutMessageScreen> {
           const SizedBox(height: 35),
           InkWell(
             onTap: () {
-              Navigator.push(
+              Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
                   builder: (context) => const MainScreen(initialIndex: 1),
@@ -89,7 +89,7 @@ class _CheckoutMessageScreenState extends State<CheckoutMessageScreen> {
           const SizedBox(height: 8),
           TextButton(
             onPressed: () {
-              Navigator.push(
+              Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(builder: (context) => const MainScreen()),
               );
