@@ -1,5 +1,8 @@
 import 'package:eatzy_food_delivery/constants.dart';
 import 'package:eatzy_food_delivery/screens/seller/seller_add_food.dart';
+import 'package:eatzy_food_delivery/utils/utils_seller.dart';
+import 'package:eatzy_food_delivery/widgets/seller_item.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class SellerDashboard extends StatefulWidget {
@@ -15,43 +18,28 @@ class _SellerDashboardState extends State<SellerDashboard> {
     return Scaffold(
       body: Column(
         children: [
-          Expanded(
-            child: ListView(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(
-                    top: 10.0,
-                    bottom: 10.0,
-                    left: 8,
-                  ),
-                  child: Text(
-                    "Manage Restaurant",
-                    style: TextStyle(
-                      fontSize: 32,
-                      fontFamily: "Times New Roman",
-                      fontWeight: FontWeight.bold,
+          FutureBuilder(
+            future: getSellerItems(FirebaseAuth.instance.currentUser!.email!),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                List<Widget> currList = [];
+                for (var i in snapshot.data!) {
+                  currList.add(
+                    SellerItem(
+                      name: i["name"],
+                      desc: i["description"],
+                      price: int.tryParse(i["price"].toString())!,
                     ),
-                  ),
-                ),
-                RestaurantButtonRow(),
-                Padding(
-                  padding: const EdgeInsets.only(
-                    top: 10.0,
-                    bottom: 10.0,
-                    left: 8,
-                  ),
-                  child: Text(
-                    "Your Items",
-                    style: TextStyle(
-                      fontSize: 32,
-                      fontFamily: "Times New Roman",
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ],
-            ),
+                  );
+                }
+                return Expanded(
+                  child: ListView(shrinkWrap: true, children: currList),
+                );
+              }
+              return CircularProgressIndicator();
+            },
           ),
+          RestaurantButtonRow(),
         ],
       ),
     );
@@ -64,24 +52,30 @@ class RestaurantButtonRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 8, right: 8),
+      padding: const EdgeInsets.all(8),
       child: Row(
         children: [
-          TextButton(
-            onPressed: () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => const AddFood()),
-              );
-            },
-            style: ButtonStyle(
-              backgroundColor: WidgetStateProperty.resolveWith((states) {
-                return EATZY_ORANGE;
-              }),
-            ),
-            child: const Text(
-              "Add Food",
-              style: TextStyle(color: Colors.white),
+          Expanded(
+            child: TextButton(
+              onPressed: () {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => const AddFood()),
+                );
+              },
+              style: ButtonStyle(
+                backgroundColor: WidgetStateProperty.resolveWith((states) {
+                  return EATZY_ORANGE;
+                }),
+              ),
+              child: const Text(
+                "Add Food",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ),
           ),
         ],

@@ -1,8 +1,9 @@
 import 'package:eatzy_food_delivery/screens/auth/auth_gate.dart';
+import 'package:eatzy_food_delivery/screens/auth/login_screen.dart';
 import 'package:eatzy_food_delivery/screens/seller/seller_screen.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:eatzy_food_delivery/utils/utils_seller.dart';
+import 'package:eatzy_food_delivery/utils/utils_user.dart';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -12,11 +13,7 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  Future<bool> isSeller = FirebaseFirestore.instance
-      .collection('sellers')
-      .doc(FirebaseAuth.instance.currentUser!.email!)
-      .get()
-      .then((value) => value.exists);
+  Future<bool> isSeller = getSellerStatus();
 
   @override
   Widget build(BuildContext context) {
@@ -45,18 +42,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                   IconButton(
                     onPressed: () async {
-                      try {
-                        await FirebaseAuth.instance.signOut();
+                      var res = await signUserOut(context);
+                      if (res) {
                         Navigator.pushReplacement(
-                          // ignore: use_build_context_synchronously
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const AuthGate(),
+                            builder: (context) =>
+                                const AuthGate(whereToGo: LoginScreen()),
                           ),
                         );
-                      } catch (e) {
-                        // ignore: avoid_print
-                        print(e);
                       }
                     },
                     icon: const Icon(Icons.logout, color: Colors.black87),
@@ -76,7 +70,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                   const SizedBox(height: 12),
                   Text(
-                    FirebaseAuth.instance.currentUser!.displayName!,
+                    getUserName(),
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                 ],
@@ -171,24 +165,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget _notASeller() {
     return _buildRoundedBox(
       "Become A Seller",
-      onTap: () {
-        var db = FirebaseFirestore.instance;
-        var data = <String, dynamic>{
-          "email": FirebaseAuth.instance.currentUser!.email,
-          "store": null,
-        };
-        db
-            .collection('sellers')
-            .doc(FirebaseAuth.instance.currentUser!.email)
-            .set(data)
-            // ignore: avoid_print
-            .onError((e, _) => print("Error writing document to seller"));
+      onTap: () async {
+        makeSeller();
         setState(() {
-          isSeller = db
-              .collection('sellers')
-              .doc(FirebaseAuth.instance.currentUser!.email!)
-              .get()
-              .then((value) => value.exists);
+          isSeller = getSellerStatus();
         });
       },
     );

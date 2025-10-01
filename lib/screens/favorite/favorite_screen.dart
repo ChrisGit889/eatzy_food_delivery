@@ -126,13 +126,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                 ],
               ),
             ),
-            const SizedBox(height: 30),
-            const Center(
-              child: Text(
-                "List makanan favorit anda",
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-            ),
+           
 
             Expanded(
               child: ListView.builder(

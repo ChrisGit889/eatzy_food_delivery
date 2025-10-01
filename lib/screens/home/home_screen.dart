@@ -1,3 +1,4 @@
+import 'package:eatzy_food_delivery/screens/category/category_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:eatzy_food_delivery/widgets/category_cell.dart';
 import '../cart/cart_screen.dart';
@@ -209,9 +210,14 @@ class _HomeScreenState extends State<HomeScreen> {
                     categories: category,
                     isSelected: index == selectedCategoryIndex,
                     onPressed: () {
-                      setState(() {
-                        selectedCategoryIndex = index;
-                      });
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => CategoryScreen(
+                            category: category,
+                          ),
+                        ),
+                      );
                     },
                   );
                 },
