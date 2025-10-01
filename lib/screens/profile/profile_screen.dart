@@ -1,5 +1,5 @@
 import 'package:eatzy_food_delivery/screens/auth/auth_gate.dart';
-import 'package:eatzy_food_delivery/screens/auth/login_screen.dart';
+import 'package:eatzy_food_delivery/screens/auth/auth_screen.dart';
 import 'package:eatzy_food_delivery/screens/seller/seller_screen.dart';
 import 'package:eatzy_food_delivery/utils/utils_seller.dart';
 import 'package:eatzy_food_delivery/utils/utils_user.dart';
@@ -48,7 +48,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           context,
                           MaterialPageRoute(
                             builder: (context) =>
-                                const AuthGate(whereToGo: LoginScreen()),
+                                const AuthGate(whereToGo: AuthScreen()),
                           ),
                         );
                       }

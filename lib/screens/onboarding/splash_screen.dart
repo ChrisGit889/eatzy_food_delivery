@@ -1,6 +1,7 @@
 import 'package:eatzy_food_delivery/constants.dart';
+import 'package:eatzy_food_delivery/screens/auth/auth_gate.dart';
+import 'package:eatzy_food_delivery/screens/auth/auth_screen.dart';
 import 'package:flutter/material.dart';
-import '../auth/login_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -53,7 +54,9 @@ class _SplashScreenState extends State<SplashScreen> {
                 onPressed: () {
                   Navigator.pushReplacement(
                     context,
-                    MaterialPageRoute(builder: (_) => const LoginScreen()),
+                    MaterialPageRoute(
+                      builder: (_) => const AuthGate(whereToGo: AuthScreen()),
+                    ),
                   );
                 },
                 child: const Text("Mulai"),

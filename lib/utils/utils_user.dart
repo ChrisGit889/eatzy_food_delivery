@@ -42,9 +42,45 @@ Future<bool> createNewUser(firstName, email, password, context) async {
         SnackBar(content: Text('The account already exists for that email.')),
         snackBarAnimationStyle: AnimationStyle(curve: ElasticInCurve()),
       );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('An error has occured. Please try again')),
+        snackBarAnimationStyle: AnimationStyle(curve: ElasticInCurve()),
+      );
     }
   } catch (e) {
     print(e);
   }
   return false;
+}
+
+Future<bool> signInUser(email, password, context) async {
+  if (email == '' || password == '') {
+    return false;
+  }
+  try {
+    await FirebaseAuth.instance.signInWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
+    return true;
+  } on FirebaseAuthException catch (e) {
+    if (e.code == 'user-not-found') {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('No user found with that email')),
+        snackBarAnimationStyle: AnimationStyle(curve: ElasticInCurve()),
+      );
+    } else if (e.code == 'wrong-password') {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Wrong password')),
+        snackBarAnimationStyle: AnimationStyle(curve: ElasticInCurve()),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('An error has occured. Please try again')),
+        snackBarAnimationStyle: AnimationStyle(curve: ElasticInCurve()),
+      );
+    }
+    return false;
+  }
 }

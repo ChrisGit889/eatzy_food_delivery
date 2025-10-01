@@ -1,3 +1,4 @@
+import 'package:eatzy_food_delivery/screens/auth/auth_gate.dart';
 import 'package:flutter/material.dart';
 import '../auth/auth_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -55,7 +56,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   void _navigateToAuthScreen() {
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => AuthScreen()),
+      MaterialPageRoute(
+        builder: (context) => AuthGate(whereToGo: AuthScreen()),
+      ),
     );
   }
 

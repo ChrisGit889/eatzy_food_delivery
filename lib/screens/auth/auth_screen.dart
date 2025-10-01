@@ -1,6 +1,7 @@
+import 'package:eatzy_food_delivery/screens/auth/auth_gate.dart';
+import 'package:eatzy_food_delivery/utils/utils_user.dart';
 import 'package:flutter/material.dart';
 import 'package:eatzy_food_delivery/screens/main_screen.dart';
-import 'package:eatzy_food_delivery/screens/home/home_screen.dart';
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({Key? key}) : super(key: key);
@@ -14,6 +15,13 @@ class _AuthScreenState extends State<AuthScreen> {
   bool _rememberMe = false;
   bool _isLoginPasswordObscured = true;
   bool _isRegisterPasswordObscured = true;
+
+  final TextEditingController firstNameController = TextEditingController();
+  final TextEditingController lastNameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController dobController = TextEditingController();
+  final TextEditingController phoneController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -158,11 +166,16 @@ class _AuthScreenState extends State<AuthScreen> {
       key: const ValueKey('login_form'),
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        _buildTextField(label: 'Email', initialValue: ''),
+        _buildTextField(
+          label: 'Email',
+          initialValue: '',
+          controller: emailController,
+        ),
         const SizedBox(height: 16),
         _buildTextField(
           label: 'Password',
           initialValue: '',
+          controller: passwordController,
           isPassword: true,
           obscureState: _isLoginPasswordObscured,
           onToggleObscure: () {
@@ -199,11 +212,20 @@ class _AuthScreenState extends State<AuthScreen> {
         ),
         const SizedBox(height: 24),
         ElevatedButton(
-          onPressed: () {
-            Navigator.pushReplacement(
+          onPressed: () async {
+            var res = await signInUser(
+              emailController.text,
+              passwordController.text,
               context,
-              MaterialPageRoute(builder: (context) => MainScreen()),
             );
+            if (res) {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => AuthGate(whereToGo: AuthScreen()),
+                ),
+              );
+            }
           },
           style: ElevatedButton.styleFrom(
             backgroundColor: const Color.fromARGB(255, 255, 145, 0),
@@ -235,19 +257,32 @@ class _AuthScreenState extends State<AuthScreen> {
         Row(
           children: [
             Expanded(
-              child: _buildTextField(label: 'First Name', initialValue: ''),
+              child: _buildTextField(
+                label: 'First Name',
+                initialValue: '',
+                controller: firstNameController,
+              ),
             ),
             const SizedBox(width: 16),
             Expanded(
-              child: _buildTextField(label: 'Last Name', initialValue: ''),
+              child: _buildTextField(
+                label: 'Last Name',
+                initialValue: '',
+                controller: lastNameController,
+              ),
             ),
           ],
         ),
         const SizedBox(height: 16),
-        _buildTextField(label: 'Email', initialValue: ''),
+        _buildTextField(
+          label: 'Email',
+          initialValue: '',
+          controller: emailController,
+        ),
         const SizedBox(height: 16),
         _buildTextField(
           label: 'Birth of date',
+          controller: dobController,
           initialValue: '',
           isDatePicker: true,
         ),
@@ -255,12 +290,14 @@ class _AuthScreenState extends State<AuthScreen> {
         _buildTextField(
           label: 'Phone Number',
           initialValue: '',
+          controller: phoneController,
           isPhoneNumber: true,
         ),
         const SizedBox(height: 16),
         _buildTextField(
           label: 'Set Password',
           initialValue: '',
+          controller: passwordController,
           isPassword: true,
           obscureState: _isRegisterPasswordObscured,
           onToggleObscure: () {
@@ -271,7 +308,22 @@ class _AuthScreenState extends State<AuthScreen> {
         ),
         const SizedBox(height: 32),
         ElevatedButton(
-          onPressed: () {},
+          onPressed: () async {
+            var res = await createNewUser(
+              firstNameController.text,
+              emailController.text,
+              passwordController.text,
+              context,
+            );
+            if (res) {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => AuthGate(whereToGo: AuthScreen()),
+                ),
+              );
+            }
+          },
           style: ElevatedButton.styleFrom(
             backgroundColor: const Color.fromARGB(255, 255, 140, 0),
             padding: const EdgeInsets.symmetric(vertical: 16),
@@ -291,12 +343,14 @@ class _AuthScreenState extends State<AuthScreen> {
   Widget _buildTextField({
     required String label,
     required String initialValue,
+    required TextEditingController controller,
     bool isPassword = false,
     bool isDatePicker = false,
     bool isPhoneNumber = false,
     bool? obscureState,
     VoidCallback? onToggleObscure,
   }) {
+    controller.text = initialValue;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -309,7 +363,7 @@ class _AuthScreenState extends State<AuthScreen> {
         ),
         const SizedBox(height: 8),
         TextFormField(
-          initialValue: initialValue,
+          controller: controller,
           obscureText: isPassword ? (obscureState ?? true) : false,
           decoration: InputDecoration(
             filled: true,
