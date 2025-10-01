@@ -1,5 +1,4 @@
 import 'package:eatzy_food_delivery/constants.dart';
-import 'package:eatzy_food_delivery/screens/seller/seller_screen.dart';
 import 'package:eatzy_food_delivery/utils/utils_seller.dart';
 import 'package:flutter/material.dart';
 
@@ -24,10 +23,7 @@ class _AddFoodState extends State<AddFood> {
       appBar: AppBar(
         leading: IconButton(
           onPressed: () {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => const SellerScreen()),
-            );
+            Navigator.pop(context);
           },
           icon: Icon(Icons.arrow_back),
         ),
@@ -82,10 +78,7 @@ class _AddFoodState extends State<AddFood> {
                       priceController.text,
                     );
                     if (res) {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(builder: (context) => SellerScreen()),
-                      );
+                      Navigator.pop(context);
                     }
                   }
                   return;

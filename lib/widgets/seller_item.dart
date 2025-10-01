@@ -1,4 +1,6 @@
 import 'package:eatzy_food_delivery/constants.dart';
+import 'package:eatzy_food_delivery/screens/seller/seller_delete_food.dart';
+import 'package:eatzy_food_delivery/screens/seller/seller_edit_food.dart';
 import 'package:eatzy_food_delivery/utils/utils.dart';
 import 'package:flutter/material.dart';
 
@@ -112,7 +114,30 @@ class SellerItemContent extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                SellerDeleteFood(foodIdentifier: name),
+                          ),
+                        );
+                      },
+                      icon: Icon(
+                        Icons.delete_forever_outlined,
+                        color: EATZY_ORANGE,
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                SellerEditFood(foodIdentifier: name),
+                          ),
+                        );
+                      },
                       icon: Icon(Icons.edit_square, color: EATZY_ORANGE),
                     ),
                   ],
