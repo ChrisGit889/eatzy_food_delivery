@@ -199,8 +199,8 @@ class CategoryScreen extends StatelessWidget {
                             SnackBar(
                               content: Text(
                                 isFav
-                                    ? '${food['name']} dihapus dari favorit'
-                                    : '${food['name']} ditambahkan ke favorit',
+                                    ? '${food['name']} removed from favorites'
+                                    : '${food['name']} added to favorites',
                               ),
                               duration: const Duration(seconds: 2),
                             ),
