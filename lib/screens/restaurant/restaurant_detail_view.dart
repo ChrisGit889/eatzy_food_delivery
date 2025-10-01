@@ -1,3 +1,4 @@
+import 'package:eatzy_food_delivery/data/models/favorit_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:eatzy_food_delivery/data/models/cart_model.dart';
@@ -174,74 +175,118 @@ class _RestaurantDetailViewState extends State<RestaurantDetailView> {
                       ],
                     ),
 
-                    // Add to Cart Button (+)
-                    trailing: Consumer<CartModel>(
-                      builder: (context, cart, child) {
-                        return Container(
-                          decoration: BoxDecoration(
-                            color: Colors.orange,
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: IconButton(
-                            icon: Icon(Icons.add, color: Colors.white),
-                            onPressed: () {
-                              cart.addItem({
-                                'id':
-                                    widget.restaurant['menus']?[index]['id'] ??
-                                    'dish_${index + 1}',
-                                'name':
-                                    widget
-                                        .restaurant['menus']?[index]['name'] ??
-                                    'Dish ${index + 1}',
-                                'price':
-                                    widget
-                                        .restaurant['menus']?[index]['price'] ??
-                                    12.99,
-                                'quantity': 1,
-                              });
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Row(
-                                    children: [
-                                      Icon(
-                                        Icons.check_circle,
-                                        color: Colors.white,
-                                      ),
-                                      SizedBox(width: 8),
-                                      Text(
-                                        '${widget.restaurant['menus'][index]['name']} added to cart',
-                                      ),
-                                    ],
+                    // Add to Cart Button and favorite button 
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Consumer<FavoriteModel>(
+                          builder: (context, favModel, child) {
+                            final isFav = favModel.favorites.any(
+                              (item) =>
+                                  item['id'] ==
+                                  widget.restaurant['menus'][index]['id'],
+                            );
+
+                            return IconButton(
+                              icon: Icon(
+                                isFav ? Icons.favorite : Icons.favorite_border,
+                                color: Colors.red,
+                              ),
+                              onPressed: () {
+                                favModel.toggleFav({
+                                  ...Map<String, dynamic>.from(
+                                    widget.restaurant['menus'][index],
                                   ),
-                                  duration: Duration(seconds: 2),
-                                  action: SnackBarAction(
-                                    label: 'View Cart',
-                                    textColor: Colors.orange,
-                                    onPressed: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => CartScreen(),
-                                        ),
-                                      );
-                                    },
+                                  'restaurant': widget.restaurant['name'],
+                                });
+
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      isFav
+                                          ? '${widget.restaurant['menus'][index]['name']} removed from favorites'
+                                          : '${widget.restaurant['menus'][index]['name']} added to favorites',
+                                    ),
+                                    duration: const Duration(seconds: 2),
                                   ),
+                                );
+                              },
+                            );
+                          },
+                        ),
+
+                        // Consumer Cart
+                        Consumer<CartModel>(
+                          builder: (context, cart, child) {
+                            return Container(
+                              decoration: BoxDecoration(
+                                color: Colors.orange,
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: IconButton(
+                                icon: const Icon(
+                                  Icons.add,
+                                  color: Colors.white,
                                 ),
-                              );
-                            },
-                          ),
-                        );
-                      },
+                                onPressed: () {
+                                  cart.addItem({
+                                    'id':
+                                        widget
+                                            .restaurant['menus']?[index]['id'] ??
+                                        'dish_${index + 1}',
+                                    'name':
+                                        widget
+                                            .restaurant['menus']?[index]['name'] ??
+                                        'Dish ${index + 1}',
+                                    'price':
+                                        widget
+                                            .restaurant['menus']?[index]['price'] ??
+                                        12.99,
+                                    'quantity': 1,
+                                  });
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Row(
+                                        children: [
+                                          const Icon(
+                                            Icons.check_circle,
+                                            color: Colors.white,
+                                          ),
+                                          const SizedBox(width: 8),
+                                          Text(
+                                            '${widget.restaurant['menus'][index]['name']} added to cart',
+                                          ),
+                                        ],
+                                      ),
+                                      duration: const Duration(seconds: 2),
+                                      action: SnackBarAction(
+                                        label: 'View Cart',
+                                        textColor: Colors.orange,
+                                        onPressed: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  CartScreen(),
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
+                            );
+                          },
+                        ),
+                      ],
                     ),
-                    onTap: () {
-                      _showDishDetails(context, index);
-                    },
+                    onTap: () => _showDishDetails(context, index),
                   ),
                 );
               },
             ),
-
-            SliverToBoxAdapter(child: SizedBox(height: 80)),
+            const SliverToBoxAdapter(child: SizedBox(height: 80)),
           ],
         ),
       ),

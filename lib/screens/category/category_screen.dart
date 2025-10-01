@@ -1,3 +1,4 @@
+import 'package:eatzy_food_delivery/data/models/favorit_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:eatzy_food_delivery/data/models/cart_model.dart';
@@ -173,54 +174,80 @@ class CategoryScreen extends StatelessWidget {
                 ],
               ),
 
-              trailing: Consumer<CartModel>(
-                builder: (context, cart, child) {
-                  return Container(
-                    decoration: BoxDecoration(
-                      color: Colors.orange,
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: IconButton(
-                      icon: const Icon(Icons.add, color: Colors.white),
-                      onPressed: () {
-                        cart.addItem({
-                          'id': food['id'],
-                          'name': food['name'],
-                          'price': food['price'],
-                          'quantity': 1,
-                        });
+              trailing: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Consumer<FavoriteModel>(
+                    builder: (context, favModel, child) {
+                      final isFav = favModel.isFavorite(food['id']);
+                      return IconButton(
+                        icon: Icon(
+                          isFav ? Icons.favorite : Icons.favorite_border,
+                          color: isFav ? Colors.red : Colors.grey,
+                        ),
+                        onPressed: () {
+                          favModel.toggleFav({
+                            'id': food['id'],
+                            'name': food['name'],
+                            'restaurant': food['restaurant'],
+                            'price': food['price'],
+                            'imagePath': food['imagePath'],
+                            'description': food['description'],
+                          });
 
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Row(
-                              children: [
-                                const Icon(
-                                  Icons.check_circle,
-                                  color: Colors.white,
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                isFav
+                                    ? '${food['name']} dihapus dari favorit'
+                                    : '${food['name']} ditambahkan ke favorit',
+                              ),
+                              duration: const Duration(seconds: 2),
+                            ),
+                          );
+                        },
+                      );
+                    },
+                  ),
+
+                  Consumer<CartModel>(
+                    builder: (context, cart, child) {
+                      return Container(
+                        decoration: BoxDecoration(
+                          color: Colors.orange,
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: IconButton(
+                          icon: const Icon(Icons.add, color: Colors.white),
+                          onPressed: () {
+                            cart.addItem({
+                              'id': food['id'],
+                              'name': food['name'],
+                              'price': food['price'],
+                              'quantity': 1,
+                            });
+
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Row(
+                                  children: [
+                                    const Icon(
+                                      Icons.check_circle,
+                                      color: Colors.white,
+                                    ),
+                                    const SizedBox(width: 8),
+                                    Text('${food['name']} added to cart'),
+                                  ],
                                 ),
-                                const SizedBox(width: 8),
-                                Text('${food['name']} added to cart'),
-                              ],
-                            ),
-                            duration: const Duration(seconds: 2),
-                            action: SnackBarAction(
-                              label: 'View Cart',
-                              textColor: Colors.orange,
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => CartScreen(),
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  );
-                },
+                                duration: const Duration(seconds: 2),
+                              ),
+                            );
+                          },
+                        ),
+                      );
+                    },
+                  ),
+                ],
               ),
             ),
           );
