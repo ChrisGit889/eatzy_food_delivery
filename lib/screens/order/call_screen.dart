@@ -67,11 +67,13 @@ class _CallScreenState extends State<CallScreen> {
                 ],
               ),
 
+              // Layout Tombol Grid 2x2
               Column(
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
+                      // Baris pertama: Tombol Mute dan Chat
                       GestureDetector(
                         onTap: () {
                           setState(() {
@@ -82,10 +84,8 @@ class _CallScreenState extends State<CallScreen> {
                             ? _buildActionButton(Icons.mic, 'Unmute')
                             : _buildActionButton(Icons.mic_off, 'Mute'),
                       ),
-
                       GestureDetector(
                         onTap: () {
-                          // Arahkan ke ChatScreen
                           Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -95,8 +95,13 @@ class _CallScreenState extends State<CallScreen> {
                         },
                         child: _buildActionButton(Icons.chat_bubble, 'Chat'),
                       ),
-
-                      // Tombol Speaker
+                    ],
+                  ),
+                  const SizedBox(height: 24),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      // Baris kedua: Tombol Speaker dan Record
                       GestureDetector(
                         onTap: () {
                           setState(() {
@@ -107,15 +112,7 @@ class _CallScreenState extends State<CallScreen> {
                             ? _buildActionButton(Icons.volume_up, 'Speaker')
                             : _buildActionButton(Icons.volume_down, 'Speaker'),
                       ),
-                    ],
-                  ),
-                  const SizedBox(height: 24),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      _buildActionButton(Icons.person_add, 'Add'),
                       _buildActionButton(Icons.voicemail, 'Record'),
-                      const SizedBox(width: 60),
                     ],
                   ),
                 ],
