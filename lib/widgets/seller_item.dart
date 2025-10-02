@@ -10,10 +10,14 @@ class SellerItem extends StatelessWidget {
     required this.price,
     required this.name,
     required this.desc,
+    required this.thenDo,
+    required this.type,
   });
-  final int price;
+  final double price;
   final String name;
   final String desc;
+  final Function() thenDo;
+  final String type;
 
   @override
   Widget build(BuildContext context) {
@@ -25,8 +29,9 @@ class SellerItem extends StatelessWidget {
           height: 200,
           child: DecoratedBox(
             decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(20)),
               border: BoxBorder.all(
-                color: Colors.black,
+                color: Colors.transparent,
                 width: 1,
                 style: BorderStyle.solid,
               ),
@@ -36,14 +41,20 @@ class SellerItem extends StatelessWidget {
                   blurRadius: 5,
                   color: Colors.black12,
                   blurStyle: BlurStyle.normal,
-                  spreadRadius: 5,
-                  offset: Offset(1, 1),
+                  spreadRadius: 2,
+                  offset: Offset(0, 3),
                 ),
               ],
             ),
             child: Padding(
               padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-              child: SellerItemContent(name: name, price: price, desc: desc),
+              child: SellerItemContent(
+                name: name,
+                price: price,
+                desc: desc,
+                type: type,
+                thenDo: thenDo,
+              ),
             ),
           ),
         ),
@@ -58,11 +69,15 @@ class SellerItemContent extends StatelessWidget {
     required this.name,
     required this.price,
     required this.desc,
+    required this.thenDo,
+    required this.type,
   });
 
   final String name;
-  final int price;
+  final double price;
   final String desc;
+  final Function() thenDo;
+  final String type;
 
   @override
   Widget build(BuildContext context) {
@@ -74,19 +89,28 @@ class SellerItemContent extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SizedBox(
-                height: 150,
-                width: 150,
-                child: DecoratedBox(
-                  decoration: BoxDecoration(),
-                  child: Image.asset(
-                    "assets/images/Water.png",
-                    fit: BoxFit.cover,
+              Stack(
+                children: [
+                  imageOfCategory(type, 150.0, 150.0),
+                  SizedBox(
+                    width: 30,
+                    height: 30,
+                    child: DecoratedBox(
+                      decoration: BoxDecoration(
+                        color: Colors.white.withAlpha(200),
+                      ),
+                      child: Icon(
+                        type != "drinks"
+                            ? Icons.fastfood
+                            : Icons.emoji_food_beverage,
+                        color: EATZY_ORANGE,
+                      ),
+                    ),
                   ),
-                ),
+                ],
               ),
               Text(
-                numToRupiah(price),
+                numToDollar(price),
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
             ],
@@ -121,7 +145,9 @@ class SellerItemContent extends StatelessWidget {
                             builder: (context) =>
                                 SellerDeleteFood(foodIdentifier: name),
                           ),
-                        );
+                        ).then((_) {
+                          thenDo();
+                        });
                       },
                       icon: Icon(
                         Icons.delete_forever_outlined,
@@ -136,7 +162,9 @@ class SellerItemContent extends StatelessWidget {
                             builder: (context) =>
                                 SellerEditFood(foodIdentifier: name),
                           ),
-                        );
+                        ).then((_) {
+                          thenDo();
+                        });
                       },
                       icon: Icon(Icons.edit_square, color: EATZY_ORANGE),
                     ),

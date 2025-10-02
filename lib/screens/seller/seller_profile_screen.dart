@@ -28,7 +28,7 @@ class _SellerProfileState extends State<SellerProfile> {
               CircleAvatar(
                 radius: 80,
                 backgroundImage: AssetImage(
-                  "assets/buatisiprofile.jpg",
+                  "assets/images/buatisiprofile.jpg",
                 ), //TODO: Use firebase for this
               ),
               Row(
@@ -45,7 +45,7 @@ class _SellerProfileState extends State<SellerProfile> {
                           );
                         }
                         return snapshot.data!["store"] == null
-                            ? Text("No name")
+                            ? Text("Unnamed Seller")
                             : Text(snapshot.data!["store"]);
                       } else {
                         return CircularProgressIndicator();

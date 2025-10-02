@@ -18,7 +18,12 @@ Future<List> getSellerItems(String sellerEmail) async {
 
 void makeSeller() {
   var db = FirebaseFirestore.instance;
-  var data = <String, dynamic>{"email": getCurrentUser().email, "store": null};
+  var data = <String, dynamic>{
+    "email": getCurrentUser().email,
+    "store": null,
+    "address": null,
+    "image": null,
+  };
   db
       .collection('sellers')
       .doc(getCurrentUser().email)
@@ -36,7 +41,7 @@ Future<bool> getSellerStatus() {
       .then((value) => value.exists);
 }
 
-Future<bool> makeNewSellerItem(name, desc, price) async {
+Future<bool> makeNewSellerItem({name, desc, price, type}) async {
   try {
     var currentDoc = FirebaseFirestore.instance
         .collection("seller-food")
@@ -50,7 +55,11 @@ Future<bool> makeNewSellerItem(name, desc, price) async {
     var newItem = {
       "name": name,
       "description": desc,
-      "price": int.parse(price),
+      "type": type,
+      "price": double.parse(price),
+      "rating": 0,
+      "reviews": 0,
+      "last_updated": DateTime.now(),
     };
     tempData.add(newItem);
     await currentDoc.set({"foods": tempData});
@@ -100,13 +109,15 @@ Future getFoodItemFromName(itemName) {
       });
 }
 
-Future changeFoodItemFromName(
+Future changeFoodItemFromName({
   context,
   itemName,
   newName,
   newDesc,
   newPrice,
-) async {
+  newType,
+  newImage,
+}) async {
   try {
     var currentDoc = FirebaseFirestore.instance
         .collection("seller-food")
@@ -122,6 +133,9 @@ Future changeFoodItemFromName(
         i["name"] = newName;
         i["description"] = newDesc;
         i["price"] = newPrice;
+        i["type"] = newType;
+        i["image"] = newImage;
+        i["last_updated"] = DateTime.now();
       }
     }
     await currentDoc.set({"foods": tempData});
