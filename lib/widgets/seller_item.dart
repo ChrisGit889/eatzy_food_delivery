@@ -91,17 +91,7 @@ class SellerItemContent extends StatelessWidget {
             children: [
               Stack(
                 children: [
-                  SizedBox(
-                    height: 150,
-                    width: 150,
-                    child: DecoratedBox(
-                      decoration: BoxDecoration(),
-                      child: Image.asset(
-                        "assets/images/Water.png",
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
+                  imageOfCategory(type, 150.0, 150.0),
                   SizedBox(
                     width: 30,
                     height: 30,
@@ -110,7 +100,7 @@ class SellerItemContent extends StatelessWidget {
                         color: Colors.white.withAlpha(200),
                       ),
                       child: Icon(
-                        type == "food"
+                        type != "drinks"
                             ? Icons.fastfood
                             : Icons.emoji_food_beverage,
                         color: EATZY_ORANGE,

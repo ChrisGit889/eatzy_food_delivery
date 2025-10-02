@@ -1,4 +1,5 @@
 import 'package:eatzy_food_delivery/constants.dart';
+import 'package:eatzy_food_delivery/utils/utils.dart';
 import 'package:eatzy_food_delivery/utils/utils_seller.dart';
 import 'package:flutter/material.dart';
 
@@ -17,7 +18,7 @@ class _SellerEditFoodState extends State<SellerEditFood> {
   bool isError = false;
   bool load = true;
   String errorMessage = '';
-  String dropDownValue = 'food';
+  String dropDownValue = 'other';
   @override
   Widget build(BuildContext context) {
     var itemData = getFoodItemFromName(widget.foodIdentifier);
@@ -46,13 +47,14 @@ class _SellerEditFoodState extends State<SellerEditFood> {
                     return Column(
                       children: [
                         SizedBox(
-                          height: 250,
+                          height: 350,
                           width: MediaQuery.widthOf(context),
                           child: DecoratedBox(
                             decoration: BoxDecoration(color: EATZY_ORANGE),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
+                                imageOfCategory(dropDownValue, 200.0, 200.0),
                                 Text(
                                   "Creating a new food item",
                                   style: TextStyle(
@@ -89,8 +91,20 @@ class _SellerEditFoodState extends State<SellerEditFood> {
                             },
                             items: [
                               DropdownMenuItem<String>(
-                                value: "food",
-                                child: Text("Food"),
+                                value: "pizza",
+                                child: Text("Pizza"),
+                              ),
+                              DropdownMenuItem<String>(
+                                value: "burger",
+                                child: Text("Burger"),
+                              ),
+                              DropdownMenuItem<String>(
+                                value: "snacks",
+                                child: Text("Snacks"),
+                              ),
+                              DropdownMenuItem<String>(
+                                value: "other",
+                                child: Text("Others"),
                               ),
                               DropdownMenuItem<String>(
                                 value: "drinks",
@@ -146,12 +160,13 @@ class _SellerEditFoodState extends State<SellerEditFood> {
                               await errorCheckInput();
                               if (!isError) {
                                 var res = await changeFoodItemFromName(
-                                  context,
-                                  widget.foodIdentifier,
-                                  nameController.text,
-                                  descController.text,
-                                  priceController.text,
-                                  dropDownValue,
+                                  context: context,
+                                  itemName: widget.foodIdentifier,
+                                  newName: nameController.text,
+                                  newDesc: descController.text,
+                                  newPrice: priceController.text,
+                                  newType: dropDownValue,
+                                  newImage: null,
                                 );
                                 if (res) {
                                   Navigator.pop(context);

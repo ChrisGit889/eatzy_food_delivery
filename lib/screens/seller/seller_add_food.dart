@@ -1,4 +1,5 @@
 import 'package:eatzy_food_delivery/constants.dart';
+import 'package:eatzy_food_delivery/utils/utils.dart';
 import 'package:eatzy_food_delivery/utils/utils_seller.dart';
 import 'package:flutter/material.dart';
 
@@ -17,7 +18,7 @@ class _AddFoodState extends State<AddFood> {
   bool isError = false;
   String errorMessage = "";
 
-  String dropDownValue = "food";
+  String dropDownValue = "other";
 
   @override
   Widget build(BuildContext context) {
@@ -39,13 +40,14 @@ class _AddFoodState extends State<AddFood> {
           Column(
             children: [
               SizedBox(
-                height: 250,
+                height: 350,
                 width: MediaQuery.widthOf(context),
                 child: DecoratedBox(
                   decoration: BoxDecoration(color: EATZY_ORANGE),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
+                      imageOfCategory(dropDownValue, 200.0, 200.0),
                       Text(
                         "Creating a new food item",
                         style: TextStyle(
@@ -81,8 +83,20 @@ class _AddFoodState extends State<AddFood> {
                   },
                   items: [
                     DropdownMenuItem<String>(
-                      value: "food",
-                      child: Text("Food"),
+                      value: "pizza",
+                      child: Text("Pizza"),
+                    ),
+                    DropdownMenuItem<String>(
+                      value: "burger",
+                      child: Text("Burger"),
+                    ),
+                    DropdownMenuItem<String>(
+                      value: "snacks",
+                      child: Text("Snacks"),
+                    ),
+                    DropdownMenuItem<String>(
+                      value: "other",
+                      child: Text("Others"),
                     ),
                     DropdownMenuItem<String>(
                       value: "drinks",
@@ -121,6 +135,7 @@ class _AddFoodState extends State<AddFood> {
               isError
                   ? Text(errorMessage, style: TextStyle(color: Colors.red))
                   : SizedBox(),
+
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextButton(
@@ -130,10 +145,10 @@ class _AddFoodState extends State<AddFood> {
                     setState(() {});
                     if (!isError) {
                       var res = await makeNewSellerItem(
-                        nameController.text,
-                        descriptionController.text,
-                        priceController.text,
-                        dropDownValue,
+                        name: nameController.text,
+                        desc: descriptionController.text,
+                        price: priceController.text,
+                        type: dropDownValue,
                       );
                       if (res) {
                         Navigator.pop(context);
