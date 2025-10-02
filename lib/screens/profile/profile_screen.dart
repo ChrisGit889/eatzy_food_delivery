@@ -161,8 +161,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         borderRadius: BorderRadius.circular(12),
                       ),
                     ),
-                    onPressed: () {
-                      signUserOut(context);
+                    onPressed: () async {
+                      await signUserOut(context);
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(

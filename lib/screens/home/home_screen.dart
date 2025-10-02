@@ -18,8 +18,8 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int selectedCategoryIndex = 0;
-  List categories = DummyData().categories;
-  List popularRestaurants = DummyData().popularRestaurants;
+  List categories = DummyData.categories;
+  List popularRestaurants = DummyData.popularRestaurants;
   List banner = [
     'assets/images/promo_banner_2.jpg',
     'assets/images/promo_banner_2.jpg',
@@ -213,9 +213,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => CategoryScreen(
-                            category: category,
-                          ),
+                          builder: (context) =>
+                              CategoryScreen(category: category),
                         ),
                       );
                     },

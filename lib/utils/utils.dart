@@ -1,4 +1,6 @@
+import 'package:eatzy_food_delivery/utils/utils_seller.dart';
 import 'package:flutter/material.dart';
+import 'package:eatzy_food_delivery/data/dummy/dummy_data.dart';
 
 String numToRupiah(number) {
   var temp = number.toString();
@@ -51,4 +53,46 @@ String imagePathOfCategory(category) {
 
 Widget wrapImage(path, width, height) {
   return Image.asset(path, height: height, width: width);
+}
+
+Future<void> cleanAndRemigrate() async {
+  try {
+    //make restaurants in database from dummy
+    var i = 0;
+    for (var seller in DummyData.popularRestaurants) {
+      i += 1;
+      await makeSellerFromInfo(
+        email: "dummy$i@gmail.com",
+        address: seller["address"],
+        image: seller["imagePath"],
+        storeName: seller["name"],
+      );
+    }
+
+    //make items for rests
+    for (var category in DummyData.categories) {
+      var categoryName = category["name"].toString().toLowerCase();
+      for (var food in category["foods"]) {
+        var storeName = food["restaurant"];
+        print(storeName);
+        var email = (await getSellerDataFromName(name: storeName))!["email"];
+        if (await makeNewSellerItemForStore(
+          email: email,
+          name: food["name"] as String,
+          desc: food["description"] as String,
+          price: food["price"],
+          type: categoryName,
+          rating: double.parse(food["rating"].toString()),
+          reviews: double.parse(food["reviews"].toString()),
+        )) {
+          print("works");
+        } else {
+          print("doesn");
+        }
+      }
+    }
+  } catch (e, s) {
+    print(s);
+    print(e);
+  }
 }
