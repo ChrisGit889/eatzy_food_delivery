@@ -39,7 +39,6 @@ class _AuthScreenState extends State<AuthScreen> {
                 color: const Color.fromARGB(255, 255, 106, 0),
               ),
               const SizedBox(height: 24),
-
               Text(
                 'Get Started now',
                 textAlign: TextAlign.center,
@@ -56,10 +55,8 @@ class _AuthScreenState extends State<AuthScreen> {
                 style: TextStyle(fontSize: 16, color: Colors.grey),
               ),
               const SizedBox(height: 40),
-
               _buildToggleButtons(),
               const SizedBox(height: 32),
-
               AnimatedSwitcher(
                 duration: const Duration(milliseconds: 300),
                 transitionBuilder: (Widget child, Animation<double> animation) {
@@ -144,7 +141,7 @@ class _AuthScreenState extends State<AuthScreen> {
                 ),
                 child: Center(
                   child: Text(
-                    'register',
+                    'Register',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       color: !_isLoginView
@@ -166,15 +163,10 @@ class _AuthScreenState extends State<AuthScreen> {
       key: const ValueKey('login_form'),
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        _buildTextField(
-          label: 'Email',
-          initialValue: '',
-          controller: emailController,
-        ),
+        _buildTextField(label: 'Email', controller: emailController),
         const SizedBox(height: 16),
         _buildTextField(
           label: 'Password',
-          initialValue: '',
           controller: passwordController,
           isPassword: true,
           obscureState: _isLoginPasswordObscured,
@@ -259,7 +251,6 @@ class _AuthScreenState extends State<AuthScreen> {
             Expanded(
               child: _buildTextField(
                 label: 'First Name',
-                initialValue: '',
                 controller: firstNameController,
               ),
             ),
@@ -267,36 +258,28 @@ class _AuthScreenState extends State<AuthScreen> {
             Expanded(
               child: _buildTextField(
                 label: 'Last Name',
-                initialValue: '',
                 controller: lastNameController,
               ),
             ),
           ],
         ),
         const SizedBox(height: 16),
-        _buildTextField(
-          label: 'Email',
-          initialValue: '',
-          controller: emailController,
-        ),
+        _buildTextField(label: 'Email', controller: emailController),
         const SizedBox(height: 16),
         _buildTextField(
           label: 'Birth of date',
           controller: dobController,
-          initialValue: '',
           isDatePicker: true,
         ),
         const SizedBox(height: 16),
         _buildTextField(
           label: 'Phone Number',
-          initialValue: '',
           controller: phoneController,
           isPhoneNumber: true,
         ),
         const SizedBox(height: 16),
         _buildTextField(
           label: 'Set Password',
-          initialValue: '',
           controller: passwordController,
           isPassword: true,
           obscureState: _isRegisterPasswordObscured,
@@ -342,7 +325,6 @@ class _AuthScreenState extends State<AuthScreen> {
 
   Widget _buildTextField({
     required String label,
-    required String initialValue,
     required TextEditingController controller,
     bool isPassword = false,
     bool isDatePicker = false,
@@ -350,7 +332,6 @@ class _AuthScreenState extends State<AuthScreen> {
     bool? obscureState,
     VoidCallback? onToggleObscure,
   }) {
-    controller.text = initialValue;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

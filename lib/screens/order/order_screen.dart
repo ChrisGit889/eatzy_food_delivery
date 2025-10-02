@@ -16,7 +16,7 @@ class _OrderScreenState extends State<OrderScreen>
   final List<Map<String, dynamic>> _allOrders = [
     {
       "orderId": "#4782-FP78924",
-      "date": "Sep 25, 2025",
+      "date": "Sep 30, 2025",
       "service": "KFC",
       "items": "3 items",
       "delivery": "June 30, 2025",
@@ -25,7 +25,7 @@ class _OrderScreenState extends State<OrderScreen>
     },
     {
       "orderId": "#4782-FP78925",
-      "date": "Sep 24, 2025",
+      "date": "Sep 27, 2025",
       "service": "Nasi Goreng Pak Dea",
       "items": "2 items",
       "delivery": "June 27, 2025",
@@ -34,7 +34,7 @@ class _OrderScreenState extends State<OrderScreen>
     },
     {
       "orderId": "#4782-FP78926",
-      "date": "Sep 23, 2025",
+      "date": "Sep 25, 2025",
       "service": "Ayam Bakar Manis",
       "items": "3 items",
       "delivery": "June 25, 2025",
@@ -119,7 +119,7 @@ class _OrderScreenState extends State<OrderScreen>
                 labelColor: Colors.white,
                 unselectedLabelColor: Colors.black,
                 indicator: BoxDecoration(
-                  color: const Color.fromARGB(255, 212, 86, 13),
+                  color: const Color.fromARGB(255, 255, 115, 0),
                   borderRadius: BorderRadius.circular(10),
                 ),
                 indicatorSize: TabBarIndicatorSize.tab,
@@ -290,11 +290,11 @@ class _OrderScreenState extends State<OrderScreen>
             children: [
               buildStep("Ordered", true),
               buildLine(),
-              buildStep("Picked Up", steps >= 2),
+              buildStep("Process", steps >= 2),
               buildLine(),
               buildStep("Handover", steps >= 3),
               buildLine(),
-              buildStep("Finish", steps >= 4),
+              buildStep("Finished", steps >= 4),
             ],
           ),
         ],
