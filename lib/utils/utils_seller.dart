@@ -152,11 +152,19 @@ Future<Map<String, dynamic>?> getSellerDataFromName({name}) async {
   return data;
 }
 
-void setSellerStoreName(storeName) {
-  FirebaseFirestore.instance
+Future setSellerStoreName(storeName) async {
+  var item = await FirebaseFirestore.instance
+      .collection('sellers')
+      .doc(getCurrentUser().email)
+      .get()
+      .then((value) {
+        return value.data()!;
+      });
+  item["store"] = storeName;
+  await FirebaseFirestore.instance
       .collection('sellers')
       .doc(getCurrentUser().email!)
-      .set({"store": storeName});
+      .set(item);
 }
 
 Future getFoodItemFromName(itemName) {
@@ -226,21 +234,19 @@ Future changeFoodItemFromName({
 
 Future itemExistsFromName(itemName) async {
   try {
-    var currentDoc = FirebaseFirestore.instance
-        .collection("seller-food")
-        .doc(getCurrentUser().email!);
-    var tempData = [];
-    await currentDoc.get().then((value) {
-      if (value.exists) {
-        tempData = value.data()!["foods"];
+    var currentDoc = FirebaseFirestore.instance.collection("seller-food");
+    var alreadyExists = await currentDoc.get().then((value) {
+      for (var docs in value.docs) {
+        var data = docs.data();
+        for (var item in data["foods"]) {
+          if (item["name"] == itemName) {
+            return true;
+          }
+        }
       }
+      return false;
     });
-    for (var i in tempData) {
-      if (i["name"] == itemName) {
-        throw Error();
-      }
-    }
-    return false;
+    return alreadyExists;
   } catch (e) {
     print(e);
     return true;
@@ -265,4 +271,47 @@ Future deleteItemFromName(itemName) async {
     print(e);
     return true;
   }
+}
+
+Future<List> getItemsByCategory(String category) async {
+  var items = await FirebaseFirestore.instance
+      .collection('seller-food')
+      .get()
+      .then((value) {
+        var temp = [];
+        for (var doc in value.docs) {
+          for (var item in doc.data()["foods"]) {
+            if (item["type"] == category) {
+              temp.add(item);
+            }
+          }
+        }
+        return temp;
+      });
+  return items;
+}
+
+Future<String?> findRestaurantFromFood(String name) async {
+  var restEmail = await FirebaseFirestore.instance
+      .collection('seller-food')
+      .get()
+      .then((value) {
+        for (var docs in value.docs) {
+          for (var item in docs.data()["foods"]) {
+            if (item["name"] == name) {
+              return docs.id;
+            }
+          }
+        }
+      });
+  var restName = await FirebaseFirestore.instance
+      .collection('sellers')
+      .where('email', isEqualTo: restEmail)
+      .get()
+      .then((value) {
+        for (var i in value.docs) {
+          return i["store"];
+        }
+      });
+  return restName;
 }

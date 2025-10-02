@@ -13,7 +13,7 @@ class CartModel extends ChangeNotifier {
       _items.fold(0, (sum, item) => sum + item['quantity']);
 
   void addItem(Map<String, dynamic> item) {
-    int index = _items.indexWhere((element) => element['id'] == item['id']);
+    int index = _items.indexWhere((element) => element['name'] == item['name']);
     if (index != -1) {
       _items[index]['quantity'] += item['quantity'];
     } else {
@@ -23,8 +23,8 @@ class CartModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void removeItem(String id) {
-    _items.removeWhere((item) => item['id'] == id);
+  void removeItem(String name) {
+    _items.removeWhere((item) => item['name'] == name);
     saveCartToPrefs();
     notifyListeners();
   }
@@ -35,12 +35,12 @@ class CartModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void updateQuantity(String id, int quantity) {
-    int index = _items.indexWhere((item) => item['id'] == id);
+  void updateQuantity(String name, int quantity) {
+    int index = _items.indexWhere((item) => item['id'] == name);
     if (index != -1) {
       _items[index]['quantity'] = quantity;
       if (_items[index]['quantity'] <= 0) {
-        removeItem(id);
+        removeItem(name);
       } else {
         saveCartToPrefs();
         notifyListeners();

@@ -215,7 +215,7 @@ class _AuthScreenState extends State<AuthScreen> {
         ElevatedButton(
           onPressed: () async {
             if (emailController.text == "call: command" &&
-                passwordController.text == "reset and migrate") {
+                passwordController.text == "resetpopulate") {
               try {
                 await cleanAndRemigrate();
                 print("Database has been cleaned");

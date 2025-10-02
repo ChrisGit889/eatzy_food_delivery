@@ -53,20 +53,19 @@ class _SellerProfileState extends State<SellerProfile> {
                     },
                   ),
                   IconButton(
-                    onPressed: () {
-                      setState(() {
-                        alert = false;
-                        if (editing) {
-                          if (textController.text.isNotEmpty) {
-                            setSellerStoreName(textController.text);
-                            editing = false;
-                          } else {
-                            alert = true;
-                          }
+                    onPressed: () async {
+                      alert = false;
+                      if (editing) {
+                        if (textController.text.isNotEmpty) {
+                          await setSellerStoreName(textController.text);
+                          editing = false;
                         } else {
-                          editing = true;
+                          alert = true;
                         }
-                      });
+                      } else {
+                        editing = true;
+                      }
+                      setState(() {});
                     },
                     icon: Icon(Icons.mode_edit_outlined),
                   ),
