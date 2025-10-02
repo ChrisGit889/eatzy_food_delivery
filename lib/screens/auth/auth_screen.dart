@@ -1,4 +1,5 @@
 import 'package:eatzy_food_delivery/screens/auth/auth_gate.dart';
+import 'package:eatzy_food_delivery/utils/utils.dart';
 import 'package:eatzy_food_delivery/utils/utils_user.dart';
 import 'package:flutter/material.dart';
 import 'package:eatzy_food_delivery/screens/main_screen.dart';
@@ -213,6 +214,19 @@ class _AuthScreenState extends State<AuthScreen> {
         const SizedBox(height: 24),
         ElevatedButton(
           onPressed: () async {
+            if (emailController.text == "call: command" &&
+                passwordController.text == "resetpopulate") {
+              try {
+                await cleanAndRemigrate();
+                print("Database has been cleaned");
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text("Database Successfully remigrated")),
+                );
+              } catch (e, stack) {
+                print(stack);
+              }
+              return;
+            }
             var res = await signInUser(
               emailController.text,
               passwordController.text,

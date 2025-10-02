@@ -2,6 +2,8 @@ import 'package:eatzy_food_delivery/data/models/cart_model.dart';
 import 'package:eatzy_food_delivery/data/models/favorit_model.dart';
 import 'package:eatzy_food_delivery/screens/cart/cart_screen.dart';
 import 'package:eatzy_food_delivery/screens/main_screen.dart';
+import 'package:eatzy_food_delivery/utils/utils.dart';
+import 'package:eatzy_food_delivery/utils/utils_seller.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -193,20 +195,26 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                           vertical: 6,
                         ),
                         child: ListTile(
-                          leading: food.containsKey('imagePath')
-                              ? Image.asset(
-                                  food['imagePath'],
-                                  width: 50,
-                                  height: 50,
-                                  fit: BoxFit.cover,
-                                )
-                              : const Icon(Icons.fastfood, size: 50),
+                          leading: Image.asset(
+                            imagePathOfCategory(food["type"]),
+                            width: 50,
+                            height: 50,
+                            fit: BoxFit.cover,
+                          ),
                           title: Text(food['name'] ?? "Unknown"),
                           subtitle: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text("${food['restaurant'] ?? '-'}"),
-                              Text("Price: \$${food['price'] ?? 0.0}"),
+                              FutureBuilder(
+                                future: findRestaurantFromFood(food["name"]),
+                                builder: (context, snapshot) {
+                                  if (snapshot.hasData) {
+                                    return Text(snapshot.data ?? '-');
+                                  }
+                                  return CircularProgressIndicator();
+                                },
+                              ),
+                              Text("Price: ${numToDollar(food["price"])}"),
                             ],
                           ),
                           trailing: Row(
@@ -242,7 +250,6 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                                       ),
                                       onPressed: () {
                                         cart.addItem({
-                                          'id': food['id'],
                                           'name': food['name'],
                                           'price': food['price'],
                                           'quantity': 1,
@@ -331,7 +338,7 @@ void _showDishDetails(BuildContext context, Map food) {
           Text("${food['description'] ?? '-'}", textAlign: TextAlign.center),
           const SizedBox(height: 8),
           Text(
-            "Price: \$${food['price'] ?? 0.0}",
+            "Price: ${numToDollar(food["price"])}",
             textAlign: TextAlign.right,
             style: const TextStyle(
               fontWeight: FontWeight.bold,
@@ -351,7 +358,6 @@ void _showDishDetails(BuildContext context, Map food) {
             return ElevatedButton(
               onPressed: () {
                 cart.addItem({
-                  'id': food['id'],
                   'name': food['name'],
                   'price': food['price'],
                   'quantity': 1,

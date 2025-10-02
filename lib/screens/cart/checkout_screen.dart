@@ -1,3 +1,4 @@
+import 'package:eatzy_food_delivery/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:eatzy_food_delivery/constants.dart';
 import 'change_address_view.dart';
@@ -128,7 +129,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                       ListView.builder(
                         padding: EdgeInsets.zero,
                         shrinkWrap: true,
-                        itemCount: DummyData().paymentArr.length,
+                        itemCount: DummyData.paymentArr.length,
                         itemBuilder: (context, index) {
                           return Container(
                             margin: const EdgeInsets.symmetric(vertical: 8),
@@ -143,7 +144,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                             child: Row(
                               children: [
                                 Image.asset(
-                                  DummyData().paymentArr[index]['icon'],
+                                  DummyData.paymentArr[index]['icon'],
                                   width: 30,
                                   height: 30,
                                   fit: BoxFit.contain,
@@ -151,7 +152,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                 const SizedBox(width: 12),
                                 Expanded(
                                   child: Text(
-                                    DummyData().paymentArr[index]['name'],
+                                    DummyData.paymentArr[index]['name'],
                                     style: TextStyle(
                                       fontSize: 12,
                                       fontWeight: FontWeight.w500,
@@ -205,7 +206,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                               ),
                             ),
                             Text(
-                              '\$${cart.totalPrice.toStringAsFixed(2)}',
+                              numToDollar(cart.totalPrice),
                               style: TextStyle(
                                 color: primaryText,
                                 fontSize: 13,
@@ -275,7 +276,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                               ),
                             ),
                             Text(
-                              '\$${cart.totalPrice.toStringAsFixed(2)}',
+                              numToDollar(cart.totalPrice),
                               style: TextStyle(
                                 color: primaryText,
                                 fontSize: 15,

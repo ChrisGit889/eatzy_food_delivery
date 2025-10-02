@@ -1,3 +1,4 @@
+import 'package:eatzy_food_delivery/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:eatzy_food_delivery/data/models/cart_model.dart';
@@ -134,7 +135,7 @@ class CartScreen extends StatelessWidget {
                                     ),
                                     SizedBox(height: 4),
                                     Text(
-                                      '\$${(item['price'] ?? 0).toStringAsFixed(2)}',
+                                      numToDollar(item["price"]),
                                       style: TextStyle(
                                         fontSize: 14,
                                         color: Colors.orange,
@@ -157,7 +158,7 @@ class CartScreen extends StatelessWidget {
                                           currentQty - 1,
                                         );
                                       } else {
-                                        cart.removeItem(item['id']);
+                                        cart.removeItem(item['name']);
                                       }
                                     },
                                     icon: Icon(Icons.remove_circle_outline),
@@ -218,7 +219,7 @@ class CartScreen extends StatelessWidget {
                             ),
                           ),
                           Text(
-                            '\$${cart.totalPrice.toStringAsFixed(2)}',
+                            numToDollar(cart.totalPrice),
                             style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
