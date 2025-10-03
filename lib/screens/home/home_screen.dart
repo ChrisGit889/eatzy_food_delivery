@@ -21,8 +21,8 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int selectedCategoryIndex = 0;
   int currentBannerIndex = 0;
-  List categories = DummyData().categories;
-  List popularRestaurants = DummyData().popularRestaurants;
+  List categories = DummyData.categories;
+  List popularRestaurants = DummyData.popularRestaurants;
   List popularFoods = DummyData().popularFoods;
   List banner = [
     'assets/images/promo_banner_2.jpg',

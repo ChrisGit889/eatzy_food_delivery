@@ -18,7 +18,7 @@ class _SearchScreenState extends State<SearchScreen> {
   bool _isSearching = false;
   String _searchQuery = '';
 
-  List popularRestaurants = DummyData().popularRestaurants;
+  List popularRestaurants = DummyData.popularRestaurants;
   List popularFoods = DummyData().popularFoods;
 
   @override
@@ -43,22 +43,22 @@ class _SearchScreenState extends State<SearchScreen> {
       if (_searchQuery.isEmpty) return;
 
       for (var restaurant in popularRestaurants) {
-        if (restaurant['name'].toString().toLowerCase().contains(_searchQuery) ||
-            restaurant['address'].toString().toLowerCase().contains(_searchQuery)) {
-          _searchResults.add({
-            'type': 'restaurant',
-            'data': restaurant,
-          });
+        if (restaurant['name'].toString().toLowerCase().contains(
+              _searchQuery,
+            ) ||
+            restaurant['address'].toString().toLowerCase().contains(
+              _searchQuery,
+            )) {
+          _searchResults.add({'type': 'restaurant', 'data': restaurant});
         }
       }
 
       for (var food in popularFoods) {
         if (food['name'].toString().toLowerCase().contains(_searchQuery) ||
-            food['restaurant'].toString().toLowerCase().contains(_searchQuery)) {
-          _searchResults.add({
-            'type': 'food',
-            'data': food,
-          });
+            food['restaurant'].toString().toLowerCase().contains(
+              _searchQuery,
+            )) {
+          _searchResults.add({'type': 'food', 'data': food});
         }
       }
     });
@@ -86,10 +86,7 @@ class _SearchScreenState extends State<SearchScreen> {
             focusNode: _focusNode,
             decoration: InputDecoration(
               hintText: "Search for food or restaurants...",
-              hintStyle: TextStyle(
-                color: Colors.grey.shade400,
-                fontSize: 14,
-              ),
+              hintStyle: TextStyle(color: Colors.grey.shade400, fontSize: 14),
               border: InputBorder.none,
               contentPadding: const EdgeInsets.symmetric(
                 horizontal: 16,
@@ -178,10 +175,7 @@ class _SearchScreenState extends State<SearchScreen> {
             const SizedBox(width: 8),
             Text(
               label,
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.grey.shade700,
-              ),
+              style: TextStyle(fontSize: 14, color: Colors.grey.shade700),
             ),
           ],
         ),
@@ -194,11 +188,7 @@ class _SearchScreenState extends State<SearchScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            Icons.search_off,
-            size: 80,
-            color: Colors.grey.shade300,
-          ),
+          Icon(Icons.search_off, size: 80, color: Colors.grey.shade300),
           const SizedBox(height: 16),
           Text(
             "No results found",
@@ -211,10 +201,7 @@ class _SearchScreenState extends State<SearchScreen> {
           const SizedBox(height: 8),
           Text(
             "Try searching for something else",
-            style: TextStyle(
-              fontSize: 14,
-              color: Colors.grey.shade500,
-            ),
+            style: TextStyle(fontSize: 14, color: Colors.grey.shade500),
           ),
         ],
       ),
@@ -336,11 +323,7 @@ class _SearchScreenState extends State<SearchScreen> {
                   const SizedBox(height: 4),
                   Row(
                     children: [
-                      const Icon(
-                        Icons.star,
-                        color: Colors.orange,
-                        size: 14,
-                      ),
+                      const Icon(Icons.star, color: Colors.orange, size: 14),
                       const SizedBox(width: 4),
                       Text(
                         restaurant['rating'].toString(),
@@ -473,11 +456,7 @@ class _SearchScreenState extends State<SearchScreen> {
                   const SizedBox(height: 4),
                   Row(
                     children: [
-                      const Icon(
-                        Icons.star,
-                        color: Colors.orange,
-                        size: 14,
-                      ),
+                      const Icon(Icons.star, color: Colors.orange, size: 14),
                       const SizedBox(width: 4),
                       Text(
                         food['rating'].toString(),
