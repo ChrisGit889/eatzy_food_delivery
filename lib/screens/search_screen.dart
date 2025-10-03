@@ -18,7 +18,7 @@ class _SearchScreenState extends State<SearchScreen> {
   bool _isSearching = false;
   String _searchQuery = '';
 
-  List popularRestaurants = DummyData().popularRestaurants;
+  List popularRestaurants = DummyData.popularRestaurants;
   List popularFoods = DummyData().popularFoods;
 
   @override
