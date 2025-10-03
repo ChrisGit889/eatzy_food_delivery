@@ -147,11 +147,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     () {},
                   ),
                   ProfileScreen._buildMenuItem(
-                    Icons.lock,
-                    "Change Password",
-                    () {},
-                  ),
-                  ProfileScreen._buildMenuItem(
                     Icons.support_agent,
                     "Help and Support",
                     () {},
@@ -168,9 +163,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                     ),
                     onPressed: () async {
-                      await signUserOut(context);
-                      Navigator.pushReplacement(
+                      await signUserOut();
+                      Navigator.of(
                         context,
+                        rootNavigator: true,
+                      ).pushReplacement(
                         MaterialPageRoute(
                           builder: (context) =>
                               AuthGate(whereToGo: AuthScreen()),

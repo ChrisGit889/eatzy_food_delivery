@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 String getUserName() {
@@ -13,7 +14,7 @@ User getCurrentUser() {
   return FirebaseAuth.instance.currentUser!;
 }
 
-Future<bool> signUserOut(context) async {
+Future<bool> signUserOut() async {
   try {
     await FirebaseAuth.instance.signOut();
     return true;
@@ -85,6 +86,22 @@ Future<bool> signInUser(email, password, context) async {
         snackBarAnimationStyle: AnimationStyle(curve: ElasticInCurve()),
       );
     }
+    return false;
+  }
+}
+
+Future<bool> updateUser({
+  required String email,
+  required String name,
+  required String phone,
+  required String password,
+  required String dob,
+}) async {
+  try {
+    await FirebaseAuth.instance.currentUser!.updateDisplayName(name);
+    await FirebaseAuth.instance.currentUser!.updatePassword(password);
+    return true;
+  } catch (e, _) {
     return false;
   }
 }

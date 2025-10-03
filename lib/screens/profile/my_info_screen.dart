@@ -1,3 +1,4 @@
+import 'package:eatzy_food_delivery/utils/utils_user.dart';
 import 'package:flutter/material.dart';
 
 class MyInfoScreen extends StatefulWidget {
@@ -9,6 +10,10 @@ class MyInfoScreen extends StatefulWidget {
 
 class _MyInfoScreenState extends State<MyInfoScreen> {
   final TextEditingController _dobController = TextEditingController();
+  final TextEditingController firstNameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController phoneController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
 
   @override
   void dispose() {
@@ -95,13 +100,16 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
             ),
             const SizedBox(height: 30),
 
-            _buildTextField("Username", "slebew"),
+            _buildTextField("Username", "username", firstNameController),
             const SizedBox(height: 16),
-            _buildTextField("Email Id", "slebew@gmail.com"),
+            _buildTextField("Phone Number", "phone number", phoneController),
             const SizedBox(height: 16),
-            _buildTextField("Phone Number", "+911"),
-            const SizedBox(height: 16),
-            _buildTextField("Password", "duarslebew", isPassword: true),
+            _buildTextField(
+              "Password",
+              "password",
+              passwordController,
+              isPassword: true,
+            ),
             const SizedBox(height: 16),
 
             TextField(
@@ -138,12 +146,20 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
                     borderRadius: BorderRadius.circular(8),
                   ),
                 ),
-                onPressed: () {
+                onPressed: () async {
+                  await updateUser(
+                    name: firstNameController.text,
+                    email: emailController.text,
+                    phone: phoneController.text,
+                    password: passwordController.text,
+                    dob: _dobController.text,
+                  );
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
                       content: Text("Profile updated successfully!"),
                     ),
                   );
+                  Navigator.pop(context);
                 },
                 child: const Text(
                   "Update",
@@ -159,11 +175,14 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
 
   static Widget _buildTextField(
     String label,
-    String hint, {
+    String hint,
+    TextEditingController controller, {
     bool isPassword = false,
+    bool locked = false,
   }) {
     return TextField(
       obscureText: isPassword,
+      controller: controller,
       decoration: InputDecoration(
         labelText: label,
         hintText: hint,

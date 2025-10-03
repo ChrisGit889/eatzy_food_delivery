@@ -1,5 +1,6 @@
 import 'package:eatzy_food_delivery/constants.dart';
 import 'package:eatzy_food_delivery/data/models/favorit_model.dart';
+import 'package:eatzy_food_delivery/screens/auth/auth_screen.dart';
 import 'package:eatzy_food_delivery/screens/onboarding/onboarding_screen.dart';
 import 'package:eatzy_food_delivery/services/firebase_options.dart';
 import 'package:eatzy_food_delivery/screens/auth/auth_gate.dart';
@@ -20,7 +21,7 @@ class EatzyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider( 
+    return MultiProvider(
       providers: [
         ChangeNotifierProvider(
           create: (context) {
@@ -32,7 +33,7 @@ class EatzyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (context) {
             FavoriteModel favModel = FavoriteModel();
-            favModel.loadFavorites(); 
+            favModel.loadFavorites();
             return favModel;
           },
         ),
