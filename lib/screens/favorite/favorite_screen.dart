@@ -255,6 +255,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                                         cart.addItem({
                                           'name': food['name'],
                                           'price': food['price'],
+                                          'type': food["type"],
                                           'quantity': 1,
                                         });
 
@@ -363,6 +364,7 @@ void _showDishDetails(BuildContext context, Map food) {
                 cart.addItem({
                   'name': food['name'],
                   'price': food['price'],
+                  'type': food["type"],
                   'quantity': 1,
                 });
                 Navigator.pop(context);

@@ -107,7 +107,7 @@ class _SellerEditFoodState extends State<SellerEditFood> {
                                 child: Text("Others"),
                               ),
                               DropdownMenuItem<String>(
-                                value: "drinks",
+                                value: "drink",
                                 child: Text("Drinks"),
                               ),
                             ],

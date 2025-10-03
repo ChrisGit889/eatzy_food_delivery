@@ -23,6 +23,7 @@ String numToDollar(number) {
 }
 
 Widget imageOfCategory(category, width, height) {
+  print(category);
   return wrapImage(imagePathOfCategory(category), width, height);
 }
 

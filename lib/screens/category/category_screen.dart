@@ -142,6 +142,7 @@ class CategoryScreen extends StatelessWidget {
                                               cart.addItem({
                                                 'name': food['name'],
                                                 'price': food['price'],
+                                                'type': food["type"],
                                                 'quantity': 1,
                                               });
 
@@ -228,6 +229,7 @@ class CategoryScreen extends StatelessWidget {
                                   cart.addItem({
                                     'name': food['name'],
                                     'price': food['price'],
+                                    'type': food["type"],
                                     'quantity': 1,
                                   });
 

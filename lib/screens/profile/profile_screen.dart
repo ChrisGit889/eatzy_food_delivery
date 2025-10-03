@@ -1,12 +1,10 @@
 import 'package:eatzy_food_delivery/screens/auth/auth_gate.dart';
 import 'package:eatzy_food_delivery/screens/auth/auth_screen.dart';
+import 'package:eatzy_food_delivery/screens/profile/my_info_screen.dart';
 import 'package:eatzy_food_delivery/screens/seller/seller_screen.dart';
 import 'package:eatzy_food_delivery/utils/utils_seller.dart';
 import 'package:eatzy_food_delivery/utils/utils_user.dart';
 import 'package:flutter/material.dart';
-<<<<<<< HEAD
-import 'my_info_screen.dart';
-=======
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -40,7 +38,6 @@ class ProfileScreen extends StatefulWidget {
     );
   }
 }
->>>>>>> ecfd15365dbca2aa83d1af81a9cb7ce5d2010262
 
 class _ProfileScreenState extends State<ProfileScreen> {
   @override
@@ -109,23 +106,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
               child: ListView(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 children: [
-<<<<<<< HEAD
-                  _buildMenuItem(
-                    Icons.person,
-                    "My Info",
-                    () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const MyInfoScreen()),
-                      );
-                    },
-                  ),
-                  _buildMenuItem(Icons.store, "My Store", () {}),
-                  _buildMenuItem(Icons.payment, "My Payment", () {}),
-                  _buildMenuItem(Icons.lock, "Change Password", () {}),
-                  _buildMenuItem(
-=======
-                  ProfileScreen._buildMenuItem(Icons.person, "My Info", () {}),
+                  ProfileScreen._buildMenuItem(Icons.person, "My Info", () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => MyInfoScreen()),
+                    );
+                  }),
                   FutureBuilder(
                     future: getSellerStatus(),
                     builder: (context, snapshot) {
@@ -166,7 +152,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     () {},
                   ),
                   ProfileScreen._buildMenuItem(
->>>>>>> ecfd15365dbca2aa83d1af81a9cb7ce5d2010262
                     Icons.support_agent,
                     "Help and Support",
                     () {},
