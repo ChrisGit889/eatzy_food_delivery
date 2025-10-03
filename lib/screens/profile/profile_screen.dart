@@ -1,20 +1,5 @@
 import 'package:flutter/material.dart';
-
-void main() {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: ProfileScreen(),
-    );
-  }
-}
+import 'my_info_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -38,7 +23,7 @@ class ProfileScreen extends StatelessWidget {
                     alignment: Alignment.center,
                     child: Image.asset(
                       "assets/images/diprofilebackground.png",
-                      height: 80,
+                      height: 150,
                       fit: BoxFit.contain,
                     ),
                   ),
@@ -84,7 +69,16 @@ class ProfileScreen extends StatelessWidget {
               child: ListView(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 children: [
-                  _buildMenuItem(Icons.person, "My Info", () {}),
+                  _buildMenuItem(
+                    Icons.person,
+                    "My Info",
+                    () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const MyInfoScreen()),
+                      );
+                    },
+                  ),
                   _buildMenuItem(Icons.store, "My Store", () {}),
                   _buildMenuItem(Icons.payment, "My Payment", () {}),
                   _buildMenuItem(Icons.lock, "Change Password", () {}),
