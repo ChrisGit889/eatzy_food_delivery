@@ -182,11 +182,9 @@ class _OrderScreenState extends State<OrderScreen>
     if (_selectedDateRange == null) {
       return const SizedBox(height: 30);
     }
-
     final dateFormat = DateFormat('dd MMM yyyy');
     final startDate = dateFormat.format(_selectedDateRange!.start);
     final endDate = dateFormat.format(_selectedDateRange!.end);
-
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
       child: Row(
@@ -232,7 +230,6 @@ class _OrderScreenState extends State<OrderScreen>
   Widget _getServiceLogo(String serviceName) {
     String imagePath;
     String trimmedServiceName = serviceName.trim();
-
     if (trimmedServiceName == 'KFC') {
       imagePath = 'assets/images/Kfc.png';
     } else if (trimmedServiceName == 'PIZZA HUT') {
@@ -338,26 +335,45 @@ class _OrderScreenState extends State<OrderScreen>
                   ],
                 ),
               ),
-              OutlinedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const OrderDetailsScreen(),
+              if (status == 'Completed')
+                ElevatedButton(
+                  onPressed: () {
+                    final snackBar = SnackBar(
+                      content: const Text('Terima kasih telah memesan!'),
+                      backgroundColor: Colors.green,
+                    );
+                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color.fromARGB(255, 230, 144, 16),
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
                     ),
-                  );
-                },
-                style: OutlinedButton.styleFrom(
-                  foregroundColor: const Color.fromARGB(255, 230, 144, 16),
-                  side: const BorderSide(
-                    color: Color.fromARGB(255, 223, 153, 13),
                   ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
+                  child: const Text("Enjoy your meal"),
+                )
+              else
+                OutlinedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const OrderDetailsScreen(),
+                      ),
+                    );
+                  },
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: const Color.fromARGB(255, 230, 144, 16),
+                    side: const BorderSide(
+                      color: Color.fromARGB(255, 223, 153, 13),
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
                   ),
+                  child: const Text("Track Order"),
                 ),
-                child: const Text("Track Order"),
-              ),
             ],
           ),
           const SizedBox(height: 16),
