@@ -5,6 +5,10 @@ String getUserName() {
   return getCurrentUser().displayName!;
 }
 
+String getUserEmail() {
+  return getCurrentUser().email!;
+}
+
 User getCurrentUser() {
   return FirebaseAuth.instance.currentUser!;
 }

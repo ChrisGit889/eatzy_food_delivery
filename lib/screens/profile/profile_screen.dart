@@ -1,9 +1,48 @@
+import 'package:eatzy_food_delivery/screens/auth/auth_gate.dart';
+import 'package:eatzy_food_delivery/screens/auth/auth_screen.dart';
+import 'package:eatzy_food_delivery/screens/seller/seller_screen.dart';
+import 'package:eatzy_food_delivery/utils/utils_seller.dart';
+import 'package:eatzy_food_delivery/utils/utils_user.dart';
 import 'package:flutter/material.dart';
+<<<<<<< HEAD
 import 'my_info_screen.dart';
+=======
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
 
+  @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+
+  static Widget _buildMenuItem(
+    IconData icon,
+    String title,
+    VoidCallback onTap,
+  ) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+        decoration: BoxDecoration(
+          color: Colors.grey[100],
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Row(
+          children: [
+            Icon(icon, color: Colors.black54),
+            const SizedBox(width: 12),
+            Expanded(child: Text(title, style: const TextStyle(fontSize: 16))),
+            const Icon(Icons.arrow_forward_ios, size: 18, color: Colors.grey),
+          ],
+        ),
+      ),
+    );
+  }
+}
+>>>>>>> ecfd15365dbca2aa83d1af81a9cb7ce5d2010262
+
+class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,11 +83,12 @@ class ProfileScreen extends StatelessWidget {
 
             const SizedBox(height: 60),
 
-            const Text(
-              "Username",
+            Text(
+              getUserName(),
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
-            const Text("Email", style: TextStyle(color: Colors.grey)),
+
+            Text(getUserEmail(), style: TextStyle(color: Colors.grey)),
 
             const SizedBox(height: 20),
 
@@ -69,6 +109,7 @@ class ProfileScreen extends StatelessWidget {
               child: ListView(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 children: [
+<<<<<<< HEAD
                   _buildMenuItem(
                     Icons.person,
                     "My Info",
@@ -83,6 +124,49 @@ class ProfileScreen extends StatelessWidget {
                   _buildMenuItem(Icons.payment, "My Payment", () {}),
                   _buildMenuItem(Icons.lock, "Change Password", () {}),
                   _buildMenuItem(
+=======
+                  ProfileScreen._buildMenuItem(Icons.person, "My Info", () {}),
+                  FutureBuilder(
+                    future: getSellerStatus(),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        if (snapshot.data!) {
+                          return ProfileScreen._buildMenuItem(
+                            Icons.store,
+                            "My Store",
+                            () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => SellerScreen(),
+                                ),
+                              );
+                            },
+                          );
+                        }
+                      }
+                      return ProfileScreen._buildMenuItem(
+                        Icons.store,
+                        "Create a Store",
+                        () {
+                          makeSeller();
+                          setState(() {});
+                        },
+                      );
+                    },
+                  ),
+                  ProfileScreen._buildMenuItem(
+                    Icons.payment,
+                    "My Payment",
+                    () {},
+                  ),
+                  ProfileScreen._buildMenuItem(
+                    Icons.lock,
+                    "Change Password",
+                    () {},
+                  ),
+                  ProfileScreen._buildMenuItem(
+>>>>>>> ecfd15365dbca2aa83d1af81a9cb7ce5d2010262
                     Icons.support_agent,
                     "Help and Support",
                     () {},
@@ -98,7 +182,16 @@ class ProfileScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(12),
                       ),
                     ),
-                    onPressed: () {},
+                    onPressed: () async {
+                      await signUserOut(context);
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              AuthGate(whereToGo: AuthScreen()),
+                        ),
+                      );
+                    },
                     child: const Text(
                       "Logout",
                       style: TextStyle(color: Color(0xFFFD6C00), fontSize: 16),
@@ -109,32 +202,6 @@ class ProfileScreen extends StatelessWidget {
                 ],
               ),
             ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  static Widget _buildMenuItem(
-    IconData icon,
-    String title,
-    VoidCallback onTap,
-  ) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        margin: const EdgeInsets.only(bottom: 12),
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-        decoration: BoxDecoration(
-          color: Colors.grey[100],
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Row(
-          children: [
-            Icon(icon, color: Colors.black54),
-            const SizedBox(width: 12),
-            Expanded(child: Text(title, style: const TextStyle(fontSize: 16))),
-            const Icon(Icons.arrow_forward_ios, size: 18, color: Colors.grey),
           ],
         ),
       ),

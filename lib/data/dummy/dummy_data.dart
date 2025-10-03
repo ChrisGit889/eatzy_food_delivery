@@ -7,7 +7,7 @@ class DummyData {
     'https://images.unsplash.com/photo-1525610553991-2bede1a236e2',
   ];
 
-  List paymentArr = [
+  static List paymentArr = [
     {"name": "Cash on delivery", "icon": "assets/images/pick.png"},
     {"name": "**** **** **** 2187", "icon": "assets/images/pick.png"},
     {"name": "test@gmail.com", "icon": "assets/images/pick.png"},
@@ -21,7 +21,7 @@ class DummyData {
     'https://images.unsplash.com/photo-1525610553991-2bede1a236e2',
   ];
 
-  List categories = [
+  static List categories = [
     {
       "name": "Pizza",
       "iconPath": "assets/images/Pizza.png",
@@ -301,7 +301,7 @@ class DummyData {
     },
   ];
 
-  List popularRestaurants = [
+  static List popularRestaurants = [
     {
       "name": "Pizza Hut",
       "imagePath": "assets/images/Pizza-hut.png",
@@ -491,7 +491,44 @@ class DummyData {
       ],
     },
     {
-      "name": "Domino's",
+      "name": "Domino's Pizza",
+      "imagePath": "assets/images/Dominos-pizza.png",
+      "rating": 4.4,
+      "reviews": 70,
+      "address": "303 Birch St",
+      "menus": [
+        {
+          "name": "BBQ Chicken Pizza",
+          "id": "dish_16",
+          "imagePath": "assets/images/pick.png",
+          "rating": 4.5,
+          "reviews": 60,
+          "price": 10.99,
+          "description": "A flavorful BBQ chicken pizza with tangy sauce.",
+        },
+        {
+          "name": "Hawaiian Pizza",
+          "id": "dish_17",
+          "imagePath": "assets/images/pick.png",
+          "rating": 4.2,
+          "reviews": 50,
+          "price": 9.99,
+          "description": "A tropical Hawaiian pizza with ham and pineapple.",
+        },
+        {
+          "name": "Meat Lovers Pizza",
+          "id": "dish_18",
+          "imagePath": "assets/images/pick.png",
+          "rating": 4.3,
+          "reviews": 40,
+          "price": 11.99,
+          "description":
+              "A hearty meat lovers pizza with pepperoni, sausage, and bacon.",
+        },
+      ],
+    },
+    {
+      "name": "McDonald's",
       "imagePath": "assets/images/Dominos-pizza.png",
       "rating": 4.4,
       "reviews": 70,
@@ -532,6 +569,7 @@ class DummyData {
   List popularFoods = [
     {
       "name": "Pepperoni Pizza",
+      "restaurant": "Pizza Hut",
       "imagePath": "assets/images/pick.png",
       "rating": 4.5,
       "reviews": 150,
@@ -539,31 +577,35 @@ class DummyData {
     },
     {
       "name": "Cheeseburger",
+      "restaurant": "Burger King",
       "imagePath": "assets/images/pick.png",
       "rating": 4.2,
       "reviews": 100,
       "price": 7.99,
     },
     {
-      "name": "Veggie Hotdog",
+      "name": "Caffe Latte",
+      "restaurant": "Starbucks",
       "imagePath": "assets/images/pick.png",
-      "rating": 4.0,
-      "reviews": 80,
-      "price": 5.99,
-    },
-    {
-      "name": "Chocolate Donut",
-      "imagePath": "assets/images/pick.png",
-      "rating": 4.8,
+      "rating": 4.7,
       "reviews": 200,
-      "price": 2.99,
+      "price": 3.99,
     },
     {
-      "name": "Coca Cola",
+      "name": "Bacon Burger",
+      "restaurant": "Burger King",
       "imagePath": "assets/images/pick.png",
       "rating": 4.3,
       "reviews": 90,
-      "price": 1.99,
+      "price": 8.99,
+    },
+    {
+      "name": "Fried Chicken",
+      "restaurant": "KFC",
+      "imagePath": "assets/images/pick.png",
+      "rating": 4.5,
+      "reviews": 160,
+      "price": 8.99,
     },
   ];
 }
