@@ -17,14 +17,16 @@ dependencies:
   firebase_auth: ^6.0.2
   provider: ^6.1.5+1
   google_sign_in: ^6.3.0
-  google_fonts: ^6.2.1 
+  google_fonts: ^6.2.1
   video_player: ^2.8.6
   shared_preferences: ^2.3.2
   carousel_slider: ^5.1.1
   google_maps_flutter: ^2.13.1
   custom_map_markers: ^0.0.1
+  geolocator: ^13.0.1
+  geocoding: ^2.1.1
+  permission_handler: ^11.0.1
 
-  
 dev_dependencies:
   flutter_launcher_icons: ^0.13.1
   flutter_test:
