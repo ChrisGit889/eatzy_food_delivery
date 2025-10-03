@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'order_details_screen.dart';
 
 class OrderScreen extends StatefulWidget {
@@ -12,6 +13,8 @@ class _OrderScreenState extends State<OrderScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   final TextEditingController _searchController = TextEditingController();
+
+  DateTimeRange? _selectedDateRange;
 
   final List<Map<String, dynamic>> _allOrders = [
     {
@@ -60,36 +63,60 @@ class _OrderScreenState extends State<OrderScreen>
     super.dispose();
   }
 
+  Future<void> _selectDateRange() async {
+    final DateTimeRange? picked = await showDateRangePicker(
+      context: context,
+      firstDate: DateTime(2020),
+      lastDate: DateTime(2026),
+      initialDateRange: _selectedDateRange,
+    );
+    if (picked != null && picked != _selectedDateRange) {
+      setState(() {
+        _selectedDateRange = picked;
+      });
+    }
+  }
+
   List<Map<String, dynamic>> _getFilteredOrders() {
-    List<Map<String, dynamic>> tabFilteredList;
+    List<Map<String, dynamic>> filteredList;
+
     switch (_tabController.index) {
       case 1:
-        tabFilteredList = _allOrders
+        filteredList = _allOrders
             .where((order) => order['status'] == 'Pending')
             .toList();
         break;
       case 2:
-        tabFilteredList = _allOrders
+        filteredList = _allOrders
             .where((order) => order['status'] == 'Completed')
             .toList();
         break;
       case 3:
-        tabFilteredList = _allOrders
+        filteredList = _allOrders
             .where((order) => order['status'] == 'Cancelled')
             .toList();
         break;
       case 0:
       default:
-        tabFilteredList = List.from(_allOrders);
+        filteredList = List.from(_allOrders);
         break;
+    }
+
+    if (_selectedDateRange != null) {
+      filteredList = filteredList.where((order) {
+        final orderDate = DateFormat("MMM dd, yyyy").parse(order['date']);
+        final startDate = _selectedDateRange!.start;
+        final endDate = _selectedDateRange!.end.add(const Duration(days: 1));
+        return orderDate.isAfter(startDate) && orderDate.isBefore(endDate);
+      }).toList();
     }
 
     final query = _searchController.text.toLowerCase();
     if (query.isEmpty) {
-      return tabFilteredList;
+      return filteredList;
     }
 
-    return tabFilteredList.where((order) {
+    return filteredList.where((order) {
       final orderId = order['orderId']!.toLowerCase();
       final service = order['service']!.toLowerCase();
       return orderId.contains(query) || service.contains(query);
@@ -109,10 +136,14 @@ class _OrderScreenState extends State<OrderScreen>
         elevation: 0,
         automaticallyImplyLeading: false,
         bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(120),
+          preferredSize: const Size.fromHeight(160),
           child: Column(
             children: [
-              _OrderSearchBar(controller: _searchController),
+              _OrderSearchBar(
+                controller: _searchController,
+                onFilterPressed: _selectDateRange,
+              ),
+              _buildActiveFilterInfo(),
               TabBar(
                 controller: _tabController,
                 labelColor: Colors.white,
@@ -147,6 +178,35 @@ class _OrderScreenState extends State<OrderScreen>
     );
   }
 
+  Widget _buildActiveFilterInfo() {
+    if (_selectedDateRange == null) {
+      return const SizedBox(height: 30);
+    }
+
+    final dateFormat = DateFormat('dd MMM yyyy');
+    final startDate = dateFormat.format(_selectedDateRange!.start);
+    final endDate = dateFormat.format(_selectedDateRange!.end);
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Chip(
+            label: Text('$startDate - $endDate'),
+            backgroundColor: Colors.orange.shade100,
+            onDeleted: () {
+              setState(() {
+                _selectedDateRange = null;
+              });
+            },
+            deleteIcon: const Icon(Icons.close, size: 18),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget buildOrderList(List<Map<String, dynamic>> orders) {
     if (orders.isEmpty) {
       return const Center(
@@ -156,7 +216,6 @@ class _OrderScreenState extends State<OrderScreen>
         ),
       );
     }
-
     return ListView.builder(
       padding: const EdgeInsets.all(16),
       itemCount: orders.length,
@@ -187,14 +246,12 @@ class _OrderScreenState extends State<OrderScreen>
         color: Color.fromARGB(255, 255, 136, 0),
       );
     }
-
     return Image.asset(imagePath);
   }
 
   Widget buildOrderCard({required Map<String, dynamic> order}) {
     final String status = order['status'];
     final int steps = order['steps'];
-
     Color statusColor;
     if (status == "Completed") {
       statusColor = Colors.green;
@@ -203,7 +260,6 @@ class _OrderScreenState extends State<OrderScreen>
     } else {
       statusColor = Colors.red;
     }
-
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -265,7 +321,7 @@ class _OrderScreenState extends State<OrderScreen>
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      order['service'],
+                      order['service'].trim(),
                       style: const TextStyle(
                         fontWeight: FontWeight.w600,
                         fontSize: 16,
@@ -349,7 +405,12 @@ class _OrderScreenState extends State<OrderScreen>
 
 class _OrderSearchBar extends StatelessWidget {
   final TextEditingController controller;
-  const _OrderSearchBar({required this.controller});
+  final VoidCallback onFilterPressed;
+
+  const _OrderSearchBar({
+    required this.controller,
+    required this.onFilterPressed,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -375,6 +436,10 @@ class _OrderSearchBar extends StatelessWidget {
           border: InputBorder.none,
           contentPadding: const EdgeInsets.all(15),
           prefixIcon: const Icon(Icons.search, color: themeColor),
+          suffixIcon: IconButton(
+            icon: const Icon(Icons.filter_list, color: themeColor),
+            onPressed: onFilterPressed,
+          ),
         ),
       ),
     );
