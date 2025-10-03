@@ -532,6 +532,7 @@ class DummyData {
   List popularFoods = [
     {
       "name": "Pepperoni Pizza",
+      "restaurant": "Pizza Hut",
       "imagePath": "assets/images/pick.png",
       "rating": 4.5,
       "reviews": 150,
@@ -539,31 +540,35 @@ class DummyData {
     },
     {
       "name": "Cheeseburger",
+      "restaurant": "Burger King",
       "imagePath": "assets/images/pick.png",
       "rating": 4.2,
       "reviews": 100,
       "price": 7.99,
     },
     {
-      "name": "Veggie Hotdog",
+      "name": "Caffe Latte",
+      "restaurant": "Starbucks",
       "imagePath": "assets/images/pick.png",
-      "rating": 4.0,
-      "reviews": 80,
-      "price": 5.99,
-    },
-    {
-      "name": "Chocolate Donut",
-      "imagePath": "assets/images/pick.png",
-      "rating": 4.8,
+      "rating": 4.7,
       "reviews": 200,
-      "price": 2.99,
+      "price": 3.99,
     },
     {
-      "name": "Coca Cola",
+      "name": "Bacon Burger",
+      "restaurant": "Burger King",
       "imagePath": "assets/images/pick.png",
       "rating": 4.3,
       "reviews": 90,
-      "price": 1.99,
+      "price": 8.99,
+    },
+    {
+      "name": "Fried Chicken",
+      "restaurant": "KFC",
+      "imagePath": "assets/images/pick.png",
+      "rating": 4.5,
+      "reviews": 160,
+      "price": 8.99,
     },
   ];
 }
