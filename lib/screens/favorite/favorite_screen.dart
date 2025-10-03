@@ -211,6 +211,9 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                                   if (snapshot.hasData) {
                                     return Text(snapshot.data ?? '-');
                                   }
+                                  if (snapshot.hasError) {
+                                    return Text("-");
+                                  }
                                   return CircularProgressIndicator();
                                 },
                               ),

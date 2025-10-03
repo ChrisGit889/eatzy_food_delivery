@@ -56,7 +56,7 @@ class _SellerEditFoodState extends State<SellerEditFood> {
                               children: [
                                 imageOfCategory(dropDownValue, 200.0, 200.0),
                                 Text(
-                                  "Creating a new food item",
+                                  "Editing food item",
                                   style: TextStyle(
                                     fontSize: 32,
                                     fontWeight: FontWeight.bold,

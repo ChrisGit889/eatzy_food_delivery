@@ -41,12 +41,31 @@ class _SellerProfileState extends State<SellerProfile> {
                           return SizedBox(
                             width: 100,
                             height: 100,
-                            child: TextField(controller: textController),
+                            child: TextField(
+                              controller: textController,
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              maxLength: 20,
+                            ),
                           );
                         }
                         return snapshot.data!["store"] == null
-                            ? Text("Unnamed Seller")
-                            : Text(snapshot.data!["store"]);
+                            ? Text(
+                                "Unnamed Seller",
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              )
+                            : Text(
+                                snapshot.data!["store"],
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              );
                       } else {
                         return CircularProgressIndicator();
                       }

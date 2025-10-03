@@ -41,6 +41,7 @@ String imagePathOfCategory(category) {
         return "assets/images/Snacks.png";
       }
     case "drinks":
+    case "drink":
       {
         return "assets/images/Water.png";
       }
