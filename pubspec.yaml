@@ -11,6 +11,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  image_picker: ^1.2.0
   cupertino_icons: ^1.0.8
   firebase_core: ^4.1.0
   cloud_firestore: ^6.0.1
@@ -37,7 +38,6 @@ flutter:
   uses-material-design: true
 
   assets:
-    - assets/buatisiprofile.jpg
     - assets/images/
     - assets/videos/kfc.mp4
     - assets/

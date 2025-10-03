@@ -7,7 +7,7 @@ class DummyData {
     'https://images.unsplash.com/photo-1525610553991-2bede1a236e2',
   ];
 
-  List paymentArr = [
+  static List paymentArr = [
     {"name": "Cash on delivery", "icon": "assets/images/pick.png"},
     {"name": "**** **** **** 2187", "icon": "assets/images/pick.png"},
     {"name": "test@gmail.com", "icon": "assets/images/pick.png"},
@@ -21,7 +21,7 @@ class DummyData {
     'https://images.unsplash.com/photo-1525610553991-2bede1a236e2',
   ];
 
-  List categories = [
+  static List categories = [
     {
       "name": "Pizza",
       "iconPath": "assets/images/Pizza.png",
@@ -29,8 +29,8 @@ class DummyData {
         {
           "name": "Pepperoni Pizza",
           "restaurant": "Pizza Hut",
-          "id": "Pizza_1",
-          "imagePath": "assets/images/Pizza.png",
+          "id": "dish_1",
+          "imagePath": "assets/images/pick.png",
           "rating": 4.5,
           "reviews": 150,
           "price": 9.99,
@@ -39,8 +39,8 @@ class DummyData {
         {
           "name": "Cheese Pizza",
           "restaurant": "Domino's Pizza",
-          "id": "Pizza_2",
-          "imagePath": "assets/images/Pizza.png",
+          "id": "dish_2",
+          "imagePath": "assets/images/pick.png",
           "rating": 4.2,
           "reviews": 100,
           "price": 8.99,
@@ -50,8 +50,8 @@ class DummyData {
         {
           "name": "Meat Lovers Pizza",
           "restaurant": "Domino's Pizza",
-          "id": "Pizza_3",
-          "imagePath": "assets/images/Pizza.png",
+          "id": "dish_18",
+          "imagePath": "assets/images/pick.png",
           "rating": 4.8,
           "reviews": 320,
           "price": 11.99,
@@ -61,8 +61,8 @@ class DummyData {
         {
           "name": "Veggie Pizza",
           "restaurant": "Pizza Hut",
-          "id": "Pizza_4",
-          "imagePath": "assets/images/Pizza.png",
+          "id": "dish_3",
+          "imagePath": "assets/images/pick.png",
           "rating": 4.0,
           "reviews": 80,
           "price": 7.99,
@@ -72,8 +72,8 @@ class DummyData {
         {
           "name": "BBQ Chicken Pizza",
           "restaurant": "Domino's Pizza",
-          "id": "Pizza_5",
-          "imagePath": "assets/images/Pizza.png",
+          "id": "dish_16",
+          "imagePath": "assets/images/pick.png",
           "rating": 4.5,
           "reviews": 60,
           "price": 10.99,
@@ -83,8 +83,8 @@ class DummyData {
         {
           "name": "Hawaiian Pizza",
           "restaurant": "Domino's Pizza",
-          "id": "Pizza_6",
-          "imagePath": "assets/images/Pizza.png",
+          "id": "dish_17",
+          "imagePath": "assets/images/pick.png",
           "rating": 4.2,
           "reviews": 50,
           "price": 9.99,
@@ -99,8 +99,8 @@ class DummyData {
         {
           "name": "Cheeseburger",
           "restaurant": "Burger King",
-          "id": "Burger_1",
-          "imagePath": "assets/images/Burger.png",
+          "id": "dish_4",
+          "imagePath": "assets/images/pick.png",
           "rating": 4.2,
           "reviews": 100,
           "price": 7.99,
@@ -110,8 +110,8 @@ class DummyData {
         {
           "name": "Bacon Burger",
           "restaurant": "Burger King",
-          "id": "Burger_2",
-          "imagePath": "assets/images/Burger.png",
+          "id": "dish_5",
+          "imagePath": "assets/images/pick.png",
           "rating": 4.3,
           "reviews": 90,
           "price": 8.99,
@@ -121,8 +121,8 @@ class DummyData {
         {
           "name": "Veggie Burger",
           "restaurant": "Burger King",
-          "id": "Burger_3",
-          "imagePath": "assets/images/Burger.png",
+          "id": "dish_6",
+          "imagePath": "assets/images/pick.png",
           "rating": 4.1,
           "reviews": 70,
           "price": 6.99,
@@ -301,7 +301,7 @@ class DummyData {
     },
   ];
 
-  List popularRestaurants = [
+  static List popularRestaurants = [
     {
       "name": "Pizza Hut",
       "imagePath": "assets/images/Pizza-hut.png",
@@ -491,7 +491,44 @@ class DummyData {
       ],
     },
     {
-      "name": "Domino's",
+      "name": "Domino's Pizza",
+      "imagePath": "assets/images/Dominos-pizza.png",
+      "rating": 4.4,
+      "reviews": 70,
+      "address": "303 Birch St",
+      "menus": [
+        {
+          "name": "BBQ Chicken Pizza",
+          "id": "dish_16",
+          "imagePath": "assets/images/pick.png",
+          "rating": 4.5,
+          "reviews": 60,
+          "price": 10.99,
+          "description": "A flavorful BBQ chicken pizza with tangy sauce.",
+        },
+        {
+          "name": "Hawaiian Pizza",
+          "id": "dish_17",
+          "imagePath": "assets/images/pick.png",
+          "rating": 4.2,
+          "reviews": 50,
+          "price": 9.99,
+          "description": "A tropical Hawaiian pizza with ham and pineapple.",
+        },
+        {
+          "name": "Meat Lovers Pizza",
+          "id": "dish_18",
+          "imagePath": "assets/images/pick.png",
+          "rating": 4.3,
+          "reviews": 40,
+          "price": 11.99,
+          "description":
+              "A hearty meat lovers pizza with pepperoni, sausage, and bacon.",
+        },
+      ],
+    },
+    {
+      "name": "McDonald's",
       "imagePath": "assets/images/Dominos-pizza.png",
       "rating": 4.4,
       "reviews": 70,

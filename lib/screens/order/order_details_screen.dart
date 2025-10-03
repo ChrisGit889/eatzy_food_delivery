@@ -73,12 +73,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                 buildSupportCard(),
                 Expanded(
                   child: Container(
-                    padding: const EdgeInsets.fromLTRB(
-                      20,
-                      20,
-                      20,
-                      0,
-                    ),
+                    padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
                     margin: const EdgeInsets.only(top: 10),
                     decoration: const BoxDecoration(
                       borderRadius: BorderRadius.vertical(
@@ -117,7 +112,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                           ),
                           buildLocationInfo(
                             "Delivery Point",
-                            "2/4-Brucfield Street, EC1Y 8, London.",
+                            "Jl Tanjung Duren Utara No. 1 Grogol",
                             Icons.flag,
                           ),
                           const Divider(height: 30),
@@ -126,9 +121,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                           buildPaymentSummary(),
                           const Divider(height: 30),
                           buildOrderInfo(),
-                          const SizedBox(
-                            height: 20,
-                          ),
+                          const SizedBox(height: 20),
                         ],
                       ),
                     ),
@@ -281,7 +274,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
           ),
           Text(
-            "Order #4782 • 4 kg • Delivery in 2 hr",
+            "Order #4782 • 1 kg • Delivery in 10 m",
             style: TextStyle(color: Colors.grey),
           ),
         ],
@@ -314,7 +307,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
       ],
     );
   }
-  
+
   Widget _buildLine(bool isCompleted) {
     return Expanded(
       child: Divider(
@@ -330,9 +323,9 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Expanded(child: _buildStep("Order", currentStep >= 1)),
+        Expanded(child: _buildStep("Ordered", currentStep >= 1)),
         _buildLine(currentStep > 1),
-        Expanded(child: _buildStep("Cooking", currentStep >= 2)),
+        Expanded(child: _buildStep("Process", currentStep >= 2)),
         _buildLine(currentStep > 2),
         Expanded(child: _buildStep("Delivered", currentStep >= 3)),
         _buildLine(currentStep > 3),
@@ -371,9 +364,9 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 10),
-        _buildItemRow("1x", "Super Big Package 1", "Rp 35.500"),
-        _buildItemRow("2x", "Cream Soup", "Rp 14.000"),
-        _buildItemRow("1x", "French Fries (Large)", "Rp 22.000"),
+        _buildItemRow("1x", "Winger Bucket", "\$6.00"),
+        _buildItemRow("1x", "Super Family", "\$7.90"),
+        _buildItemRow("1x", "French Fries", "\$1.30"),
       ],
     );
   }
@@ -401,8 +394,8 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 10),
-        _buildPaymentRow("Subtotal", "Rp 71.500"),
-        _buildPaymentRow("Delivery Fee", "Rp 16.000"),
+        _buildPaymentRow("Subtotal", "\$15.20"),
+        _buildPaymentRow("Delivery Fee", "\$0.50"),
         const SizedBox(height: 8),
         const Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -412,7 +405,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
             ),
             Text(
-              "Rp 87.500",
+              "\$15.70",
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
             ),
           ],
@@ -445,7 +438,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
         const SizedBox(height: 10),
         _buildInfoRow("Order No.", "#4782-FP78924"),
         _buildInfoRow("Payment Methods", "Eatpay"),
-        _buildInfoRow("Note", "Sausnya tolong dibanyakin ya, terima kasih."),
+        _buildInfoRow("Note", "Please add more sauce, thank you."),
       ],
     );
   }
@@ -467,7 +460,14 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
   Widget buildCancelButton() => SizedBox(
     width: double.infinity,
     child: ElevatedButton(
-      onPressed: () {},
+      onPressed: () {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return const SuccessDialog();
+          },
+        );
+      },
       style: ElevatedButton.styleFrom(
         backgroundColor: const Color.fromARGB(255, 255, 153, 0),
         padding: const EdgeInsets.symmetric(vertical: 16),
@@ -479,4 +479,97 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
       ),
     ),
   );
+}
+
+class SuccessDialog extends StatelessWidget {
+  const SuccessDialog({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+      elevation: 0,
+      backgroundColor: Colors.transparent,
+      child: contentBox(context),
+    );
+  }
+
+  void _navigateBack(BuildContext context) {
+    Navigator.of(context).pop();
+    Navigator.of(context).pop();
+  }
+
+  Widget contentBox(BuildContext context) {
+    return Stack(
+      children: <Widget>[
+        Container(
+          padding: const EdgeInsets.only(
+            left: 20,
+            top: 65,
+            right: 20,
+            bottom: 20,
+          ),
+          margin: const EdgeInsets.only(top: 45),
+          decoration: BoxDecoration(
+            shape: BoxShape.rectangle,
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(20),
+            boxShadow: const [
+              BoxShadow(
+                color: Colors.black12,
+                offset: Offset(0, 10),
+                blurRadius: 10,
+              ),
+            ],
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              const Text(
+                "Enjoy your meal! 😋",
+                style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
+              ),
+              const SizedBox(height: 15),
+              const Text(
+                "Your order is in hand. Time to eat!",
+                style: TextStyle(fontSize: 14),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 22),
+              Align(
+                alignment: Alignment.center,
+                child: SizedBox(
+                  width: 120,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      _navigateBack(context);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color.fromARGB(255, 255, 153, 0),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(50),
+                      ),
+                    ),
+                    child: const Text(
+                      "Okay",
+                      style: TextStyle(fontSize: 18, color: Colors.white),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        const Positioned(
+          left: 20,
+          right: 20,
+          child: CircleAvatar(
+            backgroundColor: Color(0xFF46D1A7),
+            radius: 45,
+            child: Icon(Icons.check, color: Colors.white, size: 50),
+          ),
+        ),
+      ],
+    );
+  }
 }

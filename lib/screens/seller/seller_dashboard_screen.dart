@@ -22,13 +22,25 @@ class _SellerDashboardState extends State<SellerDashboard> {
             future: getSellerItems(FirebaseAuth.instance.currentUser!.email!),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
+                if (snapshot.data!.isEmpty) {
+                  return Expanded(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [Text("You have no items")],
+                    ),
+                  );
+                }
                 List<Widget> currList = [];
                 for (var i in snapshot.data!) {
                   currList.add(
                     SellerItem(
                       name: i["name"],
                       desc: i["description"],
-                      price: int.tryParse(i["price"].toString())!,
+                      price: double.tryParse(i["price"].toString())!,
+                      type: i["type"],
+                      thenDo: () {
+                        setState(() {});
+                      },
                     ),
                   );
                 }
@@ -39,18 +51,13 @@ class _SellerDashboardState extends State<SellerDashboard> {
               return CircularProgressIndicator();
             },
           ),
-          RestaurantButtonRow(),
+          _buildButton(),
         ],
       ),
     );
   }
-}
 
-class RestaurantButtonRow extends StatelessWidget {
-  const RestaurantButtonRow({super.key});
-
-  @override
-  Widget build(BuildContext context) {
+  Widget _buildButton() {
     return Padding(
       padding: const EdgeInsets.all(8),
       child: Row(
@@ -58,10 +65,12 @@ class RestaurantButtonRow extends StatelessWidget {
           Expanded(
             child: TextButton(
               onPressed: () {
-                Navigator.pushReplacement(
+                Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => const AddFood()),
-                );
+                ).then((_) {
+                  setState(() {});
+                });
               },
               style: ButtonStyle(
                 backgroundColor: WidgetStateProperty.resolveWith((states) {

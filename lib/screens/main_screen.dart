@@ -2,7 +2,6 @@ import 'package:eatzy_food_delivery/widgets/bottom_nav.dart';
 import 'package:flutter/material.dart';
 import 'home/home_screen.dart';
 import 'order/order_screen.dart';
-import 'history/history_screen.dart';
 import 'favorite/favorite_screen.dart';
 import 'profile/profile_screen.dart';
 
@@ -21,7 +20,6 @@ class _MainScreenState extends State<MainScreen> {
   final List<Widget> _pages = const [
     HomeScreen(),
     OrderScreen(),
-    HistoryScreen(),
     FavoriteScreen(),
     ProfileScreen(),
   ];
@@ -36,7 +34,7 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: _pages[_selectedIndex],
-      bottomNavigationBar: BottomNav(
+      bottomNavigationBar: CustomBottomNav(
         currentIndex: _selectedIndex,
         onTap: (index) => setState(() {
           _selectedIndex = index;

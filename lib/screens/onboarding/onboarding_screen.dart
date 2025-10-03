@@ -1,5 +1,6 @@
+import 'package:eatzy_food_delivery/screens/auth/auth_gate.dart';
 import 'package:flutter/material.dart';
-import '../auth/login_screen.dart';
+import '../auth/auth_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class OnboardingScreen extends StatefulWidget {
@@ -52,10 +53,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     super.dispose();
   }
 
-  void _navigateToLogin() {
+  void _navigateToAuthScreen() {
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => const LoginScreen()),
+      MaterialPageRoute(
+        builder: (context) => AuthGate(whereToGo: AuthScreen()),
+      ),
     );
   }
 
@@ -165,7 +168,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       TextButton(
-                        onPressed: _navigateToLogin,
+                        onPressed: _navigateToAuthScreen,
                         child: Text(
                           "Skip",
                           style: TextStyle(
@@ -176,13 +179,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       ),
                       ElevatedButton(
                         onPressed: () {
-                          if (isLastPage) {
-                            _navigateToLogin();
-                          } else {
+                          if (_currentPage < _onboardingData.length - 1) {
                             _pageController.nextPage(
-                              duration: const Duration(milliseconds: 300),
-                              curve: Curves.easeIn,
+                              duration: Duration(milliseconds: 400),
+                              curve: Curves.easeInOut,
                             );
+                          } else {
+                            _navigateToAuthScreen();
                           }
                         },
                         style: ElevatedButton.styleFrom(

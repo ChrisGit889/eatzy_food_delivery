@@ -28,7 +28,7 @@ class _SellerProfileState extends State<SellerProfile> {
               CircleAvatar(
                 radius: 80,
                 backgroundImage: AssetImage(
-                  "assets/buatisiprofile.jpg",
+                  "assets/images/buatisiprofile.jpg",
                 ), //TODO: Use firebase for this
               ),
               Row(
@@ -41,32 +41,50 @@ class _SellerProfileState extends State<SellerProfile> {
                           return SizedBox(
                             width: 100,
                             height: 100,
-                            child: TextField(controller: textController),
+                            child: TextField(
+                              controller: textController,
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              maxLength: 20,
+                            ),
                           );
                         }
                         return snapshot.data!["store"] == null
-                            ? Text("No name")
-                            : Text(snapshot.data!["store"]);
+                            ? Text(
+                                "Unnamed Seller",
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              )
+                            : Text(
+                                snapshot.data!["store"],
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              );
                       } else {
                         return CircularProgressIndicator();
                       }
                     },
                   ),
                   IconButton(
-                    onPressed: () {
-                      setState(() {
-                        alert = false;
-                        if (editing) {
-                          if (textController.text.isNotEmpty) {
-                            setSellerStoreName(textController.text);
-                            editing = false;
-                          } else {
-                            alert = true;
-                          }
+                    onPressed: () async {
+                      alert = false;
+                      if (editing) {
+                        if (textController.text.isNotEmpty) {
+                          await setSellerStoreName(textController.text);
+                          editing = false;
                         } else {
-                          editing = true;
+                          alert = true;
                         }
-                      });
+                      } else {
+                        editing = true;
+                      }
+                      setState(() {});
                     },
                     icon: Icon(Icons.mode_edit_outlined),
                   ),

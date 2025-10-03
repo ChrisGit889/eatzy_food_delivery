@@ -1,5 +1,5 @@
 import 'package:eatzy_food_delivery/constants.dart';
-import 'package:eatzy_food_delivery/screens/seller/seller_screen.dart';
+import 'package:eatzy_food_delivery/utils/utils.dart';
 import 'package:eatzy_food_delivery/utils/utils_seller.dart';
 import 'package:flutter/material.dart';
 
@@ -18,16 +18,18 @@ class _AddFoodState extends State<AddFood> {
   bool isError = false;
   String errorMessage = "";
 
+  String dropDownValue = "other";
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        foregroundColor: Colors.white,
         leading: IconButton(
           onPressed: () {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => const SellerScreen()),
-            );
+            Navigator.pop(context);
           },
           icon: Icon(Icons.arrow_back),
         ),
@@ -36,9 +38,73 @@ class _AddFoodState extends State<AddFood> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Column(
-            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text("Input food information"),
+              SizedBox(
+                height: 350,
+                width: MediaQuery.widthOf(context),
+                child: DecoratedBox(
+                  decoration: BoxDecoration(color: EATZY_ORANGE),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      imageOfCategory(dropDownValue, 200.0, 200.0),
+                      Text(
+                        "Creating a new food item",
+                        style: TextStyle(
+                          fontSize: 32,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Text(
+                          "Input food information",
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              SizedBox(height: 20),
+              SizedBox(
+                width: MediaQuery.widthOf(context) * 1 / 4,
+                child: DropdownButton(
+                  value: dropDownValue,
+                  onChanged: (value) {
+                    setState(() {
+                      dropDownValue = value!;
+                    });
+                  },
+                  items: [
+                    DropdownMenuItem<String>(
+                      value: "pizza",
+                      child: Text("Pizza"),
+                    ),
+                    DropdownMenuItem<String>(
+                      value: "burger",
+                      child: Text("Burger"),
+                    ),
+                    DropdownMenuItem<String>(
+                      value: "snacks",
+                      child: Text("Snacks"),
+                    ),
+                    DropdownMenuItem<String>(
+                      value: "other",
+                      child: Text("Others"),
+                    ),
+                    DropdownMenuItem<String>(
+                      value: "drinks",
+                      child: Text("Drinks"),
+                    ),
+                  ],
+                ),
+              ),
               SizedBox(
                 width: MediaQuery.widthOf(context) * 3 / 4,
                 child: TextField(
@@ -69,35 +135,36 @@ class _AddFoodState extends State<AddFood> {
               isError
                   ? Text(errorMessage, style: TextStyle(color: Colors.red))
                   : SizedBox(),
-              TextButton(
-                onPressed: () async {
-                  setState(() {
+
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextButton(
+                  onPressed: () async {
                     isError = false;
-                    errorCheckInput();
-                  });
-                  if (!isError) {
-                    var res = await makeNewSellerItem(
-                      nameController.text,
-                      descriptionController.text,
-                      priceController.text,
-                    );
-                    if (res) {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(builder: (context) => SellerScreen()),
+                    await errorCheckInput();
+                    setState(() {});
+                    if (!isError) {
+                      var res = await makeNewSellerItem(
+                        name: nameController.text,
+                        desc: descriptionController.text,
+                        price: priceController.text,
+                        type: dropDownValue,
                       );
+                      if (res) {
+                        Navigator.pop(context);
+                      }
                     }
-                  }
-                  return;
-                },
-                style: ButtonStyle(
-                  backgroundColor: WidgetStateProperty.resolveWith((states) {
-                    return EATZY_ORANGE;
-                  }),
-                ),
-                child: const Text(
-                  "Submit",
-                  style: TextStyle(color: Color(0xFFFFFFFF)),
+                    return;
+                  },
+                  style: ButtonStyle(
+                    backgroundColor: WidgetStateProperty.resolveWith((states) {
+                      return EATZY_ORANGE;
+                    }),
+                  ),
+                  child: const Text(
+                    "Submit",
+                    style: TextStyle(color: Color(0xFFFFFFFF)),
+                  ),
                 ),
               ),
             ],
@@ -107,7 +174,11 @@ class _AddFoodState extends State<AddFood> {
     );
   }
 
-  void errorCheckInput() {
+  Future<void> errorCheckInput() async {
+    if (await itemExistsFromName(nameController.text)) {
+      isError = true;
+      errorMessage = "Use a unique name!";
+    }
     if (nameController.text.isEmpty) {
       isError = true;
       errorMessage = "Please input a name";
@@ -122,11 +193,12 @@ class _AddFoodState extends State<AddFood> {
       isError = true;
       errorMessage = "Please input a price!";
       return;
-    } else if (int.tryParse(priceController.text) == null) {
+    } else if (double.tryParse(priceController.text) == null) {
+      print(priceController.text);
       isError = true;
       errorMessage = "Please input a valid number!";
       return;
-    } else if (int.parse(priceController.text) < 0) {
+    } else if (double.parse(priceController.text) < 0) {
       isError = true;
       errorMessage = "Please input a positive number!";
       return;

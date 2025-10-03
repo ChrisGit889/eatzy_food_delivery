@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'order_details_screen.dart'; // 1. IMPORT DITAMBAHKAN DI SINI
+import 'order_details_screen.dart';
 
 class OrderScreen extends StatefulWidget {
   const OrderScreen({super.key});
@@ -16,17 +16,17 @@ class _OrderScreenState extends State<OrderScreen>
   final List<Map<String, dynamic>> _allOrders = [
     {
       "orderId": "#4782-FP78924",
-      "date": "Sep 25, 2025",
+      "date": "Sep 30, 2025",
       "service": "KFC",
-      "items": "7 items",
+      "items": "3 items",
       "delivery": "June 30, 2025",
       "status": "Pending",
       "steps": 3,
     },
     {
       "orderId": "#4782-FP78925",
-      "date": "Sep 24, 2025",
-      "service": "Nasi Goreng Pak Dea",
+      "date": "Sep 27, 2025",
+      "service": "PIZZA HUT ",
       "items": "2 items",
       "delivery": "June 27, 2025",
       "status": "Completed",
@@ -34,8 +34,8 @@ class _OrderScreenState extends State<OrderScreen>
     },
     {
       "orderId": "#4782-FP78926",
-      "date": "Sep 23, 2025",
-      "service": "Ayam Bakar Manis",
+      "date": "Sep 25, 2025",
+      "service": "Starbucks",
       "items": "3 items",
       "delivery": "June 25, 2025",
       "status": "Cancelled",
@@ -43,37 +43,63 @@ class _OrderScreenState extends State<OrderScreen>
     },
   ];
 
-  late List<Map<String, dynamic>> _filteredOrders;
-
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 4, vsync: this);
-    _filteredOrders = _allOrders;
-    _searchController.addListener(_filterOrders);
+    _searchController.addListener(() => setState(() {}));
+    _tabController.addListener(() => setState(() {}));
   }
 
   @override
   void dispose() {
-    _searchController.removeListener(_filterOrders);
+    _searchController.removeListener(() => setState(() {}));
+    _tabController.removeListener(() => setState(() {}));
     _searchController.dispose();
     _tabController.dispose();
     super.dispose();
   }
 
-  void _filterOrders() {
-    String query = _searchController.text.toLowerCase();
-    setState(() {
-      _filteredOrders = _allOrders.where((order) {
-        final orderId = order['orderId']!.toLowerCase();
-        final service = order['service']!.toLowerCase();
-        return orderId.contains(query) || service.contains(query);
-      }).toList();
-    });
+  List<Map<String, dynamic>> _getFilteredOrders() {
+    List<Map<String, dynamic>> tabFilteredList;
+    switch (_tabController.index) {
+      case 1:
+        tabFilteredList = _allOrders
+            .where((order) => order['status'] == 'Pending')
+            .toList();
+        break;
+      case 2:
+        tabFilteredList = _allOrders
+            .where((order) => order['status'] == 'Completed')
+            .toList();
+        break;
+      case 3:
+        tabFilteredList = _allOrders
+            .where((order) => order['status'] == 'Cancelled')
+            .toList();
+        break;
+      case 0:
+      default:
+        tabFilteredList = List.from(_allOrders);
+        break;
+    }
+
+    final query = _searchController.text.toLowerCase();
+    if (query.isEmpty) {
+      return tabFilteredList;
+    }
+
+    return tabFilteredList.where((order) {
+      final orderId = order['orderId']!.toLowerCase();
+      final service = order['service']!.toLowerCase();
+      return orderId.contains(query) || service.contains(query);
+    }).toList();
   }
 
   @override
   Widget build(BuildContext context) {
+    final filteredOrders = _getFilteredOrders();
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("Order History"),
@@ -92,7 +118,7 @@ class _OrderScreenState extends State<OrderScreen>
                 labelColor: Colors.white,
                 unselectedLabelColor: Colors.black,
                 indicator: BoxDecoration(
-                  color: const Color.fromARGB(255, 212, 86, 13),
+                  color: const Color.fromARGB(255, 255, 115, 0),
                   borderRadius: BorderRadius.circular(10),
                 ),
                 indicatorSize: TabBarIndicatorSize.tab,
@@ -112,17 +138,17 @@ class _OrderScreenState extends State<OrderScreen>
       body: TabBarView(
         controller: _tabController,
         children: [
-          buildOrderList(),
-          buildOrderList(),
-          buildOrderList(),
-          buildOrderList(),
+          buildOrderList(filteredOrders),
+          buildOrderList(filteredOrders),
+          buildOrderList(filteredOrders),
+          buildOrderList(filteredOrders),
         ],
       ),
     );
   }
 
-  Widget buildOrderList() {
-    if (_filteredOrders.isEmpty) {
+  Widget buildOrderList(List<Map<String, dynamic>> orders) {
+    if (orders.isEmpty) {
       return const Center(
         child: Text(
           "Pesanan tidak ditemukan.",
@@ -133,16 +159,36 @@ class _OrderScreenState extends State<OrderScreen>
 
     return ListView.builder(
       padding: const EdgeInsets.all(16),
-      itemCount: _filteredOrders.length,
+      itemCount: orders.length,
       itemBuilder: (context, index) {
-        final order = _filteredOrders[index];
-        // 2. MENGIRIM DATA PESANAN KE WIDGET buildOrderCard
+        final order = orders[index];
         return Padding(
           padding: const EdgeInsets.only(bottom: 16.0),
           child: buildOrderCard(order: order),
         );
       },
     );
+  }
+
+  Widget _getServiceLogo(String serviceName) {
+    String imagePath;
+    String trimmedServiceName = serviceName.trim();
+
+    if (trimmedServiceName == 'KFC') {
+      imagePath = 'assets/images/Kfc.png';
+    } else if (trimmedServiceName == 'PIZZA HUT') {
+      imagePath = 'assets/images/Pizza-hut.png';
+    } else if (trimmedServiceName == 'Starbucks') {
+      imagePath = 'assets/images/Starbucks.png';
+    } else {
+      return const Icon(
+        Icons.restaurant_menu,
+        size: 40,
+        color: Color.fromARGB(255, 255, 136, 0),
+      );
+    }
+
+    return Image.asset(imagePath);
   }
 
   Widget buildOrderCard({required Map<String, dynamic> order}) {
@@ -208,10 +254,10 @@ class _OrderScreenState extends State<OrderScreen>
           const SizedBox(height: 12),
           Row(
             children: [
-              const Icon(
-                Icons.restaurant_menu,
-                size: 40,
-                color: Color.fromARGB(255, 255, 136, 0),
+              SizedBox(
+                width: 40,
+                height: 40,
+                child: _getServiceLogo(order['service']),
               ),
               const SizedBox(width: 12),
               Expanded(
@@ -237,15 +283,11 @@ class _OrderScreenState extends State<OrderScreen>
                 ),
               ),
               OutlinedButton(
-                // 3. BAGIAN INI YANG DIUBAH
                 onPressed: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const OrderDetailsScreen(
-                        // Anda bisa mengirim data jika diperlukan, contoh:
-                        // orderData: order,
-                      ),
+                      builder: (context) => const OrderDetailsScreen(),
                     ),
                   );
                 },
@@ -268,11 +310,11 @@ class _OrderScreenState extends State<OrderScreen>
             children: [
               buildStep("Ordered", true),
               buildLine(),
-              buildStep("Picked Up", steps >= 2),
+              buildStep("Process", steps >= 2),
               buildLine(),
               buildStep("Handover", steps >= 3),
               buildLine(),
-              buildStep("Finish", steps >= 4),
+              buildStep("Finished", steps >= 4),
             ],
           ),
         ],
@@ -333,10 +375,6 @@ class _OrderSearchBar extends StatelessWidget {
           border: InputBorder.none,
           contentPadding: const EdgeInsets.all(15),
           prefixIcon: const Icon(Icons.search, color: themeColor),
-          suffixIcon: IconButton(
-            icon: const Icon(Icons.filter_list, color: themeColor),
-            onPressed: () {},
-          ),
         ),
       ),
     );
