@@ -26,7 +26,7 @@ class _OrderScreenState extends State<OrderScreen>
     {
       "orderId": "#4782-FP78925",
       "date": "Sep 27, 2025",
-      "service": "Nasi Goreng Pak Dea",
+      "service": "PIZZA HUT ",
       "items": "2 items",
       "delivery": "June 27, 2025",
       "status": "Completed",
@@ -35,7 +35,7 @@ class _OrderScreenState extends State<OrderScreen>
     {
       "orderId": "#4782-FP78926",
       "date": "Sep 25, 2025",
-      "service": "Ayam Bakar Manis",
+      "service": "Starbucks",
       "items": "3 items",
       "delivery": "June 25, 2025",
       "status": "Cancelled",
@@ -47,7 +47,6 @@ class _OrderScreenState extends State<OrderScreen>
   void initState() {
     super.initState();
     _tabController = TabController(length: 4, vsync: this);
-
     _searchController.addListener(() => setState(() {}));
     _tabController.addListener(() => setState(() {}));
   }
@@ -171,6 +170,27 @@ class _OrderScreenState extends State<OrderScreen>
     );
   }
 
+  Widget _getServiceLogo(String serviceName) {
+    String imagePath;
+    String trimmedServiceName = serviceName.trim();
+
+    if (trimmedServiceName == 'KFC') {
+      imagePath = 'assets/images/Kfc.png';
+    } else if (trimmedServiceName == 'PIZZA HUT') {
+      imagePath = 'assets/images/Pizza-hut.png';
+    } else if (trimmedServiceName == 'Starbucks') {
+      imagePath = 'assets/images/Starbucks.png';
+    } else {
+      return const Icon(
+        Icons.restaurant_menu,
+        size: 40,
+        color: Color.fromARGB(255, 255, 136, 0),
+      );
+    }
+
+    return Image.asset(imagePath);
+  }
+
   Widget buildOrderCard({required Map<String, dynamic> order}) {
     final String status = order['status'];
     final int steps = order['steps'];
@@ -234,10 +254,10 @@ class _OrderScreenState extends State<OrderScreen>
           const SizedBox(height: 12),
           Row(
             children: [
-              const Icon(
-                Icons.restaurant_menu,
-                size: 40,
-                color: Color.fromARGB(255, 255, 136, 0),
+              SizedBox(
+                width: 40,
+                height: 40,
+                child: _getServiceLogo(order['service']),
               ),
               const SizedBox(width: 12),
               Expanded(
@@ -355,10 +375,6 @@ class _OrderSearchBar extends StatelessWidget {
           border: InputBorder.none,
           contentPadding: const EdgeInsets.all(15),
           prefixIcon: const Icon(Icons.search, color: themeColor),
-          suffixIcon: IconButton(
-            icon: const Icon(Icons.filter_list, color: themeColor),
-            onPressed: () {},
-          ),
         ),
       ),
     );

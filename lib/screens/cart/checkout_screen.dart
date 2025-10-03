@@ -36,7 +36,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
             padding: const EdgeInsets.symmetric(vertical: 12.0),
             child: Column(
               children: [
-                // Delivery Address Section
                 Padding(
                   padding: const EdgeInsets.symmetric(
                     vertical: 15,
