@@ -339,7 +339,7 @@ class _OrderScreenState extends State<OrderScreen>
                 ElevatedButton(
                   onPressed: () {
                     final snackBar = SnackBar(
-                      content: const Text('Terima kasih telah memesan!'),
+                      content: Text('Enjoy your ${order['service'].trim()} 😊'),
                       backgroundColor: Colors.green,
                     );
                     ScaffoldMessenger.of(context).showSnackBar(snackBar);
@@ -352,6 +352,20 @@ class _OrderScreenState extends State<OrderScreen>
                     ),
                   ),
                   child: const Text("Enjoy your meal"),
+                )
+              else if (status == 'Cancelled')
+                OutlinedButton(
+                  onPressed: null, // <-- Tombol dinonaktifkan di sini
+                  style: OutlinedButton.styleFrom(
+                    disabledForegroundColor: Colors.grey.withOpacity(
+                      0.38,
+                    ), // Styling saat disabled
+                    side: const BorderSide(color: Colors.grey),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  child: const Text("Lihat Detail"),
                 )
               else
                 OutlinedButton(
