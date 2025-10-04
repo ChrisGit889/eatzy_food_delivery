@@ -272,7 +272,7 @@ class _ChangeAddressViewState extends State<ChangeAddressView> {
                   ),
                 ),
 
-                // Current Address Display 
+                // Current Address Display
                 Positioned(
                   top: 16,
                   left: 16,
@@ -362,54 +362,6 @@ class _ChangeAddressViewState extends State<ChangeAddressView> {
                                   ),
                                 ),
                                 onSubmitted: _searchAddress,
-                              ),
-                            ),
-
-                            const SizedBox(height: 16),
-
-                            // Saved Places Button
-                            InkWell(
-                              onTap: () {
-                                // TODO: Navigate to saved places
-                              },
-                              borderRadius: BorderRadius.circular(12),
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 16,
-                                  vertical: 12,
-                                ),
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                    color: Colors.grey[300]!,
-                                    width: 1,
-                                  ),
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                child: Row(
-                                  children: [
-                                    Icon(
-                                      Icons.bookmark_outline,
-                                      color: primaryText,
-                                      size: 20,
-                                    ),
-                                    const SizedBox(width: 12),
-                                    Expanded(
-                                      child: Text(
-                                        "Choose a saved place",
-                                        style: TextStyle(
-                                          color: primaryText,
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
-                                    ),
-                                    Icon(
-                                      Icons.chevron_right,
-                                      color: primaryText,
-                                      size: 20,
-                                    ),
-                                  ],
-                                ),
                               ),
                             ),
 

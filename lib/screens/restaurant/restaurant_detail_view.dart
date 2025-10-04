@@ -245,8 +245,10 @@ class _RestaurantDetailViewState extends State<RestaurantDetailView> {
                                           color: Colors.white,
                                         ),
                                         const SizedBox(width: 8),
-                                        Text(
-                                          '${menuItem['name']} added to cart',
+                                        Expanded(
+                                          child: Text(
+                                            '${menuItem['name']} added to cart',
+                                          ),
                                         ),
                                       ],
                                     ),
