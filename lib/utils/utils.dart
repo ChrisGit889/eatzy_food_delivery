@@ -12,7 +12,14 @@ String numToRupiah(number) {
 }
 
 String numToDollar(number) {
-  var num = number.toStringAsFixed(2).toString().replaceAll(".", ",");
+  var num = number;
+  if (!(num is String)) {
+    num = number.toStringAsFixed(2).toString().replaceAll(".", ",");
+  } else {
+    num = double.tryParse(
+      num,
+    )!.toStringAsFixed(2).toString().replaceAll(".", ",");
+  }
   var res = num.substring(num.length - 3, num.length);
   var temp = num.substring(0, num.length - 3);
   for (var i = 3; i < temp.length; i += 4) {

@@ -219,7 +219,7 @@ Future changeFoodItemFromName({
       if (i["name"] == itemName) {
         i["name"] = newName;
         i["description"] = newDesc;
-        i["price"] = newPrice;
+        i["price"] = double.tryParse(newPrice);
         i["type"] = newType;
         i["image"] = newImage;
         i["last_updated"] = DateTime.now();
