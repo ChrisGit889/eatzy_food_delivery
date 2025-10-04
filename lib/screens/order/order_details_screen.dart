@@ -67,7 +67,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                 children: [
                   buildSupportCard(context),
                   const SizedBox(height: 20),
-                  buildOrderStatusStepper(widget.order['status'] ?? 'Ordered'),
+                  buildOrderStatusStepper('Delivered'),
                   const SizedBox(height: 20),
                   FutureBuilder(
                     future: _initializeVideoPlayerFuture,
@@ -89,10 +89,10 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                   buildLocationInfo(
                     pickUpPoint:
                         widget.order['pickupPoint'] ??
-                        'Pick-up address not available',
+                        'KFC, Jl. Raya Lenteng Agung No. 25',
                     deliveryPoint:
                         widget.order['deliveryAddress'] ??
-                        'Shipping Address not available',
+                        'Untar 2, Grogol, Jakarta',
                   ),
                   const Divider(height: 30),
                   buildItemDetails(widget.order['items'] as List),
@@ -141,7 +141,6 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                   );
                   if (mounted) Navigator.pop(context);
                   if (mounted) Navigator.pop(context);
-
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
                       content: Text('Order has been completed!'),
@@ -175,7 +174,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
   }
 
   Widget buildOrderStatusStepper(String currentStatus) {
-    List<String> statuses = ['Pending', 'Process', 'Delivered', 'Completed'];
+    List<String> statuses = ['Ordered', 'Process', 'Delivered', 'Completed'];
     int currentStepIndex = statuses.indexWhere(
       (s) => s.toLowerCase() == currentStatus.toLowerCase(),
     );
@@ -246,7 +245,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
         borderRadius: BorderRadius.circular(15),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withAlpha(25),
+            color: Colors.grey.withOpacity(0.1),
             spreadRadius: 2,
             blurRadius: 5,
           ),

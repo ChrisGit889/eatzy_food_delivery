@@ -128,7 +128,7 @@ class _OrderScreenState extends State<OrderScreen>
         ),
       ),
       body: StreamBuilder<QuerySnapshot>(
-        stream: getOrdersStream(),
+        stream: OrderService().getOrdersStream(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -139,7 +139,7 @@ class _OrderScreenState extends State<OrderScreen>
           if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
             return const Center(
               child: Text(
-                "Belum ada pesanan.",
+                "No orders yet 🥲",
                 style: TextStyle(fontSize: 18, color: Colors.grey),
               ),
             );
@@ -206,7 +206,7 @@ class _OrderScreenState extends State<OrderScreen>
     if (orders.isEmpty) {
       return const Center(
         child: Text(
-          "Order not found",
+          "Order not found 🥲",
           style: TextStyle(fontSize: 18, color: Colors.grey),
         ),
       );
@@ -361,7 +361,7 @@ class _OrderScreenState extends State<OrderScreen>
                       borderRadius: BorderRadius.circular(12),
                     ),
                   ),
-                  child: const Text("View Details"),
+                  child: const Text("Lihat Detail"),
                 )
               else
                 OutlinedButton(
@@ -394,9 +394,9 @@ class _OrderScreenState extends State<OrderScreen>
               buildLine(),
               buildStep("Process", steps >= 2),
               buildLine(),
-              buildStep("Handover", steps >= 3),
+              buildStep("Delivered", steps >= 3),
               buildLine(),
-              buildStep("Finished", steps >= 4),
+              buildStep("Completed", steps >= 4),
             ],
           ),
         ],

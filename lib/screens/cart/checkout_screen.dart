@@ -317,7 +317,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                         if (cart.isEmpty || selectMethod == -1) {
                           showSnackBar(
                             context: context,
-                            content: Text(
+                            content: const Text(
                               "Keranjang kosong atau metode pembayaran belum dipilih.",
                             ),
                             backgroundColor: Colors.red,
@@ -341,7 +341,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                               ? "PIZZA HUT"
                               : "KFC";
 
-                          await placeOrder(
+                          // DIUBAH: Panggil fungsi melalui OrderService()
+                          await OrderService().placeOrder(
                             items: cart.items,
                             totalPrice: cart.totalPrice,
                             userId: userId,

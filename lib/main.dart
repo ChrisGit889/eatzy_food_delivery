@@ -16,6 +16,7 @@ void main() async {
   runApp(const EatzyApp());
 }
 
+//widget for the whole app
 class EatzyApp extends StatelessWidget {
   const EatzyApp({super.key});
 
