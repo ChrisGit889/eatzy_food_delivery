@@ -175,7 +175,7 @@ class _RestaurantDetailViewState extends State<RestaurantDetailView> {
                       ],
                     ),
 
-                    // Add to Cart Button and favorite button 
+                    // Add to Cart Button and favorite button
                     trailing: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
@@ -244,6 +244,9 @@ class _RestaurantDetailViewState extends State<RestaurantDetailView> {
                                         12.99,
                                     'quantity': 1,
                                   });
+                                  ScaffoldMessenger.of(
+                                    context,
+                                  ).clearSnackBars();
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
                                       content: Row(
@@ -253,8 +256,10 @@ class _RestaurantDetailViewState extends State<RestaurantDetailView> {
                                             color: Colors.white,
                                           ),
                                           const SizedBox(width: 8),
-                                          Text(
-                                            '${widget.restaurant['menus'][index]['name']} added to cart',
+                                          Expanded(
+                                            child: Text(
+                                              '${widget.restaurant['menus'][index]['name']} added to cart',
+                                            ),
                                           ),
                                         ],
                                       ),
