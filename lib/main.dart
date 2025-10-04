@@ -1,5 +1,6 @@
 import 'package:eatzy_food_delivery/constants.dart';
 import 'package:eatzy_food_delivery/data/models/favorit_model.dart';
+import 'package:eatzy_food_delivery/data/models/address_model.dart';
 import 'package:eatzy_food_delivery/screens/auth/auth_screen.dart';
 import 'package:eatzy_food_delivery/screens/onboarding/onboarding_screen.dart';
 import 'package:eatzy_food_delivery/services/firebase_options.dart';
@@ -37,6 +38,13 @@ class EatzyApp extends StatelessWidget {
             return favModel;
           },
         ),
+        ChangeNotifierProvider(
+          create: (context) { 
+            AddressModel addressModel = AddressModel();
+            addressModel.loadAddress();
+            return addressModel;
+
+        }),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
