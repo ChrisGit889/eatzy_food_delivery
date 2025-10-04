@@ -46,7 +46,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
   void _confirmPayment() {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text("You selected: $_selectedMethod"),
+        content: Text("Kamu memilih metode: $_selectedMethod"),
         backgroundColor: const Color(0xFFFD6C00),
       ),
     );
@@ -64,15 +64,23 @@ class _PaymentScreenState extends State<PaymentScreen> {
             controller: amountController,
             keyboardType: TextInputType.number,
             decoration: const InputDecoration(
-              hintText: "Enter amount",
-              prefixIcon: Icon(Icons.attach_money),
-              border: OutlineInputBorder(),
+              hintText: "Masukkan nominal",
+              prefixText: "Rp ",
+              prefixStyle: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Color(0xFFFD6C00),
+              ),
+              contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(8)),
+              ),
             ),
           ),
+          actionsPadding: const EdgeInsets.only(right: 12, bottom: 8),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text("Cancel"),
+              child: const Text("Batal"),
             ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
@@ -88,8 +96,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   Navigator.pop(context);
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content:
-                          Text("Top Up Successful! Balance: Rp${_eatzyBalance.toStringAsFixed(0)}"),
+                      content: Text(
+                        "Top Up berhasil! Saldo sekarang: Rp${_eatzyBalance.toStringAsFixed(0)}",
+                      ),
                       backgroundColor: const Color(0xFFFD6C00),
                     ),
                   );
@@ -178,7 +187,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
             ),
             const SizedBox(height: 10),
             Text(
-              "Balance: Rp${_eatzyBalance.toStringAsFixed(0)}",
+              "Saldo: Rp${_eatzyBalance.toStringAsFixed(0)}",
               style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
             ),
             const SizedBox(height: 10),
@@ -203,7 +212,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Payment Method"),
+        title: const Text("Metode Pembayaran"),
         backgroundColor: const Color(0xFFFD6C00),
         foregroundColor: Colors.white,
         centerTitle: true,
@@ -226,7 +235,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 ),
               ),
               child: const Text(
-                "Confirm Payment",
+                "Konfirmasi Pembayaran",
                 style: TextStyle(color: Colors.white, fontSize: 16),
               ),
             ),
