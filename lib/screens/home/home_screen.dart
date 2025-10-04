@@ -6,6 +6,7 @@ import '../cart/cart_screen.dart';
 import '../restaurant/restaurant_detail_view.dart';
 import 'package:provider/provider.dart';
 import 'package:eatzy_food_delivery/data/models/cart_model.dart';
+import 'package:eatzy_food_delivery/data/models/favorit_model.dart';
 import 'package:eatzy_food_delivery/data/dummy/dummy_data.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:eatzy_food_delivery/screens/cart/change_address_view.dart';
@@ -670,7 +671,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 crossAxisCount: 2,
                 crossAxisSpacing: 16,
                 mainAxisSpacing: 16,
-                childAspectRatio: 0.8,
               ),
               delegate: SliverChildBuilderDelegate((
                 BuildContext context,
@@ -731,10 +731,47 @@ class _HomeScreenState extends State<HomeScreen> {
                                   color: Colors.white,
                                   borderRadius: BorderRadius.circular(8),
                                 ),
-                                child: const Icon(
-                                  Icons.favorite_border,
-                                  size: 18,
-                                  color: Colors.red,
+                                child: Consumer<FavoriteModel>(
+                                  builder: (context, favModel, child) {
+                                    final isFav = favModel.favorites.any(
+                                      (item) =>
+                                          item['id'] ==
+                                          popularFoods[index]['id'],
+                                    );
+
+                                    return IconButton(
+                                      icon: Icon(
+                                        isFav
+                                            ? Icons.favorite
+                                            : Icons.favorite_border,
+                                        color: Colors.red,
+                                      ),
+                                      onPressed: () {
+                                        favModel.toggleFav({
+                                          ...Map<String, dynamic>.from(
+                                            popularFoods[index],
+                                          ),
+                                          'restaurant':
+                                              popularFoods[index]['restaurant'],
+                                        });
+
+                                        ScaffoldMessenger.of(
+                                          context,
+                                        ).showSnackBar(
+                                          SnackBar(
+                                            content: Text(
+                                              isFav
+                                                  ? '${popularFoods[index]['name']} removed from favorites'
+                                                  : '${popularFoods[index]['name']} added to favorites',
+                                            ),
+                                            duration: const Duration(
+                                              seconds: 2,
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    );
+                                  },
                                 ),
                               ),
                             ),

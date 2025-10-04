@@ -570,6 +570,7 @@ class DummyData {
     {
       "name": "Pepperoni Pizza",
       "restaurant": "Pizza Hut",
+      "id": "dish_1",
       "imagePath": "assets/images/pick.png",
       "rating": 4.5,
       "reviews": 150,
@@ -578,6 +579,7 @@ class DummyData {
     {
       "name": "Cheeseburger",
       "restaurant": "Burger King",
+      "id": "dish_4",
       "imagePath": "assets/images/pick.png",
       "rating": 4.2,
       "reviews": 100,
@@ -586,6 +588,7 @@ class DummyData {
     {
       "name": "Caffe Latte",
       "restaurant": "Starbucks",
+      "id": "dish_13",
       "imagePath": "assets/images/pick.png",
       "rating": 4.7,
       "reviews": 200,
@@ -594,17 +597,10 @@ class DummyData {
     {
       "name": "Bacon Burger",
       "restaurant": "Burger King",
+      "id": "dish_5",
       "imagePath": "assets/images/pick.png",
       "rating": 4.3,
       "reviews": 90,
-      "price": 8.99,
-    },
-    {
-      "name": "Fried Chicken",
-      "restaurant": "KFC",
-      "imagePath": "assets/images/pick.png",
-      "rating": 4.5,
-      "reviews": 160,
       "price": 8.99,
     },
   ];
