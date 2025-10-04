@@ -114,9 +114,10 @@ class CartScreen extends StatelessWidget {
                                   color: Colors.grey[200],
                                   borderRadius: BorderRadius.circular(8),
                                 ),
-                                child: Icon(
-                                  Icons.restaurant,
-                                  color: Colors.grey,
+                                child: imageOfCategory(
+                                  item["type"],
+                                  60.0,
+                                  60.0,
                                 ),
                               ),
                               SizedBox(width: 12),

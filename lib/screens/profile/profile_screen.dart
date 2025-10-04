@@ -1,5 +1,6 @@
 import 'package:eatzy_food_delivery/screens/auth/auth_gate.dart';
 import 'package:eatzy_food_delivery/screens/auth/auth_screen.dart';
+import 'package:eatzy_food_delivery/screens/profile/my_info_screen.dart';
 import 'package:eatzy_food_delivery/screens/seller/seller_screen.dart';
 import 'package:eatzy_food_delivery/utils/utils_seller.dart';
 import 'package:eatzy_food_delivery/utils/utils_user.dart';
@@ -58,7 +59,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     alignment: Alignment.center,
                     child: Image.asset(
                       "assets/images/diprofilebackground.png",
-                      height: 80,
+                      height: 150,
                       fit: BoxFit.contain,
                     ),
                   ),
@@ -105,7 +106,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
               child: ListView(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 children: [
-                  ProfileScreen._buildMenuItem(Icons.person, "My Info", () {}),
+                  ProfileScreen._buildMenuItem(Icons.person, "My Info", () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => MyInfoScreen()),
+                    );
+                  }),
                   FutureBuilder(
                     future: getSellerStatus(),
                     builder: (context, snapshot) {
@@ -141,11 +147,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     () {},
                   ),
                   ProfileScreen._buildMenuItem(
-                    Icons.lock,
-                    "Change Password",
-                    () {},
-                  ),
-                  ProfileScreen._buildMenuItem(
                     Icons.support_agent,
                     "Help and Support",
                     () {},
@@ -162,9 +163,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                     ),
                     onPressed: () async {
-                      await signUserOut(context);
-                      Navigator.pushReplacement(
+                      await signUserOut();
+                      Navigator.of(
                         context,
+                        rootNavigator: true,
+                      ).pushReplacement(
                         MaterialPageRoute(
                           builder: (context) =>
                               AuthGate(whereToGo: AuthScreen()),
