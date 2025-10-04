@@ -6,6 +6,8 @@ import '../cart/cart_screen.dart';
 import '../restaurant/restaurant_detail_view.dart';
 import 'package:provider/provider.dart';
 import 'package:eatzy_food_delivery/data/models/cart_model.dart';
+import 'package:eatzy_food_delivery/data/models/favorit_model.dart';
+import 'package:eatzy_food_delivery/data/models/address_model.dart';
 import 'package:eatzy_food_delivery/data/dummy/dummy_data.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:eatzy_food_delivery/screens/cart/change_address_view.dart';
@@ -179,76 +181,92 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                         const SizedBox(height: 20),
                         // Location
-                        InkWell(
-                          onTap: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute<void>(
-                                builder: (context) => const ChangeAddressView(),
+                        Consumer<AddressModel>(
+                          builder: (context, addressModel, child) {
+                            return InkWell(
+                              onTap: () async {
+                                final result = await Navigator.of(context).push(
+                                  MaterialPageRoute<Map<String, dynamic>?>(
+                                    builder: (context) =>
+                                        const ChangeAddressView(),
+                                  ),
+                                );
+
+                                if (result != null && mounted) {
+                                  await addressModel.updateAddress(
+                                    address: result['address'] as String,
+                                    latitude: result['latitude'] as double,
+                                    longitude: result['longitude'] as double,
+                                  );
+                                }
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 12,
+                                  vertical: 10,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(12),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.05),
+                                      blurRadius: 10,
+                                      offset: const Offset(0, 2),
+                                    ),
+                                  ],
+                                ),
+                                child: Row(
+                                  children: [
+                                    Container(
+                                      padding: const EdgeInsets.all(6),
+                                      decoration: BoxDecoration(
+                                        color: Colors.red.shade50,
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      child: const Icon(
+                                        Icons.location_on,
+                                        color: Colors.red,
+                                        size: 18,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 12),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Text(
+                                            'Deliver to',
+                                            style: TextStyle(
+                                              fontSize: 11,
+                                              color: Colors.grey.shade600,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                          const SizedBox(height: 2),
+                                          Text(
+                                            addressModel.address,
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Icon(
+                                      Icons.keyboard_arrow_down,
+                                      color: Colors.grey.shade600,
+                                    ),
+                                  ],
+                                ),
                               ),
                             );
                           },
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 10,
-                            ),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(12),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withAlpha(15),
-                                  blurRadius: 10,
-                                  offset: const Offset(0, 2),
-                                ),
-                              ],
-                            ),
-                            child: Row(
-                              children: [
-                                Container(
-                                  padding: const EdgeInsets.all(6),
-                                  decoration: BoxDecoration(
-                                    color: Colors.red.shade50,
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  child: const Icon(
-                                    Icons.location_on,
-                                    color: Colors.red,
-                                    size: 18,
-                                  ),
-                                ),
-                                const SizedBox(width: 12),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        'Deliver to',
-                                        style: TextStyle(
-                                          fontSize: 11,
-                                          color: Colors.grey.shade600,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                      const SizedBox(height: 2),
-                                      const Text(
-                                        '123 Main Street. Bekasi',
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Icon(
-                                  Icons.keyboard_arrow_down,
-                                  color: Colors.grey.shade600,
-                                ),
-                              ],
-                            ),
-                          ),
                         ),
                       ],
                     ),
@@ -664,13 +682,13 @@ class _HomeScreenState extends State<HomeScreen> {
 
           // Popular Foods Grid
           SliverPadding(
-            padding: const EdgeInsets.fromLTRB(20, 0, 20, 30),
+            padding: const EdgeInsets.fromLTRB(20, 20, 20, 30),
             sliver: SliverGrid(
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
                 crossAxisSpacing: 16,
                 mainAxisSpacing: 16,
-                childAspectRatio: 0.8,
+                childAspectRatio: 0.7,
               ),
               delegate: SliverChildBuilderDelegate((
                 BuildContext context,
@@ -731,10 +749,32 @@ class _HomeScreenState extends State<HomeScreen> {
                                   color: Colors.white,
                                   borderRadius: BorderRadius.circular(8),
                                 ),
-                                child: const Icon(
-                                  Icons.favorite_border,
-                                  size: 18,
-                                  color: Colors.red,
+                                child: Consumer<FavoriteModel>(
+                                  builder: (context, favModel, child) {
+                                    final isFav = favModel.favorites.any(
+                                      (item) =>
+                                          item['id'] ==
+                                          popularFoods[index]['id'],
+                                    );
+
+                                    return IconButton(
+                                      icon: Icon(
+                                        isFav
+                                            ? Icons.favorite
+                                            : Icons.favorite_border,
+                                        color: Colors.red,
+                                      ),
+                                      onPressed: () {
+                                        favModel.toggleFav({
+                                          ...Map<String, dynamic>.from(
+                                            popularFoods[index],
+                                          ),
+                                          'restaurant':
+                                              popularFoods[index]['restaurant'],
+                                        });
+                                      },
+                                    );
+                                  },
                                 ),
                               ),
                             ),

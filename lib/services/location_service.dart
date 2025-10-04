@@ -1,5 +1,4 @@
 import 'package:geolocator/geolocator.dart';
-import 'package:geocoding/geocoding.dart';
 
 class LocationService {
   double? lat;
@@ -35,7 +34,6 @@ class LocationService {
     lng = currentPosition.longitude;
   }
 
-  // Helper method untuk validasi
   bool hasLocation() {
     return lat != null && lng != null;
   }
