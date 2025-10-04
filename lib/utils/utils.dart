@@ -1,4 +1,4 @@
-import 'package:eatzy_food_delivery/utils/utils_seller.dart';
+import 'package:eatzy_food_delivery/services/seller_service.dart';
 import 'package:flutter/material.dart';
 import 'package:eatzy_food_delivery/data/dummy/dummy_data.dart';
 
@@ -23,7 +23,6 @@ String numToDollar(number) {
 }
 
 Widget imageOfCategory(category, width, height) {
-  print(category);
   return wrapImage(imagePathOfCategory(category), width, height);
 }
 
@@ -76,7 +75,6 @@ Future<void> cleanAndRemigrate() async {
       var categoryName = category["name"].toString().toLowerCase();
       for (var food in category["foods"]) {
         var storeName = food["restaurant"];
-        print(storeName);
         var email = (await getSellerDataFromName(name: storeName))!["email"];
         if (await makeNewSellerItemForStore(
           email: email,
@@ -87,10 +85,7 @@ Future<void> cleanAndRemigrate() async {
           rating: double.parse(food["rating"].toString()),
           reviews: double.parse(food["reviews"].toString()),
         )) {
-          print("works");
-        } else {
-          print("doesn");
-        }
+        } else {}
       }
     }
   } catch (e, s) {

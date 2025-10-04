@@ -1,6 +1,6 @@
 import 'package:eatzy_food_delivery/screens/auth/auth_gate.dart';
 import 'package:eatzy_food_delivery/utils/utils.dart';
-import 'package:eatzy_food_delivery/utils/utils_user.dart';
+import 'package:eatzy_food_delivery/services/user_service.dart';
 import 'package:flutter/material.dart';
 import 'package:eatzy_food_delivery/screens/main_screen.dart';
 

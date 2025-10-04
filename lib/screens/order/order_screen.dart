@@ -127,7 +127,7 @@ class _OrderScreenState extends State<OrderScreen>
         ),
       ),
       body: StreamBuilder<QuerySnapshot>(
-        stream: OrderService().getOrdersStream(),
+        stream: getOrdersStream(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
