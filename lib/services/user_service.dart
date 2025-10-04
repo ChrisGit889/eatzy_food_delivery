@@ -83,14 +83,23 @@ Future<bool> updateUser({
   required String email,
   required String name,
   required String phone,
-  required String password,
   required String dob,
 }) async {
   try {
-    await auth.currentUser!.updateDisplayName(name);
-    await auth.currentUser!.updatePassword(password);
+    await getCurrentUser().updateDisplayName(name);
     return true;
   } catch (e, _) {
+    return false;
+  }
+}
+
+Future<bool> updatePassword({required String password}) async {
+  try {
+    await getCurrentUser().updatePassword(password);
+    return true;
+  } catch (e, s) {
+    print(e);
+    print(s);
     return false;
   }
 }

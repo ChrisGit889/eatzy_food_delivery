@@ -1,3 +1,5 @@
+import 'package:eatzy_food_delivery/services/user_service.dart';
+import 'package:eatzy_food_delivery/utils/snackbar_helper.dart';
 import 'package:flutter/material.dart';
 
 class ChangePasswordScreen extends StatefulWidget {
@@ -27,15 +29,23 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
 
   void _savePassword() {
     if (_formKey.currentState!.validate()) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Password changed successfully!")),
+      if (newPasswordController.text == confirmPasswordController.text) {
+        updatePassword(password: newPasswordController.text);
+      }
+      showSnackBar(
+        context: context,
+        content: Text("Password changed successfully!"),
       );
       Navigator.pop(context);
     }
   }
 
   Widget _buildPasswordField(
-      String label, TextEditingController controller, bool obscure, VoidCallback toggle) {
+    String label,
+    TextEditingController controller,
+    bool obscure,
+    VoidCallback toggle,
+  ) {
     return TextFormField(
       controller: controller,
       obscureText: obscure,
@@ -68,26 +78,46 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
           key: _formKey,
           child: Column(
             children: [
-              _buildPasswordField("Old Password", oldPasswordController, _isObscureOld, () {
-                setState(() => _isObscureOld = !_isObscureOld);
-              }),
+              _buildPasswordField(
+                "Old Password",
+                oldPasswordController,
+                _isObscureOld,
+                () {
+                  setState(() => _isObscureOld = !_isObscureOld);
+                },
+              ),
               const SizedBox(height: 16),
-              _buildPasswordField("New Password", newPasswordController, _isObscureNew, () {
-                setState(() => _isObscureNew = !_isObscureNew);
-              }),
+              _buildPasswordField(
+                "New Password",
+                newPasswordController,
+                _isObscureNew,
+                () {
+                  setState(() => _isObscureNew = !_isObscureNew);
+                },
+              ),
               const SizedBox(height: 16),
-              _buildPasswordField("Confirm Password", confirmPasswordController, _isObscureConfirm, () {
-                setState(() => _isObscureConfirm = !_isObscureConfirm);
-              }),
+              _buildPasswordField(
+                "Confirm Password",
+                confirmPasswordController,
+                _isObscureConfirm,
+                () {
+                  setState(() => _isObscureConfirm = !_isObscureConfirm);
+                },
+              ),
               const SizedBox(height: 24),
               ElevatedButton(
                 onPressed: _savePassword,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFFFD6C00),
                   minimumSize: const Size(double.infinity, 50),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                 ),
-                child: const Text("Save", style: TextStyle(fontSize: 16, color: Colors.white)),
+                child: const Text(
+                  "Save",
+                  style: TextStyle(fontSize: 16, color: Colors.white),
+                ),
               ),
             ],
           ),

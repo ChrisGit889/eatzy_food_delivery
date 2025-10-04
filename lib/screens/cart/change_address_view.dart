@@ -2,7 +2,6 @@ import 'package:eatzy_food_delivery/utils/snackbar_helper.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
-import 'package:eatzy_food_delivery/constants.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:eatzy_food_delivery/services/location_service.dart';
 import 'package:geocoding/geocoding.dart';
@@ -92,14 +91,13 @@ class _ChangeAddressViewState extends State<ChangeAddressView> {
       String errorMsg = _getUserError(e.toString());
 
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(errorMsg),
-            duration: const Duration(seconds: 4),
-            action: SnackBarAction(
-              label: 'Retry',
-              onPressed: _getCurrentLocation,
-            ),
+        showSnackBar(
+          context: context,
+          content: Text(errorMsg),
+          duration: const Duration(seconds: 4),
+          action: SnackBarAction(
+            label: 'Retry',
+            onPressed: _getCurrentLocation,
           ),
         );
       }
@@ -194,11 +192,10 @@ class _ChangeAddressViewState extends State<ChangeAddressView> {
     } catch (e) {
       debugPrint("Search Error: $e");
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Address not found. Try different keywords'),
-            duration: Duration(seconds: 2),
-          ),
+        showSnackBar(
+          context: context,
+          content: Text('Address not found. Try different keywords'),
+          duration: Duration(seconds: 2),
         );
       }
     }

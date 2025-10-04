@@ -24,7 +24,7 @@ class ProfileScreen extends StatefulWidget {
       onTap: onTap,
       behavior: HitTestBehavior.opaque,
       child: Container(
-        margin: const EdgeInsets.only(bottom: 12),
+        margin: const EdgeInsets.only(bottom: 10),
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
         decoration: BoxDecoration(
           color: Colors.grey[100],
@@ -34,12 +34,7 @@ class ProfileScreen extends StatefulWidget {
           children: [
             Icon(icon, color: Colors.black54),
             const SizedBox(width: 12),
-            Expanded(
-              child: Text(
-                title,
-                style: const TextStyle(fontSize: 16),
-              ),
-            ),
+            Expanded(child: Text(title, style: const TextStyle(fontSize: 16))),
             const Icon(Icons.arrow_forward_ios, size: 18, color: Colors.grey),
           ],
         ),
@@ -79,8 +74,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   right: 0,
                   child: CircleAvatar(
                     radius: 50,
-                    backgroundImage:
-                        AssetImage("assets/images/buatisiprofile.jpg"),
+                    backgroundImage: AssetImage(
+                      "assets/images/buatisiprofile.jpg",
+                    ),
                   ),
                 ),
               ],
@@ -92,10 +88,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               getUserName(),
               style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
-            Text(
-              getUserEmail(),
-              style: const TextStyle(color: Colors.grey),
-            ),
+            Text(getUserEmail(), style: const TextStyle(color: Colors.grey)),
 
             const SizedBox(height: 20),
 
@@ -110,24 +103,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ),
 
-            const SizedBox(height: 10),
-
             Expanded(
               child: ListView(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 children: [
-                  ProfileScreen._buildMenuItem(
-                    Icons.person,
-                    "My Info",
-                    () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const MyInfoScreen(),
-                        ),
-                      );
-                    },
-                  ),
+                  ProfileScreen._buildMenuItem(Icons.person, "My Info", () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const MyInfoScreen(),
+                      ),
+                    );
+                  }),
 
                   ProfileScreen._buildMenuItem(
                     Icons.lock,
@@ -141,8 +128,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       );
                     },
                   ),
-
-                  const SizedBox(height: 10),
 
                   FutureBuilder<bool>(
                     future: getSellerStatus(),
@@ -175,8 +160,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     },
                   ),
 
-                  const SizedBox(height: 10),
-
                   ProfileScreen._buildMenuItem(
                     Icons.payment,
                     "Payment Method",
@@ -190,8 +173,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     },
                   ),
 
-                  const SizedBox(height: 10),
-
                   ProfileScreen._buildMenuItem(
                     Icons.support_agent,
                     "Help & Support",
@@ -204,7 +185,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       );
                     },
                   ),
-
                   const SizedBox(height: 30),
 
                   OutlinedButton(
@@ -218,7 +198,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     onPressed: () async {
                       await signUserOut();
                       if (!mounted) return;
-                      Navigator.of(context, rootNavigator: true).pushReplacement(
+                      Navigator.of(
+                        context,
+                        rootNavigator: true,
+                      ).pushReplacement(
                         MaterialPageRoute(
                           builder: (context) =>
                               AuthGate(whereToGo: const AuthScreen()),
@@ -230,7 +213,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       style: TextStyle(color: Color(0xFFFD6C00), fontSize: 16),
                     ),
                   ),
-                  const SizedBox(height: 30),
+                  const SizedBox(height: 10),
                 ],
               ),
             ),

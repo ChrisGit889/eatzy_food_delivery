@@ -746,7 +746,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               child: Container(
                                 padding: const EdgeInsets.all(6),
                                 decoration: BoxDecoration(
-                                  color: Colors.white,
+                                  color: Colors.white.withAlpha(20),
                                   borderRadius: BorderRadius.circular(8),
                                 ),
                                 child: Consumer<FavoriteModel>(

@@ -105,13 +105,6 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
             const SizedBox(height: 16),
             _buildTextField("Phone Number", "phone number", phoneController),
             const SizedBox(height: 16),
-            _buildTextField(
-              "Password",
-              "password",
-              passwordController,
-              isPassword: true,
-            ),
-            const SizedBox(height: 16),
 
             TextField(
               controller: _dobController,
@@ -152,7 +145,6 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
                     name: firstNameController.text,
                     email: emailController.text,
                     phone: phoneController.text,
-                    password: passwordController.text,
                     dob: _dobController.text,
                   );
                   if (mounted) {
