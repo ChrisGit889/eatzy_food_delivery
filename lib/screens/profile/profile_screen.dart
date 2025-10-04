@@ -3,6 +3,7 @@ import 'package:eatzy_food_delivery/screens/auth/auth_screen.dart';
 import 'package:eatzy_food_delivery/screens/profile/my_info_screen.dart';
 import 'package:eatzy_food_delivery/screens/profile/change_password_screen.dart';
 import 'package:eatzy_food_delivery/screens/profile/payment_screen.dart';
+import 'package:eatzy_food_delivery/screens/profile/about_us_screen.dart';
 import 'package:eatzy_food_delivery/screens/profile/help_support_screen.dart';
 import 'package:eatzy_food_delivery/screens/seller/seller_screen.dart';
 import 'package:eatzy_food_delivery/services/seller_service.dart';
@@ -168,6 +169,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         context,
                         MaterialPageRoute(
                           builder: (context) => const PaymentScreen(),
+                        ),
+                      );
+                    },
+                  ),
+
+                  ProfileScreen._buildMenuItem(
+                    Icons.info_outline,
+                    "About Us",
+                    () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const AboutUsScreen(),
                         ),
                       );
                     },
