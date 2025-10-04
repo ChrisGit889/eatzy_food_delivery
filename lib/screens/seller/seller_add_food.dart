@@ -150,7 +150,7 @@ class _AddFoodState extends State<AddFood> {
                         price: priceController.text,
                         type: dropDownValue,
                       );
-                      if (res) {
+                      if (res && mounted) {
                         Navigator.pop(context);
                       }
                     }

@@ -2,6 +2,7 @@ import 'package:eatzy_food_delivery/data/models/cart_model.dart';
 import 'package:eatzy_food_delivery/data/models/favorit_model.dart';
 import 'package:eatzy_food_delivery/screens/cart/cart_screen.dart';
 import 'package:eatzy_food_delivery/screens/main_screen.dart';
+import 'package:eatzy_food_delivery/utils/snackbar_helper.dart';
 import 'package:eatzy_food_delivery/utils/utils.dart';
 import 'package:eatzy_food_delivery/services/seller_service.dart';
 import 'package:flutter/material.dart';
@@ -227,10 +228,10 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                                   favModel.toggleFav(
                                     Map<String, dynamic>.from(food),
                                   );
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content: Text("Removed from favorites"),
-                                    ),
+
+                                  showSnackBar(
+                                    context: context,
+                                    content: Text("Removed from favorites"),
                                   );
                                 },
                               ),
@@ -258,38 +259,33 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                                         );
                                         cart.addItem(newItem);
 
-                                        ScaffoldMessenger.of(
-                                          context,
-                                        ).showSnackBar(
-                                          SnackBar(
-                                            content: Row(
-                                              children: [
-                                                const Icon(
-                                                  Icons.check_circle,
-                                                  color: Colors.white,
+                                        showSnackBar(
+                                          context: context,
+                                          content: Row(
+                                            children: [
+                                              const Icon(
+                                                Icons.check_circle,
+                                                color: Colors.white,
+                                              ),
+                                              const SizedBox(width: 8),
+                                              Text(
+                                                '${food['name']} added to cart',
+                                              ),
+                                            ],
+                                          ),
+                                          duration: const Duration(seconds: 2),
+                                          action: SnackBarAction(
+                                            label: 'View Cart',
+                                            textColor: Colors.orange,
+                                            onPressed: () {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      const CartScreen(),
                                                 ),
-                                                const SizedBox(width: 8),
-                                                Text(
-                                                  '${food['name']} added to cart',
-                                                ),
-                                              ],
-                                            ),
-                                            duration: const Duration(
-                                              seconds: 2,
-                                            ),
-                                            action: SnackBarAction(
-                                              label: 'View Cart',
-                                              textColor: Colors.orange,
-                                              onPressed: () {
-                                                Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        const CartScreen(),
-                                                  ),
-                                                );
-                                              },
-                                            ),
+                                              );
+                                            },
                                           ),
                                         );
                                       },
@@ -362,9 +358,7 @@ void _showDishDetails(BuildContext context, Map food) {
                 cart.addItem(newItem);
 
                 Navigator.pop(context);
-                ScaffoldMessenger.of(
-                  context,
-                ).showSnackBar(const SnackBar(content: Text('Added to cart!')));
+                showSnackBar(context: context, content: Text("Added to cart!"));
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.orange,

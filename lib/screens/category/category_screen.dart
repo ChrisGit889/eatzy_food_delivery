@@ -1,4 +1,5 @@
 import 'package:eatzy_food_delivery/data/models/favorit_model.dart';
+import 'package:eatzy_food_delivery/utils/snackbar_helper.dart';
 import 'package:eatzy_food_delivery/utils/utils.dart';
 import 'package:eatzy_food_delivery/services/seller_service.dart';
 import 'package:flutter/material.dart';
@@ -165,14 +166,9 @@ class CategoryScreen extends StatelessWidget {
                                               cart.addItem(newItem);
 
                                               Navigator.pop(context);
-                                              ScaffoldMessenger.of(
-                                                context,
-                                              ).showSnackBar(
-                                                const SnackBar(
-                                                  content: Text(
-                                                    'Added to cart!',
-                                                  ),
-                                                ),
+                                              showSnackBar(
+                                                context: context,
+                                                content: Text("Added to cart!"),
                                               );
                                             },
                                             child: const Text("Add to Cart"),
@@ -214,15 +210,14 @@ class CategoryScreen extends StatelessWidget {
                                   'description': food['desc'],
                                 });
 
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(
-                                      isFav
-                                          ? '${food['name']} removed from favorites'
-                                          : '${food['name']} added to favorites',
-                                    ),
-                                    duration: const Duration(seconds: 2),
+                                showSnackBar(
+                                  context: context,
+                                  content: Text(
+                                    isFav
+                                        ? '${food['name']} removed from favorites'
+                                        : '${food['name']} added to favorites',
                                   ),
+                                  duration: const Duration(seconds: 2),
                                 );
                               },
                             );
@@ -249,20 +244,19 @@ class CategoryScreen extends StatelessWidget {
                                   );
                                   cart.addItem(newItem);
 
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Row(
-                                        children: [
-                                          const Icon(
-                                            Icons.check_circle,
-                                            color: Colors.white,
-                                          ),
-                                          const SizedBox(width: 8),
-                                          Text('${food['name']} added to cart'),
-                                        ],
-                                      ),
-                                      duration: const Duration(seconds: 2),
+                                  showSnackBar(
+                                    context: context,
+                                    content: Row(
+                                      children: [
+                                        const Icon(
+                                          Icons.check_circle,
+                                          color: Colors.white,
+                                        ),
+                                        const SizedBox(width: 8),
+                                        Text('${food['name']} added to cart'),
+                                      ],
                                     ),
+                                    duration: const Duration(seconds: 2),
                                   );
                                 },
                               ),

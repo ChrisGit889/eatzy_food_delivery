@@ -1,6 +1,8 @@
+import 'package:eatzy_food_delivery/utils/snackbar_helper.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+
+final auth = FirebaseAuth.instance;
 
 String getUserName() {
   return getCurrentUser().displayName!;
@@ -11,12 +13,12 @@ String getUserEmail() {
 }
 
 User getCurrentUser() {
-  return FirebaseAuth.instance.currentUser!;
+  return auth.currentUser!;
 }
 
 Future<bool> signUserOut() async {
   try {
-    await FirebaseAuth.instance.signOut();
+    await auth.signOut();
     return true;
   } catch (e) {
     print(e);
@@ -29,27 +31,24 @@ Future<bool> createNewUser(firstName, email, password, context) async {
     return false;
   }
   try {
-    await FirebaseAuth.instance.createUserWithEmailAndPassword(
-      email: email,
-      password: password,
-    );
-    await FirebaseAuth.instance.currentUser!.updateDisplayName(firstName);
+    await auth.createUserWithEmailAndPassword(email: email, password: password);
+    await auth.currentUser!.updateDisplayName(firstName);
     return true;
   } on FirebaseException catch (e) {
     if (e.code == 'weak-password') {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('The password provided is too weak.')),
-        snackBarAnimationStyle: AnimationStyle(curve: ElasticInCurve()),
+      showSnackBar(
+        context: context,
+        content: Text('The password provided is too weak.'),
       );
     } else if (e.code == 'email-already-in-use') {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('The account already exists for that email.')),
-        snackBarAnimationStyle: AnimationStyle(curve: ElasticInCurve()),
+      showSnackBar(
+        context: context,
+        content: Text('The account already exists for that email.'),
       );
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('An error has occured. Please try again')),
-        snackBarAnimationStyle: AnimationStyle(curve: ElasticInCurve()),
+      showSnackBar(
+        context: context,
+        content: Text('An error has occured. Please try again'),
       );
     }
   } catch (e) {
@@ -63,27 +62,18 @@ Future<bool> signInUser(email, password, context) async {
     return false;
   }
   try {
-    await FirebaseAuth.instance.signInWithEmailAndPassword(
-      email: email,
-      password: password,
-    );
+    await auth.signInWithEmailAndPassword(email: email, password: password);
     return true;
   } on FirebaseAuthException catch (e) {
     if (e.code == 'user-not-found') {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('No user found with that email')),
-        snackBarAnimationStyle: AnimationStyle(curve: ElasticInCurve()),
+      showSnackBar(
+        context: context,
+        content: Text('No user found with that email'),
       );
     } else if (e.code == 'wrong-password') {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Wrong password')),
-        snackBarAnimationStyle: AnimationStyle(curve: ElasticInCurve()),
-      );
+      showSnackBar(context: context, content: Text('Wrong password'));
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('An error has occured. Please try again')),
-        snackBarAnimationStyle: AnimationStyle(curve: ElasticInCurve()),
-      );
+      showSnackBar(context: context, content: Text('Please try again'));
     }
     return false;
   }
@@ -97,8 +87,8 @@ Future<bool> updateUser({
   required String dob,
 }) async {
   try {
-    await FirebaseAuth.instance.currentUser!.updateDisplayName(name);
-    await FirebaseAuth.instance.currentUser!.updatePassword(password);
+    await auth.currentUser!.updateDisplayName(name);
+    await auth.currentUser!.updatePassword(password);
     return true;
   } catch (e, _) {
     return false;

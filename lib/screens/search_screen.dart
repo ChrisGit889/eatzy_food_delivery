@@ -244,7 +244,7 @@ class _SearchScreenState extends State<SearchScreen> {
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
+              color: Colors.black.withAlpha(15),
               blurRadius: 10,
               offset: const Offset(0, 2),
             ),
@@ -274,7 +274,7 @@ class _SearchScreenState extends State<SearchScreen> {
                           vertical: 2,
                         ),
                         decoration: BoxDecoration(
-                          color: EATZY_ORANGE.withOpacity(0.1),
+                          color: EATZY_ORANGE.withAlpha(25),
                           borderRadius: BorderRadius.circular(4),
                         ),
                         child: Text(
@@ -377,7 +377,7 @@ class _SearchScreenState extends State<SearchScreen> {
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
+              color: Colors.black.withAlpha(15),
               blurRadius: 10,
               offset: const Offset(0, 2),
             ),
@@ -407,7 +407,7 @@ class _SearchScreenState extends State<SearchScreen> {
                           vertical: 2,
                         ),
                         decoration: BoxDecoration(
-                          color: Colors.green.withOpacity(0.1),
+                          color: Colors.green.withAlpha(25),
                           borderRadius: BorderRadius.circular(4),
                         ),
                         child: const Text(

@@ -27,9 +27,7 @@ class _SellerProfileState extends State<SellerProfile> {
             children: [
               CircleAvatar(
                 radius: 80,
-                backgroundImage: AssetImage(
-                  "assets/images/buatisiprofile.jpg",
-                ), //TODO: Use firebase for this
+                backgroundImage: AssetImage("assets/images/buatisiprofile.jpg"),
               ),
               Row(
                 children: [

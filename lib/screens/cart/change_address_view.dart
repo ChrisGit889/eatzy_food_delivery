@@ -1,3 +1,4 @@
+import 'package:eatzy_food_delivery/utils/snackbar_helper.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
@@ -89,14 +90,13 @@ class _ChangeAddressViewState extends State<ChangeAddressView> {
           _currentAddress = "Tidak dapat mengakses lokasi";
         });
 
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Error: $e'),
-            duration: const Duration(seconds: 3),
-            action: SnackBarAction(
-              label: 'Coba Lagi',
-              onPressed: _getCurrentLocation,
-            ),
+        showSnackBar(
+          context: context,
+          content: Text("Error: $e"),
+          duration: const Duration(seconds: 3),
+          action: SnackBarAction(
+            label: 'Coba Lagi',
+            onPressed: _getCurrentLocation,
           ),
         );
       }
@@ -194,9 +194,10 @@ class _ChangeAddressViewState extends State<ChangeAddressView> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Alamat tidak ditemukan: $e')));
+        showSnackBar(
+          context: context,
+          content: Text("Alamat tidak ditemukan: $e"),
+        );
       }
     }
   }
@@ -264,7 +265,7 @@ class _ChangeAddressViewState extends State<ChangeAddressView> {
                       myLocationButtonEnabled: false,
                       compassEnabled: false,
                       zoomControlsEnabled: false,
-                      gestureRecognizers: Set()
+                      gestureRecognizers: {}
                         ..add(
                           Factory<PanGestureRecognizer>(
                             () => PanGestureRecognizer(),
@@ -292,7 +293,7 @@ class _ChangeAddressViewState extends State<ChangeAddressView> {
                       borderRadius: BorderRadius.circular(12),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.1),
+                          color: Colors.black.withAlpha(26),
                           blurRadius: 8,
                           offset: const Offset(0, 2),
                         ),
@@ -336,7 +337,7 @@ class _ChangeAddressViewState extends State<ChangeAddressView> {
                       ),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.1),
+                          color: Colors.black.withAlpha(26),
                           blurRadius: 10,
                           offset: const Offset(0, -2),
                         ),

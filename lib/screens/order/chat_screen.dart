@@ -121,7 +121,7 @@ class _ChatScreenState extends State<ChatScreen> {
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
+              color: Colors.black.withAlpha(20),
               spreadRadius: 1,
               blurRadius: 1,
             ),
@@ -142,7 +142,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 Text(
                   time,
                   style: TextStyle(
-                    color: Colors.black.withOpacity(0.45),
+                    color: Colors.black.withAlpha(150),
                     fontSize: 11,
                   ),
                 ),

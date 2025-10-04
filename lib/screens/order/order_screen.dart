@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eatzy_food_delivery/services/order_service.dart';
+import 'package:eatzy_food_delivery/utils/snackbar_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'order_details_screen.dart';
@@ -226,18 +227,19 @@ class _OrderScreenState extends State<OrderScreen>
   Widget _getServiceLogo(String serviceName) {
     String imagePath;
     String trimmedServiceName = serviceName.trim().toUpperCase();
-    if (trimmedServiceName == 'KFC')
+    if (trimmedServiceName == 'KFC') {
       imagePath = 'assets/images/Kfc.png';
-    else if (trimmedServiceName == 'PIZZA HUT')
+    } else if (trimmedServiceName == 'PIZZA HUT') {
       imagePath = 'assets/images/Pizza-hut.png';
-    else if (trimmedServiceName == 'STARBUCKS')
+    } else if (trimmedServiceName == 'STARBUCKS') {
       imagePath = 'assets/images/Starbucks.png';
-    else
+    } else {
       return const Icon(
         Icons.restaurant_menu,
         size: 40,
         color: Color.fromARGB(255, 255, 136, 0),
       );
+    }
     return Image.asset(imagePath);
   }
 
@@ -334,11 +336,11 @@ class _OrderScreenState extends State<OrderScreen>
               if (status == 'Completed')
                 ElevatedButton(
                   onPressed: () {
-                    final snackBar = SnackBar(
+                    showSnackBar(
+                      context: context,
                       content: Text('Enjoy your ${restaurantName.trim()} 😊'),
                       backgroundColor: Colors.green,
                     );
-                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color.fromARGB(255, 230, 144, 16),
@@ -353,7 +355,7 @@ class _OrderScreenState extends State<OrderScreen>
                 OutlinedButton(
                   onPressed: null,
                   style: OutlinedButton.styleFrom(
-                    disabledForegroundColor: Colors.grey.withOpacity(0.38),
+                    disabledForegroundColor: Colors.grey.withAlpha(200),
                     side: const BorderSide(color: Colors.grey),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
@@ -445,7 +447,7 @@ class _OrderSearchBar extends StatelessWidget {
         borderRadius: BorderRadius.circular(10),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.2),
+            color: Colors.grey.withAlpha(55),
             spreadRadius: 1,
             blurRadius: 5,
             offset: const Offset(0, 2),

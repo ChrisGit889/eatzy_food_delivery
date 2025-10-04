@@ -1,4 +1,5 @@
 import 'package:eatzy_food_delivery/services/user_service.dart';
+import 'package:eatzy_food_delivery/utils/snackbar_helper.dart';
 import 'package:flutter/material.dart';
 
 class MyInfoScreen extends StatefulWidget {
@@ -154,12 +155,13 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
                     password: passwordController.text,
                     dob: _dobController.text,
                   );
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
+                  if (mounted) {
+                    showSnackBar(
+                      context: context,
                       content: Text("Profile updated successfully!"),
-                    ),
-                  );
-                  Navigator.pop(context);
+                    );
+                    Navigator.pop(context);
+                  }
                 },
                 child: const Text(
                   "Update",
@@ -178,7 +180,6 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
     String hint,
     TextEditingController controller, {
     bool isPassword = false,
-    bool locked = false,
   }) {
     return TextField(
       obscureText: isPassword,
