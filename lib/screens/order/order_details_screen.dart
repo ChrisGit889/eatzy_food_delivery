@@ -1,3 +1,4 @@
+import 'package:eatzy_food_delivery/services/order_service.dart';
 import 'package:eatzy_food_delivery/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'chat_screen.dart';
@@ -66,7 +67,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                 children: [
                   buildSupportCard(context),
                   const SizedBox(height: 20),
-                  buildOrderStatusStepper(widget.order['status'] ?? 'Ordered'),
+                  buildOrderStatusStepper('Delivered'),
                   const SizedBox(height: 20),
                   FutureBuilder(
                     future: _initializeVideoPlayerFuture,
@@ -74,7 +75,10 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                       if (snapshot.connectionState == ConnectionState.done) {
                         return AspectRatio(
                           aspectRatio: _videoController.value.aspectRatio,
-                          child: VideoPlayer(_videoController),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(15.0),
+                            child: VideoPlayer(_videoController),
+                          ),
                         );
                       } else {
                         return const Center(child: CircularProgressIndicator());
@@ -87,7 +91,8 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                         widget.order['pickupPoint'] ??
                         'KFC, Jl. Raya Lenteng Agung No. 25',
                     deliveryPoint:
-                        widget.order['deliveryAddress'] ?? 'Untar 2, Grogol.',
+                        widget.order['deliveryAddress'] ??
+                        'Untar 2, Grogol, Jakarta',
                   ),
                   const Divider(height: 30),
                   buildItemDetails(widget.order['items'] as List),
@@ -113,6 +118,125 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
     );
   }
 
+  Widget buildFinishButton(BuildContext context) {
+    final bool isCompleted = widget.order['status'] == 'Completed';
+
+    return SizedBox(
+      width: double.infinity,
+      child: ElevatedButton(
+        onPressed: isCompleted
+            ? null
+            : () async {
+                showDialog(
+                  context: context,
+                  barrierDismissible: false,
+                  builder: (context) =>
+                      const Center(child: CircularProgressIndicator()),
+                );
+
+                try {
+                  await OrderService().updateOrderStatus(
+                    orderId: widget.order['orderId'],
+                    newStatus: 'Completed',
+                  );
+                  if (mounted) Navigator.pop(context);
+                  if (mounted) Navigator.pop(context);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Order has been completed!'),
+                      backgroundColor: Colors.green,
+                    ),
+                  );
+                } catch (e) {
+                  if (mounted) Navigator.pop(context);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Failed to update status: $e'),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                }
+              },
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.orange,
+          disabledBackgroundColor: Colors.grey,
+          padding: const EdgeInsets.symmetric(vertical: 16),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15),
+          ),
+        ),
+        child: Text(
+          isCompleted ? "ORDER COMPLETED" : "FINISH ORDER",
+          style: const TextStyle(color: Colors.white, fontSize: 16),
+        ),
+      ),
+    );
+  }
+
+  Widget buildOrderStatusStepper(String currentStatus) {
+    List<String> statuses = ['Ordered', 'Process', 'Delivered', 'Completed'];
+    int currentStepIndex = statuses.indexWhere(
+      (s) => s.toLowerCase() == currentStatus.toLowerCase(),
+    );
+
+    if (currentStepIndex == -1) {
+      if (currentStatus.toLowerCase() == 'order') {
+        currentStepIndex = 0;
+      } else {
+        currentStepIndex = 0;
+      }
+    }
+
+    List<Widget> stepWidgets = [];
+    for (int i = 0; i < statuses.length; i++) {
+      bool isCompleted = i <= currentStepIndex;
+
+      stepWidgets.add(_buildStep(label: statuses[i], isCompleted: isCompleted));
+
+      if (i < statuses.length - 1) {
+        stepWidgets.add(_buildConnector(isCompleted: i < currentStepIndex));
+      }
+    }
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: stepWidgets,
+    );
+  }
+
+  Widget _buildStep({required String label, required bool isCompleted}) {
+    return Column(
+      children: [
+        CircleAvatar(
+          radius: 15,
+          backgroundColor: isCompleted ? Colors.green : Colors.grey.shade300,
+          child: isCompleted
+              ? const Icon(Icons.check, color: Colors.white, size: 18)
+              : null,
+        ),
+        const SizedBox(height: 8),
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 12,
+            color: isCompleted ? Colors.black : Colors.grey,
+            fontWeight: isCompleted ? FontWeight.bold : FontWeight.normal,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildConnector({required bool isCompleted}) {
+    return Expanded(
+      child: Container(
+        height: 2,
+        color: isCompleted ? Colors.green : Colors.grey.shade300,
+        margin: const EdgeInsets.symmetric(horizontal: 4),
+      ),
+    );
+  }
+
   Widget buildSupportCard(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(16),
@@ -121,7 +245,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
         borderRadius: BorderRadius.circular(15),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withAlpha(25),
+            color: Colors.grey.withOpacity(0.1),
             spreadRadius: 2,
             blurRadius: 5,
           ),
@@ -167,46 +291,6 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
           ),
         ],
       ),
-    );
-  }
-
-  Widget buildOrderStatusStepper(String currentStatus) {
-    List<String> statuses = ['Ordered', 'Cooking', 'Delivered', 'Finished'];
-    int currentStep = statuses.indexOf(currentStatus) + 1;
-
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: List.generate(statuses.length, (index) {
-        bool isDone = (index + 1) <= currentStep;
-        return Expanded(
-          child: Column(
-            children: [
-              CircleAvatar(
-                radius: 18,
-                backgroundColor: isDone ? Colors.green : Colors.grey.shade300,
-                child: isDone
-                    ? const Icon(Icons.check, color: Colors.white, size: 20)
-                    : Text(
-                        '${index + 1}',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 12,
-                        ),
-                      ),
-              ),
-              const SizedBox(height: 5),
-              Text(
-                statuses[index],
-                style: TextStyle(
-                  fontSize: 12,
-                  color: isDone ? Colors.black : Colors.grey,
-                  fontWeight: isDone ? FontWeight.bold : FontWeight.normal,
-                ),
-              ),
-            ],
-          ),
-        );
-      }),
     );
   }
 
@@ -378,22 +462,4 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
       ),
     );
   }
-
-  Widget buildFinishButton(BuildContext context) => SizedBox(
-    width: double.infinity,
-    child: ElevatedButton(
-      onPressed: () {
-        Navigator.of(context).pop();
-      },
-      style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.orange,
-        padding: const EdgeInsets.symmetric(vertical: 16),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-      ),
-      child: const Text(
-        "FINISH ORDER",
-        style: TextStyle(color: Colors.white, fontSize: 16),
-      ),
-    ),
-  );
 }
