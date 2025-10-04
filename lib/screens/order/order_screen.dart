@@ -205,7 +205,7 @@ class _OrderScreenState extends State<OrderScreen>
     if (orders.isEmpty) {
       return const Center(
         child: Text(
-          "Pesanan tidak ditemukan.",
+          "Order not found",
           style: TextStyle(fontSize: 18, color: Colors.grey),
         ),
       );
@@ -359,7 +359,7 @@ class _OrderScreenState extends State<OrderScreen>
                       borderRadius: BorderRadius.circular(12),
                     ),
                   ),
-                  child: const Text("Lihat Detail"),
+                  child: const Text("View Details"),
                 )
               else
                 OutlinedButton(
