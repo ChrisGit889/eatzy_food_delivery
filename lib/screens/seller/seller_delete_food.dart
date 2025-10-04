@@ -22,7 +22,9 @@ class SellerDeleteFood extends StatelessWidget {
                   TextButton(
                     onPressed: () async {
                       await deleteItemFromName(foodIdentifier);
-                      Navigator.pop(context);
+                      if (context.mounted) {
+                        Navigator.pop(context);
+                      }
                     },
                     child: Text("Yes"),
                   ),

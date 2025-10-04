@@ -158,7 +158,7 @@ class _SellerEditFoodState extends State<SellerEditFood> {
                             onPressed: () async {
                               isError = false;
                               await errorCheckInput();
-                              if (!isError) {
+                              if (!isError && mounted) {
                                 var res = await changeFoodItemFromName(
                                   context: context,
                                   itemName: widget.foodIdentifier,
@@ -168,7 +168,7 @@ class _SellerEditFoodState extends State<SellerEditFood> {
                                   newType: dropDownValue,
                                   newImage: null,
                                 );
-                                if (res) {
+                                if (res && mounted) {
                                   Navigator.pop(context);
                                 }
                               }

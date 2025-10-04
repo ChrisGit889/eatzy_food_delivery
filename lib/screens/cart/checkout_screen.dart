@@ -1,4 +1,5 @@
 import 'package:eatzy_food_delivery/services/order_service.dart';
+import 'package:eatzy_food_delivery/utils/snackbar_helper.dart';
 import 'package:eatzy_food_delivery/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:eatzy_food_delivery/constants.dart';
@@ -299,13 +300,12 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                     child: InkWell(
                       onTap: () async {
                         if (cart.isEmpty || selectMethod == -1) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              backgroundColor: Colors.red,
-                              content: Text(
-                                "Keranjang kosong atau metode pembayaran belum dipilih.",
-                              ),
+                          showSnackBar(
+                            context: context,
+                            content: Text(
+                              "Keranjang kosong atau metode pembayaran belum dipilih.",
                             ),
+                            backgroundColor: Colors.red,
                           );
                           return;
                         }
@@ -352,11 +352,10 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                           if (mounted) Navigator.of(context).pop();
 
                           if (mounted) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                backgroundColor: Colors.red,
-                                content: Text("Gagal membuat pesanan: $e"),
-                              ),
+                            showSnackBar(
+                              context: context,
+                              content: Text("Gagal membuat pesanan: $e"),
+                              backgroundColor: Colors.red,
                             );
                           }
                         }

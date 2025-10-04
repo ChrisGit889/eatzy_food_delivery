@@ -1,11 +1,12 @@
 import 'package:eatzy_food_delivery/screens/auth/auth_gate.dart';
+import 'package:eatzy_food_delivery/utils/snackbar_helper.dart';
 import 'package:eatzy_food_delivery/utils/utils.dart';
 import 'package:eatzy_food_delivery/services/user_service.dart';
 import 'package:flutter/material.dart';
 import 'package:eatzy_food_delivery/screens/main_screen.dart';
 
 class AuthScreen extends StatefulWidget {
-  const AuthScreen({Key? key}) : super(key: key);
+  const AuthScreen({super.key});
 
   @override
   _AuthScreenState createState() => _AuthScreenState();
@@ -95,7 +96,7 @@ class _AuthScreenState extends State<AuthScreen> {
                   boxShadow: _isLoginView
                       ? [
                           BoxShadow(
-                            color: Colors.grey.withOpacity(0.3),
+                            color: Colors.grey.withAlpha(80),
                             spreadRadius: 1,
                             blurRadius: 5,
                             offset: const Offset(0, 2),
@@ -132,7 +133,7 @@ class _AuthScreenState extends State<AuthScreen> {
                   boxShadow: !_isLoginView
                       ? [
                           BoxShadow(
-                            color: Colors.grey.withOpacity(0.3),
+                            color: Colors.grey.withAlpha(80),
                             spreadRadius: 1,
                             blurRadius: 5,
                             offset: const Offset(0, 2),
@@ -211,9 +212,13 @@ class _AuthScreenState extends State<AuthScreen> {
               try {
                 await cleanAndRemigrate();
                 print("Database has been cleaned");
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text("Database Successfully remigrated")),
-                );
+                if (mounted) {
+                  showSnackBar(
+                    context: context,
+                    content: Text("Database Successfully Remigrated"),
+                    animationStyle: Anim.elasticIn,
+                  );
+                }
               } catch (e, stack) {
                 print(stack);
               }
@@ -224,7 +229,7 @@ class _AuthScreenState extends State<AuthScreen> {
               passwordController.text,
               context,
             );
-            if (res) {
+            if (res && mounted) {
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
