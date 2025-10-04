@@ -28,12 +28,11 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            // Search bar
             Row(
               children: [
-                Expanded(
+                const Expanded(
                   child: TextField(
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       hintText: "Find your favorite food",
                     ),
                   ),
@@ -48,7 +47,6 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
               ],
             ),
             const SizedBox(height: 30),
-
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Row(
@@ -117,7 +115,6 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
               ),
             ),
             const SizedBox(height: 20),
-
             Expanded(
               child: Consumer<FavoriteModel>(
                 builder: (context, favModel, child) {
@@ -205,16 +202,13 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                           subtitle: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              FutureBuilder(
+                              FutureBuilder<String?>(
                                 future: findRestaurantFromFood(food["name"]),
                                 builder: (context, snapshot) {
-                                  if (snapshot.hasData) {
-                                    return Text(snapshot.data ?? '-');
+                                  if (snapshot.connectionState == ConnectionState.waiting) {
+                                    return const Text("Loading...");
                                   }
-                                  if (snapshot.hasError) {
-                                    return Text("-");
-                                  }
-                                  return CircularProgressIndicator();
+                                  return Text(snapshot.data ?? '-');
                                 },
                               ),
                               Text("Price: ${numToDollar(food["price"])}"),
@@ -252,12 +246,13 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                                         color: Colors.white,
                                       ),
                                       onPressed: () {
-                                        cart.addItem({
-                                          'name': food['name'],
-                                          'price': food['price'],
-                                          'type': food["type"],
-                                          'quantity': 1,
-                                        });
+                                        final newItem = CartItem(
+                                          name: food['name'],
+                                          price: (food['price'] as num).toDouble(),
+                                          quantity: 1,
+                                          image: imagePathOfCategory(food["type"]),
+                                        );
+                                        cart.addItem(newItem);
 
                                         ScaffoldMessenger.of(
                                           context,
@@ -286,7 +281,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                                                   context,
                                                   MaterialPageRoute(
                                                     builder: (context) =>
-                                                        CartScreen(),
+                                                        const CartScreen(),
                                                   ),
                                                 );
                                               },
@@ -326,18 +321,11 @@ void _showDishDetails(BuildContext context, Map food) {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          if (food.containsKey('imagePath'))
-            ClipRRect(
-              borderRadius: BorderRadius.circular(15),
-              child: Image.asset(
-                food['imagePath'],
-                width: 150,
-                height: 150,
-                fit: BoxFit.cover,
-              ),
-            )
-          else
-            const Icon(Icons.fastfood, size: 100),
+          Image.asset(
+            imagePathOfCategory(food["type"]),
+            height: 150,
+            fit: BoxFit.contain,
+          ),
           const SizedBox(height: 16),
           Text("${food['description'] ?? '-'}", textAlign: TextAlign.center),
           const SizedBox(height: 8),
@@ -361,16 +349,18 @@ void _showDishDetails(BuildContext context, Map food) {
           builder: (context, cart, child) {
             return ElevatedButton(
               onPressed: () {
-                cart.addItem({
-                  'name': food['name'],
-                  'price': food['price'],
-                  'type': food["type"],
-                  'quantity': 1,
-                });
+                final newItem = CartItem(
+                  name: food['name'],
+                  price: (food['price'] as num).toDouble(),
+                  quantity: 1,
+                  image: imagePathOfCategory(food["type"]),
+                );
+                cart.addItem(newItem);
+
                 Navigator.pop(context);
                 ScaffoldMessenger.of(
                   context,
-                ).showSnackBar(SnackBar(content: Text('added to cart!')));
+                ).showSnackBar(const SnackBar(content: Text('Added to cart!')));
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.orange,
