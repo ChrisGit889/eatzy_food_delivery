@@ -99,7 +99,7 @@ class _AddFoodState extends State<AddFood> {
                       child: Text("Others"),
                     ),
                     DropdownMenuItem<String>(
-                      value: "drinks",
+                      value: "drink",
                       child: Text("Drinks"),
                     ),
                   ],

@@ -305,21 +305,26 @@ class _AuthScreenState extends State<AuthScreen> {
         ),
         const SizedBox(height: 32),
         ElevatedButton(
-          onPressed: () async {
-            var res = await createNewUser(
+          onPressed: () {
+            var res = createNewUser(
               firstNameController.text,
               emailController.text,
               passwordController.text,
               context,
             );
-            if (res) {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => AuthGate(whereToGo: AuthScreen()),
-                ),
-              );
-            }
+            FutureBuilder(
+              future: res,
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  if (snapshot.data!) {
+                    Navigator.of(context, rootNavigator: true).pushReplacement(
+                      MaterialPageRoute(builder: (context) => MainScreen()),
+                    );
+                  }
+                }
+                return Placeholder();
+              },
+            );
           },
           style: ElevatedButton.styleFrom(
             backgroundColor: const Color.fromARGB(255, 255, 140, 0),
