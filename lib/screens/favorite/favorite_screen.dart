@@ -1,6 +1,7 @@
 import 'package:eatzy_food_delivery/data/models/cart_model.dart';
 import 'package:eatzy_food_delivery/data/models/favorit_model.dart';
 import 'package:eatzy_food_delivery/screens/cart/cart_screen.dart';
+import 'package:eatzy_food_delivery/screens/favorite/favorite_search.dart';
 import 'package:eatzy_food_delivery/screens/main_screen.dart';
 import 'package:eatzy_food_delivery/utils/utils.dart';
 import 'package:eatzy_food_delivery/utils/utils_seller.dart';
@@ -28,24 +29,42 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            // Search bar
-            Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    decoration: const InputDecoration(
-                      hintText: "Find your favorite food",
-                    ),
+            GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const FavoriteSearchScreen(),
                   ),
+                );
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.2),
+                      blurRadius: 5,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
                 ),
-                const SizedBox(width: 10),
-                IconButton(
-                  onPressed: () {},
-                  icon: const Icon(Icons.search),
-                  color: Colors.black,
-                  iconSize: 32,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 14,
                 ),
-              ],
+                child: Row(
+                  children: const [
+                    Icon(Icons.search, color: Color.fromARGB(255, 212, 86, 13)),
+                    SizedBox(width: 10),
+                    Text(
+                      "Search your favorite food by name",
+                      style: TextStyle(color: Colors.grey),
+                    ),
+                  ],
+                ),
+              ),
             ),
             const SizedBox(height: 30),
 
@@ -269,8 +288,10 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                                                   color: Colors.white,
                                                 ),
                                                 const SizedBox(width: 8),
-                                                Text(
-                                                  '${food['name']} added to cart',
+                                                Expanded(
+                                                  child: Text(
+                                                    '${food['name']} added to cart',
+                                                  ),
                                                 ),
                                               ],
                                             ),
