@@ -7,6 +7,11 @@
         android:label="eatzy"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
+
+        <meta-data 
+            android:name="com.google.android.geo.API_KEY" 
+            android:value="AIzaSyC_ryomN79gV4dWrErvTVK6jFlmpDjo8lo"/>
+            
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -24,8 +29,6 @@
               android:name="io.flutter.embedding.android.NormalTheme"
               android:resource="@style/NormalTheme"
               />
-            <meta-data android:name="com.google.android.geo.API_KEY" 
-                    android:value="AIzaSyC_ryomN79gV4dWrErvTVK6jFlmpDjo8lo"/>
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>

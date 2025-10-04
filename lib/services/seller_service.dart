@@ -1,11 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:eatzy_food_delivery/utils/utils_user.dart';
+import 'package:eatzy_food_delivery/services/user_service.dart';
+import 'package:eatzy_food_delivery/utils/snackbar_helper.dart';
 import 'package:flutter/material.dart';
 
-Future<List> getSellerItems(String sellerEmail) async {
-  final fb = FirebaseFirestore.instance;
+final db = FirebaseFirestore.instance;
 
-  return await fb.collection('seller-food').doc(sellerEmail).get().then((
+Future<List> getSellerItems(String sellerEmail) async {
+  return await db.collection('seller-food').doc(sellerEmail).get().then((
     value,
   ) {
     if (value.exists) {
@@ -16,8 +17,75 @@ Future<List> getSellerItems(String sellerEmail) async {
   });
 }
 
+Future getFoodItemFromName(itemName) {
+  return db
+      .collection('seller-food')
+      .doc(
+        getCurrentUser().email!,
+      ) //Assuming the seller is currently the signed in user
+      .get()
+      .then((val) {
+        if (val.data() != null) {
+          var data = val.data()!;
+          for (var i in data['foods']) {
+            if (i["name"] == itemName) {
+              return i;
+            }
+          }
+        }
+        return null;
+      })
+      .onError((error, stackTrace) {
+        print(error);
+        print(stackTrace);
+      });
+}
+
+Future<bool> getSellerStatus() {
+  return db
+      .collection('sellers')
+      .doc(getCurrentUser().email!)
+      .get()
+      .then((value) => value.exists);
+}
+
+Future getSellerData() {
+  return db
+      .collection('sellers')
+      .doc(getCurrentUser().email!)
+      .get()
+      .then((value) => value.data());
+}
+
+Future<Map<String, dynamic>?> getSellerDataFromName({name}) async {
+  var data = await db
+      .collection('sellers')
+      .where('store', isEqualTo: name)
+      .get()
+      .then((res) {
+        for (var querySnapshot in res.docs) {
+          return querySnapshot.data();
+        }
+      });
+  return data;
+}
+
+Future<List> getItemsByCategory(String category) async {
+  var items = await db.collection('seller-food').get().then((value) {
+    var temp = [];
+    for (var doc in value.docs) {
+      for (var item in doc.data()["foods"]) {
+        if (item["type"] == category) {
+          temp.add(item);
+        }
+      }
+    }
+    return temp;
+  });
+  return items;
+}
+
 void makeSeller() {
-  var db = FirebaseFirestore.instance;
   var data = <String, dynamic>{
     "email": getCurrentUser().email,
     "store": null,
@@ -34,7 +102,6 @@ void makeSeller() {
 }
 
 Future makeSellerFromInfo({email, storeName, address, image}) async {
-  var db = FirebaseFirestore.instance;
   var data = <String, dynamic>{
     "email": email,
     "store": storeName,
@@ -50,19 +117,9 @@ Future makeSellerFromInfo({email, storeName, address, image}) async {
   return;
 }
 
-Future<bool> getSellerStatus() {
-  return FirebaseFirestore.instance
-      .collection('sellers')
-      .doc(getCurrentUser().email!)
-      .get()
-      .then((value) => value.exists);
-}
-
 Future<bool> makeNewSellerItem({name, desc, price, type}) async {
   try {
-    var currentDoc = FirebaseFirestore.instance
-        .collection("seller-food")
-        .doc(getCurrentUser().email!);
+    var currentDoc = db.collection("seller-food").doc(getCurrentUser().email!);
     var tempData = [];
     await currentDoc.get().then((value) {
       if (value.exists) {
@@ -98,9 +155,7 @@ Future<bool> makeNewSellerItemForStore({
 }) async {
   print(email);
   try {
-    var currentDoc = FirebaseFirestore.instance
-        .collection("seller-food")
-        .doc(email);
+    var currentDoc = db.collection("seller-food").doc(email);
     var tempData = [];
     await currentDoc.get().then((DocumentSnapshot q) {
       if (q.exists) {
@@ -131,29 +186,8 @@ Future<bool> makeNewSellerItemForStore({
   }
 }
 
-Future getSellerData() {
-  return FirebaseFirestore.instance
-      .collection('sellers')
-      .doc(getCurrentUser().email!)
-      .get()
-      .then((value) => value.data());
-}
-
-Future<Map<String, dynamic>?> getSellerDataFromName({name}) async {
-  var data = await FirebaseFirestore.instance
-      .collection('sellers')
-      .where('store', isEqualTo: name)
-      .get()
-      .then((res) {
-        for (var querySnapshot in res.docs) {
-          return querySnapshot.data();
-        }
-      });
-  return data;
-}
-
 Future setSellerStoreName(storeName) async {
-  var item = await FirebaseFirestore.instance
+  var item = await db
       .collection('sellers')
       .doc(getCurrentUser().email)
       .get()
@@ -161,34 +195,7 @@ Future setSellerStoreName(storeName) async {
         return value.data()!;
       });
   item["store"] = storeName;
-  await FirebaseFirestore.instance
-      .collection('sellers')
-      .doc(getCurrentUser().email!)
-      .set(item);
-}
-
-Future getFoodItemFromName(itemName) {
-  return FirebaseFirestore.instance
-      .collection('seller-food')
-      .doc(
-        getCurrentUser().email!,
-      ) //Assuming the seller is currently the signed in user
-      .get()
-      .then((val) {
-        if (val.data() != null) {
-          var data = val.data()!;
-          for (var i in data['foods']) {
-            if (i["name"] == itemName) {
-              return i;
-            }
-          }
-        }
-        return null;
-      })
-      .onError((error, stackTrace) {
-        print(error);
-        print(stackTrace);
-      });
+  await db.collection('sellers').doc(getCurrentUser().email!).set(item);
 }
 
 Future changeFoodItemFromName({
@@ -201,9 +208,7 @@ Future changeFoodItemFromName({
   newImage,
 }) async {
   try {
-    var currentDoc = FirebaseFirestore.instance
-        .collection("seller-food")
-        .doc(getCurrentUser().email!);
+    var currentDoc = db.collection("seller-food").doc(getCurrentUser().email!);
     var tempData = [];
     await currentDoc.get().then((value) {
       if (value.exists) {
@@ -214,7 +219,7 @@ Future changeFoodItemFromName({
       if (i["name"] == itemName) {
         i["name"] = newName;
         i["description"] = newDesc;
-        i["price"] = newPrice;
+        i["price"] = double.tryParse(newPrice);
         i["type"] = newType;
         i["image"] = newImage;
         i["last_updated"] = DateTime.now();
@@ -224,9 +229,9 @@ Future changeFoodItemFromName({
     return true;
   } catch (e) {
     print(e);
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Item with the same name already exists')),
-      snackBarAnimationStyle: AnimationStyle(curve: ElasticInCurve()),
+    showSnackBar(
+      context: context,
+      content: Text('Item with the same name already exists'),
     );
     return false;
   }
@@ -234,7 +239,7 @@ Future changeFoodItemFromName({
 
 Future itemExistsFromName(itemName) async {
   try {
-    var currentDoc = FirebaseFirestore.instance.collection("seller-food");
+    var currentDoc = db.collection("seller-food");
     var alreadyExists = await currentDoc.get().then((value) {
       for (var docs in value.docs) {
         var data = docs.data();
@@ -253,11 +258,31 @@ Future itemExistsFromName(itemName) async {
   }
 }
 
+Future<String?> findRestaurantFromFood(String name) async {
+  var restEmail = await db.collection('seller-food').get().then((value) {
+    for (var docs in value.docs) {
+      for (var item in docs.data()["foods"]) {
+        if (item["name"] == name) {
+          return docs.id;
+        }
+      }
+    }
+  });
+  var restName = await db
+      .collection('sellers')
+      .where('email', isEqualTo: restEmail)
+      .get()
+      .then((value) {
+        for (var i in value.docs) {
+          return i["store"];
+        }
+      });
+  return restName;
+}
+
 Future deleteItemFromName(itemName) async {
   try {
-    var currentDoc = FirebaseFirestore.instance
-        .collection("seller-food")
-        .doc(getCurrentUser().email!);
+    var currentDoc = db.collection("seller-food").doc(getCurrentUser().email!);
     var tempData = [];
     await currentDoc.get().then((value) {
       if (value.exists) {
@@ -271,47 +296,4 @@ Future deleteItemFromName(itemName) async {
     print(e);
     return true;
   }
-}
-
-Future<List> getItemsByCategory(String category) async {
-  var items = await FirebaseFirestore.instance
-      .collection('seller-food')
-      .get()
-      .then((value) {
-        var temp = [];
-        for (var doc in value.docs) {
-          for (var item in doc.data()["foods"]) {
-            if (item["type"] == category) {
-              temp.add(item);
-            }
-          }
-        }
-        return temp;
-      });
-  return items;
-}
-
-Future<String?> findRestaurantFromFood(String name) async {
-  var restEmail = await FirebaseFirestore.instance
-      .collection('seller-food')
-      .get()
-      .then((value) {
-        for (var docs in value.docs) {
-          for (var item in docs.data()["foods"]) {
-            if (item["name"] == name) {
-              return docs.id;
-            }
-          }
-        }
-      });
-  var restName = await FirebaseFirestore.instance
-      .collection('sellers')
-      .where('email', isEqualTo: restEmail)
-      .get()
-      .then((value) {
-        for (var i in value.docs) {
-          return i["store"];
-        }
-      });
-  return restName;
 }
