@@ -116,7 +116,7 @@ class _MyInfoScreenState extends State<MyInfoScreen> {
               controller: _dobController,
               readOnly: true,
               decoration: InputDecoration(
-                labelText: "Tanggal Lahir",
+                labelText: "Date of Birth",
                 hintText: "DD/MM/YYYY",
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
