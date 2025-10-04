@@ -10,7 +10,7 @@ class PaymentScreen extends StatefulWidget {
 class _PaymentScreenState extends State<PaymentScreen> {
   String _selectedMethod = "COD";
 
-  Widget _buildPaymentOption(String title, String subtitle, String asset, String value) {
+  Widget _buildPaymentOption(String title, String value) {
     bool selected = _selectedMethod == value;
     return GestureDetector(
       onTap: () {
@@ -19,10 +19,10 @@ class _PaymentScreenState extends State<PaymentScreen> {
         });
       },
       child: Container(
-        margin: const EdgeInsets.symmetric(vertical: 8),
-        padding: const EdgeInsets.all(16),
+        margin: const EdgeInsets.symmetric(vertical: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
         decoration: BoxDecoration(
-          color: selected ? const Color(0xFFFD6C00).withOpacity(0.15) : Colors.white,
+          color: selected ? const Color(0xFFFD6C00).withOpacity(0.1) : Colors.white,
           border: Border.all(
             color: selected ? const Color(0xFFFD6C00) : Colors.grey.shade300,
             width: 2,
@@ -30,23 +30,20 @@ class _PaymentScreenState extends State<PaymentScreen> {
           borderRadius: BorderRadius.circular(16),
         ),
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Image.asset(asset, height: 40, width: 40),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(title,
-                      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                  const SizedBox(height: 4),
-                  Text(subtitle, style: TextStyle(color: Colors.grey[600])),
-                ],
+            Text(
+              title,
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+                color: selected ? const Color(0xFFFD6C00) : Colors.black87,
               ),
             ),
             Icon(
               selected ? Icons.check_circle : Icons.circle_outlined,
               color: selected ? const Color(0xFFFD6C00) : Colors.grey,
+              size: 26,
             ),
           ],
         ),
@@ -56,7 +53,10 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
   void _confirmPayment() {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text("Payment method: $_selectedMethod selected")),
+      SnackBar(
+        content: Text("You selected: $_selectedMethod"),
+        backgroundColor: const Color(0xFFFD6C00),
+      ),
     );
   }
 
@@ -67,33 +67,31 @@ class _PaymentScreenState extends State<PaymentScreen> {
         title: const Text("Payment Method"),
         backgroundColor: const Color(0xFFFD6C00),
         foregroundColor: Colors.white,
+        centerTitle: true,
       ),
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildPaymentOption(
-              "Cash on Delivery (COD)",
-              "Pay directly when the order arrives",
-              "assets/images/cash.png",
-              "COD",
-            ),
-            _buildPaymentOption(
-              "EatzyPay",
-              "Pay securely using Eatzy Wallet",
-              "assets/images/eatzypay.png",
-              "EatzyPay",
-            ),
+            _buildPaymentOption("Cash on Delivery (COD)", "COD"),
+            _buildPaymentOption("Eatzy Payment", "Eatzy"),
             const Spacer(),
             ElevatedButton(
               onPressed: _confirmPayment,
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFFFD6C00),
-                minimumSize: const Size(double.infinity, 50),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                minimumSize: const Size(double.infinity, 55),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(14),
+                ),
               ),
-              child: const Text("Confirm", style: TextStyle(color: Colors.white, fontSize: 16)),
+              child: const Text(
+                "Confirm Payment",
+                style: TextStyle(color: Colors.white, fontSize: 16),
+              ),
             ),
+            const SizedBox(height: 20),
           ],
         ),
       ),
