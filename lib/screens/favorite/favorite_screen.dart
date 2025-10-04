@@ -3,7 +3,7 @@ import 'package:eatzy_food_delivery/data/models/favorit_model.dart';
 import 'package:eatzy_food_delivery/screens/cart/cart_screen.dart';
 import 'package:eatzy_food_delivery/screens/main_screen.dart';
 import 'package:eatzy_food_delivery/utils/utils.dart';
-import 'package:eatzy_food_delivery/utils/utils_seller.dart';
+import 'package:eatzy_food_delivery/services/seller_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -205,7 +205,8 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                               FutureBuilder<String?>(
                                 future: findRestaurantFromFood(food["name"]),
                                 builder: (context, snapshot) {
-                                  if (snapshot.connectionState == ConnectionState.waiting) {
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.waiting) {
                                     return const Text("Loading...");
                                   }
                                   return Text(snapshot.data ?? '-');
@@ -248,9 +249,12 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                                       onPressed: () {
                                         final newItem = CartItem(
                                           name: food['name'],
-                                          price: (food['price'] as num).toDouble(),
+                                          price: (food['price'] as num)
+                                              .toDouble(),
                                           quantity: 1,
-                                          image: imagePathOfCategory(food["type"]),
+                                          image: imagePathOfCategory(
+                                            food["type"],
+                                          ),
                                         );
                                         cart.addItem(newItem);
 

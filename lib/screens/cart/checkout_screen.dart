@@ -326,7 +326,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                               ? "PIZZA HUT"
                               : "KFC";
 
-                          await OrderService().placeOrder(
+                          await placeOrder(
                             items: cart.items,
                             totalPrice: cart.totalPrice,
                             userId: userId,

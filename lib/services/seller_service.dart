@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:eatzy_food_delivery/utils/utils_user.dart';
+import 'package:eatzy_food_delivery/services/user_service.dart';
 import 'package:flutter/material.dart';
 
 Future<List> getSellerItems(String sellerEmail) async {

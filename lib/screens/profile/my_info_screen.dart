@@ -1,4 +1,4 @@
-import 'package:eatzy_food_delivery/utils/utils_user.dart';
+import 'package:eatzy_food_delivery/services/user_service.dart';
 import 'package:flutter/material.dart';
 
 class MyInfoScreen extends StatefulWidget {
