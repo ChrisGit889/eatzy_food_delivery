@@ -1,3 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:eatzy_food_delivery/services/order_service.dart';
+import 'package:eatzy_food_delivery/utils/snackbar_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'order_details_screen.dart';
@@ -13,38 +16,7 @@ class _OrderScreenState extends State<OrderScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   final TextEditingController _searchController = TextEditingController();
-
   DateTimeRange? _selectedDateRange;
-
-  final List<Map<String, dynamic>> _allOrders = [
-    {
-      "orderId": "#4782-FP78924",
-      "date": "Sep 30, 2025",
-      "service": "KFC",
-      "items": "3 items",
-      "delivery": "June 30, 2025",
-      "status": "Pending",
-      "steps": 3,
-    },
-    {
-      "orderId": "#4782-FP78925",
-      "date": "Sep 27, 2025",
-      "service": "PIZZA HUT ",
-      "items": "2 items",
-      "delivery": "June 27, 2025",
-      "status": "Completed",
-      "steps": 4,
-    },
-    {
-      "orderId": "#4782-FP78926",
-      "date": "Sep 25, 2025",
-      "service": "Starbucks",
-      "items": "3 items",
-      "delivery": "June 25, 2025",
-      "status": "Cancelled",
-      "steps": 1,
-    },
-  ];
 
   @override
   void initState() {
@@ -56,8 +28,6 @@ class _OrderScreenState extends State<OrderScreen>
 
   @override
   void dispose() {
-    _searchController.removeListener(() => setState(() {}));
-    _tabController.removeListener(() => setState(() {}));
     _searchController.dispose();
     _tabController.dispose();
     super.dispose();
@@ -77,30 +47,10 @@ class _OrderScreenState extends State<OrderScreen>
     }
   }
 
-  List<Map<String, dynamic>> _getFilteredOrders() {
-    List<Map<String, dynamic>> filteredList;
-
-    switch (_tabController.index) {
-      case 1:
-        filteredList = _allOrders
-            .where((order) => order['status'] == 'Pending')
-            .toList();
-        break;
-      case 2:
-        filteredList = _allOrders
-            .where((order) => order['status'] == 'Completed')
-            .toList();
-        break;
-      case 3:
-        filteredList = _allOrders
-            .where((order) => order['status'] == 'Cancelled')
-            .toList();
-        break;
-      case 0:
-      default:
-        filteredList = List.from(_allOrders);
-        break;
-    }
+  List<Map<String, dynamic>> _getFilteredOrders(
+    List<Map<String, dynamic>> allOrders,
+  ) {
+    List<Map<String, dynamic>> filteredList = List.from(allOrders);
 
     if (_selectedDateRange != null) {
       filteredList = filteredList.where((order) {
@@ -118,15 +68,26 @@ class _OrderScreenState extends State<OrderScreen>
 
     return filteredList.where((order) {
       final orderId = order['orderId']!.toLowerCase();
-      final service = order['service']!.toLowerCase();
-      return orderId.contains(query) || service.contains(query);
+      final restaurantName = (order['restaurantName'] as String).toLowerCase();
+      return orderId.contains(query) || restaurantName.contains(query);
     }).toList();
+  }
+
+  int _getStatusSteps(String status) {
+    switch (status.toLowerCase()) {
+      case 'pending':
+        return 2;
+      case 'completed':
+        return 4;
+      case 'cancelled':
+        return 1;
+      default:
+        return 1;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    final filteredOrders = _getFilteredOrders();
-
     return Scaffold(
       appBar: AppBar(
         title: const Text("Order History"),
@@ -166,22 +127,62 @@ class _OrderScreenState extends State<OrderScreen>
           ),
         ),
       ),
-      body: TabBarView(
-        controller: _tabController,
-        children: [
-          buildOrderList(filteredOrders),
-          buildOrderList(filteredOrders),
-          buildOrderList(filteredOrders),
-          buildOrderList(filteredOrders),
-        ],
+      body: StreamBuilder<QuerySnapshot>(
+        stream: getOrdersStream(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          if (snapshot.hasError) {
+            return Center(child: Text("Terjadi error: ${snapshot.error}"));
+          }
+          if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+            return const Center(
+              child: Text(
+                "Belum ada pesanan.",
+                style: TextStyle(fontSize: 18, color: Colors.grey),
+              ),
+            );
+          }
+
+          final allOrdersFromDb = snapshot.data!.docs.map((doc) {
+            final data = doc.data() as Map<String, dynamic>;
+            data['orderId'] = doc.id;
+            data['date'] = DateFormat(
+              "MMM dd, yyyy",
+            ).format((data['createdAt'] as Timestamp).toDate());
+            data['steps'] = _getStatusSteps(data['status'] ?? 'Unknown');
+            return data;
+          }).toList();
+
+          final filteredOrders = _getFilteredOrders(allOrdersFromDb);
+
+          return TabBarView(
+            controller: _tabController,
+            children: [
+              buildOrderList(filteredOrders),
+              buildOrderList(
+                filteredOrders.where((o) => o['status'] == 'Pending').toList(),
+              ),
+              buildOrderList(
+                filteredOrders
+                    .where((o) => o['status'] == 'Completed')
+                    .toList(),
+              ),
+              buildOrderList(
+                filteredOrders
+                    .where((o) => o['status'] == 'Cancelled')
+                    .toList(),
+              ),
+            ],
+          );
+        },
       ),
     );
   }
 
   Widget _buildActiveFilterInfo() {
-    if (_selectedDateRange == null) {
-      return const SizedBox(height: 30);
-    }
+    if (_selectedDateRange == null) return const SizedBox(height: 30);
     final dateFormat = DateFormat('dd MMM yyyy');
     final startDate = dateFormat.format(_selectedDateRange!.start);
     final endDate = dateFormat.format(_selectedDateRange!.end);
@@ -193,11 +194,7 @@ class _OrderScreenState extends State<OrderScreen>
           Chip(
             label: Text('$startDate - $endDate'),
             backgroundColor: Colors.orange.shade100,
-            onDeleted: () {
-              setState(() {
-                _selectedDateRange = null;
-              });
-            },
+            onDeleted: () => setState(() => _selectedDateRange = null),
             deleteIcon: const Icon(Icons.close, size: 18),
           ),
         ],
@@ -229,12 +226,12 @@ class _OrderScreenState extends State<OrderScreen>
 
   Widget _getServiceLogo(String serviceName) {
     String imagePath;
-    String trimmedServiceName = serviceName.trim();
+    String trimmedServiceName = serviceName.trim().toUpperCase();
     if (trimmedServiceName == 'KFC') {
       imagePath = 'assets/images/Kfc.png';
     } else if (trimmedServiceName == 'PIZZA HUT') {
       imagePath = 'assets/images/Pizza-hut.png';
-    } else if (trimmedServiceName == 'Starbucks') {
+    } else if (trimmedServiceName == 'STARBUCKS') {
       imagePath = 'assets/images/Starbucks.png';
     } else {
       return const Icon(
@@ -249,14 +246,15 @@ class _OrderScreenState extends State<OrderScreen>
   Widget buildOrderCard({required Map<String, dynamic> order}) {
     final String status = order['status'];
     final int steps = order['steps'];
-    Color statusColor;
-    if (status == "Completed") {
-      statusColor = Colors.green;
-    } else if (status == "Pending") {
-      statusColor = Colors.orange;
-    } else {
-      statusColor = Colors.red;
-    }
+    final restaurantName = order['restaurantName'] ?? 'Restaurant';
+    final items = order['items'] as List;
+
+    Color statusColor = switch (status) {
+      "Completed" => Colors.green,
+      "Pending" => Colors.orange,
+      _ => Colors.red,
+    };
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -277,7 +275,7 @@ class _OrderScreenState extends State<OrderScreen>
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                "Order ${order['orderId']}",
+                "Order #${order['orderId'].substring(0, 8)}...",
                 style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 16,
@@ -310,7 +308,7 @@ class _OrderScreenState extends State<OrderScreen>
               SizedBox(
                 width: 40,
                 height: 40,
-                child: _getServiceLogo(order['service']),
+                child: _getServiceLogo(restaurantName),
               ),
               const SizedBox(width: 12),
               Expanded(
@@ -318,18 +316,18 @@ class _OrderScreenState extends State<OrderScreen>
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      order['service'].trim(),
+                      restaurantName,
                       style: const TextStyle(
                         fontWeight: FontWeight.w600,
                         fontSize: 16,
                       ),
                     ),
                     Text(
-                      order['items'],
+                      "${items.length} items",
                       style: TextStyle(color: Colors.grey.shade600),
                     ),
                     Text(
-                      "Delivery • ${order['delivery']}",
+                      "Delivery • ${order['date']}",
                       style: TextStyle(color: Colors.grey.shade600),
                     ),
                   ],
@@ -338,11 +336,11 @@ class _OrderScreenState extends State<OrderScreen>
               if (status == 'Completed')
                 ElevatedButton(
                   onPressed: () {
-                    final snackBar = SnackBar(
-                      content: Text('Enjoy your ${order['service'].trim()} 😊'),
+                    showSnackBar(
+                      context: context,
+                      content: Text('Enjoy your ${restaurantName.trim()} 😊'),
                       backgroundColor: Colors.green,
                     );
-                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color.fromARGB(255, 230, 144, 16),
@@ -355,11 +353,9 @@ class _OrderScreenState extends State<OrderScreen>
                 )
               else if (status == 'Cancelled')
                 OutlinedButton(
-                  onPressed: null, // <-- Tombol dinonaktifkan di sini
+                  onPressed: null,
                   style: OutlinedButton.styleFrom(
-                    disabledForegroundColor: Colors.grey.withOpacity(
-                      0.38,
-                    ), // Styling saat disabled
+                    disabledForegroundColor: Colors.grey.withAlpha(200),
                     side: const BorderSide(color: Colors.grey),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
@@ -373,7 +369,7 @@ class _OrderScreenState extends State<OrderScreen>
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const OrderDetailsScreen(),
+                        builder: (context) => OrderDetailsScreen(order: order),
                       ),
                     );
                   },
@@ -428,9 +424,8 @@ class _OrderScreenState extends State<OrderScreen>
     );
   }
 
-  Widget buildLine() {
-    return Expanded(child: Container(height: 2, color: Colors.grey.shade300));
-  }
+  Widget buildLine() =>
+      Expanded(child: Container(height: 2, color: Colors.grey.shade300));
 }
 
 class _OrderSearchBar extends StatelessWidget {
@@ -452,7 +447,7 @@ class _OrderSearchBar extends StatelessWidget {
         borderRadius: BorderRadius.circular(10),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.2),
+            color: Colors.grey.withAlpha(55),
             spreadRadius: 1,
             blurRadius: 5,
             offset: const Offset(0, 2),

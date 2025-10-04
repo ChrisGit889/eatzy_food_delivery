@@ -94,7 +94,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         vertical: 4,
                                       ),
                                       decoration: BoxDecoration(
-                                        color: EATZY_ORANGE.withOpacity(0.1),
+                                        color: EATZY_ORANGE.withAlpha(26),
                                         borderRadius: BorderRadius.circular(6),
                                       ),
                                       child: Text(
@@ -118,7 +118,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     borderRadius: BorderRadius.circular(12),
                                     boxShadow: [
                                       BoxShadow(
-                                        color: Colors.black.withOpacity(0.05),
+                                        color: Colors.black.withAlpha(15),
                                         blurRadius: 10,
                                         offset: const Offset(0, 2),
                                       ),
@@ -295,7 +295,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     borderRadius: BorderRadius.circular(16),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.06),
+                        color: Colors.black.withAlpha(20),
                         blurRadius: 15,
                         offset: const Offset(0, 4),
                       ),
@@ -325,7 +325,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         suffixIcon: Container(
                           margin: const EdgeInsets.all(8),
                           decoration: BoxDecoration(
-                            color: EATZY_ORANGE.withOpacity(0.1),
+                            color: EATZY_ORANGE.withAlpha(25),
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: IconButton(
@@ -373,7 +373,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             borderRadius: BorderRadius.circular(16),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withOpacity(0.1),
+                                color: Colors.black.withAlpha(25),
                                 blurRadius: 15,
                                 offset: const Offset(0, 5),
                               ),
@@ -529,7 +529,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             borderRadius: BorderRadius.circular(16),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withOpacity(0.06),
+                                color: Colors.black.withAlpha(25),
                                 blurRadius: 15,
                                 offset: const Offset(0, 4),
                               ),
@@ -718,7 +718,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       borderRadius: BorderRadius.circular(16),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.06),
+                          color: Colors.black.withAlpha(20),
                           blurRadius: 15,
                           offset: const Offset(0, 4),
                         ),

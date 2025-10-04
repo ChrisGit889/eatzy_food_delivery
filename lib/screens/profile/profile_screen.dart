@@ -2,8 +2,8 @@ import 'package:eatzy_food_delivery/screens/auth/auth_gate.dart';
 import 'package:eatzy_food_delivery/screens/auth/auth_screen.dart';
 import 'package:eatzy_food_delivery/screens/profile/my_info_screen.dart';
 import 'package:eatzy_food_delivery/screens/seller/seller_screen.dart';
-import 'package:eatzy_food_delivery/utils/utils_seller.dart';
-import 'package:eatzy_food_delivery/utils/utils_user.dart';
+import 'package:eatzy_food_delivery/services/seller_service.dart';
+import 'package:eatzy_food_delivery/services/user_service.dart';
 import 'package:flutter/material.dart';
 
 class ProfileScreen extends StatefulWidget {

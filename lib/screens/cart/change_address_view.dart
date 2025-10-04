@@ -1,3 +1,4 @@
+import 'package:eatzy_food_delivery/utils/snackbar_helper.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
@@ -283,7 +284,7 @@ class _ChangeAddressViewState extends State<ChangeAddressView> {
                       borderRadius: BorderRadius.circular(12),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.1),
+                          color: Colors.black.withAlpha(26),
                           blurRadius: 8,
                           offset: const Offset(0, 2),
                         ),
@@ -327,7 +328,7 @@ class _ChangeAddressViewState extends State<ChangeAddressView> {
                       ),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.1),
+                          color: Colors.black.withAlpha(26),
                           blurRadius: 10,
                           offset: const Offset(0, -2),
                         ),

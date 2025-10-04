@@ -1,6 +1,6 @@
 import 'package:eatzy_food_delivery/constants.dart';
 import 'package:eatzy_food_delivery/utils/utils.dart';
-import 'package:eatzy_food_delivery/utils/utils_seller.dart';
+import 'package:eatzy_food_delivery/services/seller_service.dart';
 import 'package:flutter/material.dart';
 
 class AddFood extends StatefulWidget {
@@ -150,7 +150,7 @@ class _AddFoodState extends State<AddFood> {
                         price: priceController.text,
                         type: dropDownValue,
                       );
-                      if (res) {
+                      if (res && mounted) {
                         Navigator.pop(context);
                       }
                     }

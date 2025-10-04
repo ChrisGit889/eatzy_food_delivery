@@ -1,6 +1,7 @@
 import 'package:eatzy_food_delivery/data/models/favorit_model.dart';
+import 'package:eatzy_food_delivery/utils/snackbar_helper.dart';
 import 'package:eatzy_food_delivery/utils/utils.dart';
-import 'package:eatzy_food_delivery/utils/utils_seller.dart';
+import 'package:eatzy_food_delivery/services/seller_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:eatzy_food_delivery/data/models/cart_model.dart';
@@ -26,7 +27,9 @@ class CategoryScreen extends StatelessWidget {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => CartScreen()),
+                        MaterialPageRoute(
+                          builder: (context) => const CartScreen(),
+                        ),
                       );
                     },
                   ),
@@ -60,11 +63,23 @@ class CategoryScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: FutureBuilder(
+      body: FutureBuilder<List<dynamic>>(
         future: getItemsByCategory(category["name"].toString().toLowerCase()),
         builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          if (snapshot.hasError) {
+            return Center(child: Text("Error: ${snapshot.error}"));
+          }
           if (snapshot.hasData) {
-            var data = snapshot.data!;
+            var data = snapshot.data!.cast<Map<String, dynamic>>().toList();
+
+            if (data.isEmpty) {
+              return const Center(
+                child: Text("No items found in this category."),
+              );
+            }
             return ListView.builder(
               itemCount: data.length,
               itemBuilder: (context, index) {
@@ -139,22 +154,21 @@ class CategoryScreen extends StatelessWidget {
                                               ),
                                             ),
                                             onPressed: () {
-                                              cart.addItem({
-                                                'name': food['name'],
-                                                'price': food['price'],
-                                                'type': food["type"],
-                                                'quantity': 1,
-                                              });
+                                              final newItem = CartItem(
+                                                name: food['name'],
+                                                price: (food['price'] as num)
+                                                    .toDouble(),
+                                                quantity: 1,
+                                                image: imagePathOfCategory(
+                                                  food["type"],
+                                                ),
+                                              );
+                                              cart.addItem(newItem);
 
                                               Navigator.pop(context);
-                                              ScaffoldMessenger.of(
-                                                context,
-                                              ).showSnackBar(
-                                                SnackBar(
-                                                  content: Text(
-                                                    'Added to cart!',
-                                                  ),
-                                                ),
+                                              showSnackBar(
+                                                context: context,
+                                                content: Text("Added to cart!"),
                                               );
                                             },
                                             child: const Text("Add to Cart"),
@@ -170,14 +184,12 @@ class CategoryScreen extends StatelessWidget {
                         },
                       );
                     },
-
                     leading: imageOfCategory(food["type"], 50.0, 50.0),
                     title: Text(food['name']),
                     subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [Text(numToDollar(food["price"]))],
                     ),
-
                     trailing: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
@@ -198,21 +210,19 @@ class CategoryScreen extends StatelessWidget {
                                   'description': food['desc'],
                                 });
 
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(
-                                      isFav
-                                          ? '${food['name']} removed from favorites'
-                                          : '${food['name']} added to favorites',
-                                    ),
-                                    duration: const Duration(seconds: 2),
+                                showSnackBar(
+                                  context: context,
+                                  content: Text(
+                                    isFav
+                                        ? '${food['name']} removed from favorites'
+                                        : '${food['name']} added to favorites',
                                   ),
+                                  duration: const Duration(seconds: 2),
                                 );
                               },
                             );
                           },
                         ),
-
                         Consumer<CartModel>(
                           builder: (context, cart, child) {
                             return Container(
@@ -226,27 +236,27 @@ class CategoryScreen extends StatelessWidget {
                                   color: Colors.white,
                                 ),
                                 onPressed: () {
-                                  cart.addItem({
-                                    'name': food['name'],
-                                    'price': food['price'],
-                                    'type': food["type"],
-                                    'quantity': 1,
-                                  });
+                                  final newItem = CartItem(
+                                    name: food['name'],
+                                    price: (food['price'] as num).toDouble(),
+                                    quantity: 1,
+                                    image: imagePathOfCategory(food["type"]),
+                                  );
+                                  cart.addItem(newItem);
 
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Row(
-                                        children: [
-                                          const Icon(
-                                            Icons.check_circle,
-                                            color: Colors.white,
-                                          ),
-                                          const SizedBox(width: 8),
-                                          Text('${food['name']} added to cart'),
-                                        ],
-                                      ),
-                                      duration: const Duration(seconds: 2),
+                                  showSnackBar(
+                                    context: context,
+                                    content: Row(
+                                      children: [
+                                        const Icon(
+                                          Icons.check_circle,
+                                          color: Colors.white,
+                                        ),
+                                        const SizedBox(width: 8),
+                                        Text('${food['name']} added to cart'),
+                                      ],
                                     ),
+                                    duration: const Duration(seconds: 2),
                                   );
                                 },
                               ),
@@ -260,7 +270,7 @@ class CategoryScreen extends StatelessWidget {
               },
             );
           }
-          return CircularProgressIndicator();
+          return const Center(child: CircularProgressIndicator());
         },
       ),
     );
