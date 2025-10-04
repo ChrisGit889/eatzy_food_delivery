@@ -207,7 +207,7 @@ class CategoryScreen extends StatelessWidget {
                                   'restaurant': food['restaurant'],
                                   'price': food['price'],
                                   'type': food["type"],
-                                  'description': food['desc'],
+                                  'description': food['description'],
                                 });
 
                                 showSnackBar(
