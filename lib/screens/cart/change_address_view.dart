@@ -1,11 +1,9 @@
+import 'package:eatzy_food_delivery/utils/snackbar_helper.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
-import 'package:eatzy_food_delivery/constants.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:custom_map_markers/custom_map_markers.dart';
 import 'package:eatzy_food_delivery/services/location_service.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
 
 class ChangeAddressView extends StatefulWidget {
@@ -23,198 +21,184 @@ class _ChangeAddressViewState extends State<ChangeAddressView> {
   double? _currentLng;
   String _currentAddress = "Looking for location...";
   bool _isLoading = true;
+  bool _isUpdatingAddress = false;
 
-  late List<MarkerData> _customMarkers;
-
-  // Default location on Jakarta
+  static const _defaultLocation = LatLng(-6.2088, 106.8456);
   CameraPosition _initialPosition = const CameraPosition(
-    target: LatLng(-6.2088, 106.8456),
+    target: _defaultLocation,
     zoom: 15,
   );
 
   @override
   void initState() {
     super.initState();
-    _customMarkers = [];
     _getCurrentLocation();
   }
 
   @override
   void dispose() {
     _mapController?.dispose();
+    _mapController = null;
     super.dispose();
   }
 
   Future<void> _getCurrentLocation() async {
-    setState(() => _isLoading = true);
+    if (!mounted) return;
+
+    setState(() {
+      _isLoading = true;
+      _currentAddress = "Getting your location...";
+    });
 
     try {
-      // Call service untuk get current location
       await _locationService.getCurrentLocation();
 
-      // Ambil lat lng dari service dengan null check
-      final lat = _locationService.lat;
-      final lng = _locationService.lng;
-
-      // Validasi bahwa lat dan lng tidak null
-      if (lat == null || lng == null) {
+      if (!_locationService.hasLocation()) {
         throw Exception('Failed to get location coordinates');
       }
 
-      if (mounted) {
-        setState(() {
-          _currentLat = lat;
-          _currentLng = lng;
-          _initialPosition = CameraPosition(target: LatLng(lat, lng), zoom: 15);
-        });
+      final lat = _locationService.lat!;
+      final lng = _locationService.lng!;
 
-        // Update marker
-        _updateMarker(lat, lng);
+      if (!mounted) return;
 
-        // Get address
-        await _getAddressFromLatLng(lat, lng);
+      setState(() {
+        _currentLat = lat;
+        _currentLng = lng;
+        _initialPosition = CameraPosition(target: LatLng(lat, lng), zoom: 16);
+      });
 
-        // Animate camera
-        _mapController?.animateCamera(
+      await _getAddressFromLatLng(lat, lng);
+
+      if (_mapController != null && mounted) {
+        await _mapController!.animateCamera(
           CameraUpdate.newCameraPosition(_initialPosition),
         );
+      }
 
+      if (mounted) {
         setState(() => _isLoading = false);
       }
     } catch (e) {
-      // Handle error
-      if (mounted) {
-        setState(() {
-          _isLoading = false;
-          _currentAddress = "Tidak dapat mengakses lokasi";
-        });
+      debugPrint("Location Error: $e");
+      if (!mounted) return;
 
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Error: $e'),
-            duration: const Duration(seconds: 3),
-            action: SnackBarAction(
-              label: 'Coba Lagi',
-              onPressed: _getCurrentLocation,
-            ),
+      setState(() {
+        _isLoading = false;
+        _currentAddress = "Unable to access location";
+      });
+
+      String errorMsg = _getUserError(e.toString());
+
+      if (mounted) {
+        showSnackBar(
+          context: context,
+          content: Text(errorMsg),
+          duration: const Duration(seconds: 4),
+          action: SnackBarAction(
+            label: 'Retry',
+            onPressed: _getCurrentLocation,
           ),
         );
       }
     }
   }
 
-  // Get address from coordinates
+  String _getUserError(String error) {
+    if (error.contains('disabled')) {
+      return 'Please enable GPS in your device settings';
+    } else if (error.contains('denied')) {
+      return 'Location permission denied. Please enable in app settings';
+    } else if (error.contains('permanently')) {
+      return 'Location permanently denied. Enable in Settings > Apps';
+    }
+    return 'Unable to get location. Please try again';
+  }
+
   Future<void> _getAddressFromLatLng(double lat, double lng) async {
+    if (_isUpdatingAddress) return;
+    _isUpdatingAddress = true;
+
     try {
       List<Placemark> placemarks = await placemarkFromCoordinates(lat, lng);
 
       if (placemarks.isNotEmpty && mounted) {
         Placemark place = placemarks[0];
-        setState(() {
-          _currentAddress =
-              "${place.street}, ${place.subLocality}, ${place.locality}, ${place.postalCode}, ${place.country}";
-        });
+
+        final parts = [
+          place.street,
+          place.subLocality,
+          place.locality,
+          place.postalCode,
+          place.country,
+        ].where((part) => part != null && part.isNotEmpty).join(', ');
+
+        if (mounted) {
+          setState(() {
+            _currentAddress = parts.isNotEmpty
+                ? parts
+                : "Lat: ${lat.toStringAsFixed(6)}, Lng: ${lng.toStringAsFixed(6)}";
+          });
+        }
       }
     } catch (e) {
-      debugPrint("Error getting address: $e");
+      print(e);
       if (mounted) {
         setState(() {
-          _currentAddress = "Lat: $lat, Lng: $lng";
+          _currentAddress =
+              "Lat: ${lat.toStringAsFixed(6)}, Lng: ${lng.toStringAsFixed(6)}";
         });
       }
+    } finally {
+      _isUpdatingAddress = false;
     }
   }
 
-  // Update marker posisi
-  void _updateMarker(double lat, double lng) {
-    setState(() {
-      _customMarkers = [
-        MarkerData(
-          marker: Marker(
-            markerId: const MarkerId('current-location'),
-            position: LatLng(lat, lng),
-          ),
-          child: _customMarker('Current', Colors.red),
-        ),
-      ];
-    });
-  }
-
-  // Handle ketika map di-drag
   void _onCameraMove(CameraPosition position) {
-    final center = position.target;
-    _updateMarker(center.latitude, center.longitude);
+    _currentLat = position.target.latitude;
+    _currentLng = position.target.longitude;
   }
 
-  // Handle ketika selesai drag
   Future<void> _onCameraIdle() async {
-    if (_mapController != null) {
-      final center = await _mapController!.getVisibleRegion();
-      final centerLat =
-          (center.northeast.latitude + center.southwest.latitude) / 2;
-      final centerLng =
-          (center.northeast.longitude + center.southwest.longitude) / 2;
+    if (_mapController == null || !mounted) return;
+    if (_currentLat == null || _currentLng == null) return;
 
-      // Update current position
-      setState(() {
-        _currentLat = centerLat;
-        _currentLng = centerLng;
-      });
-
-      // Get address untuk posisi baru
-      await _getAddressFromLatLng(centerLat, centerLng);
-    }
+    await _getAddressFromLatLng(_currentLat!, _currentLng!);
   }
 
-  // Search address
   Future<void> _searchAddress(String address) async {
     if (address.trim().isEmpty) return;
 
     try {
       List<Location> locations = await locationFromAddress(address);
-      if (locations.isNotEmpty) {
+
+      if (locations.isNotEmpty && mounted) {
         final location = locations.first;
 
-        // Update position
         setState(() {
           _currentLat = location.latitude;
           _currentLng = location.longitude;
         });
 
-        // Animate camera
-        _mapController?.animateCamera(
+        await _mapController?.animateCamera(
           CameraUpdate.newLatLngZoom(
             LatLng(location.latitude, location.longitude),
-            15,
+            16,
           ),
         );
 
-        // Get formatted address
         await _getAddressFromLatLng(location.latitude, location.longitude);
       }
     } catch (e) {
+      debugPrint("Search Error: $e");
       if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Alamat tidak ditemukan: $e')));
+        showSnackBar(
+          context: context,
+          content: Text('Address not found. Try different keywords'),
+          duration: Duration(seconds: 2),
+        );
       }
     }
-  }
-
-  Widget _customMarker(String symbol, Color color) {
-    return SizedBox(
-      width: 50,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Image.asset(
-            'assets/images/map_pin.png',
-            width: 40,
-            fit: BoxFit.contain,
-          ),
-        ],
-      ),
-    );
   }
 
   @override
@@ -229,11 +213,10 @@ class _ChangeAddressViewState extends State<ChangeAddressView> {
         elevation: 0,
         iconTheme: const IconThemeData(color: Colors.black),
         actions: [
-          // Button untuk kembali ke lokasi saat ini
           IconButton(
             icon: const Icon(Icons.my_location, color: Colors.red),
-            onPressed: _getCurrentLocation,
-            tooltip: 'Lokasi saya',
+            onPressed: _isLoading ? null : _getCurrentLocation,
+            tooltip: 'My Location',
           ),
         ],
       ),
@@ -244,43 +227,49 @@ class _ChangeAddressViewState extends State<ChangeAddressView> {
                 children: [
                   CircularProgressIndicator(color: Colors.red),
                   SizedBox(height: 16),
-                  Text('Mendapatkan lokasi Anda...'),
+                  Text('Getting your location...'),
                 ],
               ),
             )
           : Stack(
               children: [
-                // Google Map
-                CustomGoogleMapMarkerBuilder(
-                  customMarkers: _customMarkers,
-                  builder: (BuildContext context, Set<Marker>? markers) {
-                    if (markers == null) {
-                      return const Center(child: CircularProgressIndicator());
-                    }
-                    return GoogleMap(
-                      mapType: MapType.normal,
-                      initialCameraPosition: _initialPosition,
-                      myLocationEnabled: true,
-                      myLocationButtonEnabled: false,
-                      compassEnabled: false,
-                      zoomControlsEnabled: false,
-                      gestureRecognizers: Set()
-                        ..add(
-                          Factory<PanGestureRecognizer>(
-                            () => PanGestureRecognizer(),
-                          ),
-                        ),
-                      markers: markers,
-                      onMapCreated: (GoogleMapController controller) {
-                        _mapController = controller;
-                      },
-                      onCameraMove: _onCameraMove,
-                      onCameraIdle: _onCameraIdle,
-                    );
+                GoogleMap(
+                  mapType: MapType.normal,
+                  initialCameraPosition: _initialPosition,
+                  myLocationEnabled: true,
+                  myLocationButtonEnabled: false,
+                  compassEnabled: false,
+                  zoomControlsEnabled: false,
+                  mapToolbarEnabled: false,
+                  gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>{
+                    Factory<PanGestureRecognizer>(() => PanGestureRecognizer()),
                   },
+                  onMapCreated: (GoogleMapController controller) async {
+                    if (_mapController == null) {
+                      _mapController = controller;
+
+                      if (_currentLat != null && _currentLng != null) {
+                        await controller.animateCamera(
+                          CameraUpdate.newCameraPosition(_initialPosition),
+                        );
+                      }
+                    }
+                  },
+                  onCameraMove: _onCameraMove,
+                  onCameraIdle: _onCameraIdle,
                 ),
 
-                // Current Address Indicator (atas)
+                Positioned.fill(
+                  child: Center(
+                    child: Image.asset(
+                      'assets/images/map_pin.png',
+                      width: 40,
+                      height: 40,
+                    ),
+                  ),
+                ),
+
+                // Current Address Display
                 Positioned(
                   top: 16,
                   left: 16,
@@ -292,7 +281,7 @@ class _ChangeAddressViewState extends State<ChangeAddressView> {
                       borderRadius: BorderRadius.circular(12),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.1),
+                          color: Colors.black.withAlpha(26),
                           blurRadius: 8,
                           offset: const Offset(0, 2),
                         ),
@@ -336,7 +325,7 @@ class _ChangeAddressViewState extends State<ChangeAddressView> {
                       ),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.1),
+                          color: Colors.black.withAlpha(26),
                           blurRadius: 10,
                           offset: const Offset(0, -2),
                         ),
@@ -375,54 +364,6 @@ class _ChangeAddressViewState extends State<ChangeAddressView> {
 
                             const SizedBox(height: 16),
 
-                            // Saved Places Button
-                            InkWell(
-                              onTap: () {
-                                // Navigate ke saved places screen
-                              },
-                              borderRadius: BorderRadius.circular(12),
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 16,
-                                  vertical: 12,
-                                ),
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                    color: Colors.grey[300]!,
-                                    width: 1,
-                                  ),
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                child: Row(
-                                  children: [
-                                    Icon(
-                                      Icons.bookmark_outline,
-                                      color: primaryText,
-                                      size: 20,
-                                    ),
-                                    const SizedBox(width: 12),
-                                    Expanded(
-                                      child: Text(
-                                        "Choose a saved place",
-                                        style: TextStyle(
-                                          color: primaryText,
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
-                                    ),
-                                    Icon(
-                                      Icons.chevron_right,
-                                      color: primaryText,
-                                      size: 20,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-
-                            const SizedBox(height: 16),
-
                             // Confirm Button
                             SizedBox(
                               width: double.infinity,
@@ -431,7 +372,6 @@ class _ChangeAddressViewState extends State<ChangeAddressView> {
                                     _currentLat == null || _currentLng == null
                                     ? null
                                     : () {
-                                        // Return selected location
                                         Navigator.pop(context, {
                                           'address': _currentAddress,
                                           'latitude': _currentLat,
@@ -447,6 +387,7 @@ class _ChangeAddressViewState extends State<ChangeAddressView> {
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(12),
                                   ),
+                                  elevation: 0,
                                 ),
                                 child: const Text(
                                   'Confirm Location',

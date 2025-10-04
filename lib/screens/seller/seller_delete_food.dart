@@ -1,4 +1,4 @@
-import 'package:eatzy_food_delivery/utils/utils_seller.dart';
+import 'package:eatzy_food_delivery/services/seller_service.dart';
 import 'package:flutter/material.dart';
 
 class SellerDeleteFood extends StatelessWidget {
@@ -22,7 +22,9 @@ class SellerDeleteFood extends StatelessWidget {
                   TextButton(
                     onPressed: () async {
                       await deleteItemFromName(foodIdentifier);
-                      Navigator.pop(context);
+                      if (context.mounted) {
+                        Navigator.pop(context);
+                      }
                     },
                     child: Text("Yes"),
                   ),

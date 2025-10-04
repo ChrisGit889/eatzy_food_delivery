@@ -1,4 +1,5 @@
 import 'package:eatzy_food_delivery/services/order_service.dart';
+import 'package:eatzy_food_delivery/utils/snackbar_helper.dart';
 import 'package:eatzy_food_delivery/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:eatzy_food_delivery/constants.dart';
@@ -8,6 +9,7 @@ import 'package:provider/provider.dart';
 import 'package:eatzy_food_delivery/data/models/cart_model.dart';
 import 'checkout_message_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:eatzy_food_delivery/data/models/address_model.dart';
 
 class CheckoutScreen extends StatefulWidget {
   const CheckoutScreen({super.key});
@@ -43,52 +45,66 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                     vertical: 15,
                     horizontal: 20,
                   ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Delivery Address',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 12, color: primaryText),
-                      ),
-                      const SizedBox(height: 9),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  child: Consumer<AddressModel>(
+                    builder: (context, addressModel, child) {
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Expanded(
-                            child: Text(
-                              '123 Main Street.\nBekasi, Indonesia',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w800,
-                                color: primaryText,
-                              ),
-                            ),
+                          Text(
+                            'Delivery Address',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontSize: 12, color: primaryText),
                           ),
-                          const SizedBox(width: 5),
-                          TextButton(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      const ChangeAddressView(),
+                          const SizedBox(height: 9),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  addressModel.address,
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w800,
+                                    color: primaryText,
+                                  ),
                                 ),
-                              );
-                            },
-                            child: Text(
-                              'Change',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontSize: 13,
-                                color: EATZY_ORANGE,
-                                fontWeight: FontWeight.w600,
                               ),
-                            ),
+                              const SizedBox(width: 5),
+                              TextButton(
+                                onPressed: () async {
+                                  final result = await Navigator.of(context)
+                                      .push(
+                                        MaterialPageRoute<
+                                          Map<String, dynamic>?
+                                        >(
+                                          builder: (context) =>
+                                              const ChangeAddressView(),
+                                        ),
+                                      );
+
+                                  if (result != null && mounted) {
+                                    await addressModel.updateAddress(
+                                      address: result['address'] as String,
+                                      latitude: result['latitude'] as double,
+                                      longitude: result['longitude'] as double,
+                                    );
+                                  }
+                                },
+                                child: Text(
+                                  'Change',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    color: EATZY_ORANGE,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ],
-                      ),
-                    ],
+                      );
+                    },
                   ),
                 ),
                 const Divider(),
@@ -299,13 +315,12 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                     child: InkWell(
                       onTap: () async {
                         if (cart.isEmpty || selectMethod == -1) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              backgroundColor: Colors.red,
-                              content: Text(
-                                "Keranjang kosong atau metode pembayaran belum dipilih.",
-                              ),
+                          showSnackBar(
+                            context: context,
+                            content: Text(
+                              "Keranjang kosong atau metode pembayaran belum dipilih.",
                             ),
+                            backgroundColor: Colors.red,
                           );
                           return;
                         }
@@ -326,7 +341,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                               ? "PIZZA HUT"
                               : "KFC";
 
-                          await OrderService().placeOrder(
+                          await placeOrder(
                             items: cart.items,
                             totalPrice: cart.totalPrice,
                             userId: userId,
@@ -352,11 +367,10 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                           if (mounted) Navigator.of(context).pop();
 
                           if (mounted) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                backgroundColor: Colors.red,
-                                content: Text("Gagal membuat pesanan: $e"),
-                              ),
+                            showSnackBar(
+                              context: context,
+                              content: Text("Gagal membuat pesanan: $e"),
+                              backgroundColor: Colors.red,
                             );
                           }
                         }

@@ -1,9 +1,12 @@
 import 'package:eatzy_food_delivery/screens/auth/auth_gate.dart';
 import 'package:eatzy_food_delivery/screens/auth/auth_screen.dart';
 import 'package:eatzy_food_delivery/screens/profile/my_info_screen.dart';
+import 'package:eatzy_food_delivery/screens/profile/change_password_screen.dart';
+import 'package:eatzy_food_delivery/screens/profile/payment_screen.dart';
+import 'package:eatzy_food_delivery/screens/profile/help_support_screen.dart';
 import 'package:eatzy_food_delivery/screens/seller/seller_screen.dart';
-import 'package:eatzy_food_delivery/utils/utils_seller.dart';
-import 'package:eatzy_food_delivery/utils/utils_user.dart';
+import 'package:eatzy_food_delivery/services/seller_service.dart';
+import 'package:eatzy_food_delivery/services/user_service.dart';
 import 'package:flutter/material.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -19,8 +22,9 @@ class ProfileScreen extends StatefulWidget {
   ) {
     return GestureDetector(
       onTap: onTap,
+      behavior: HitTestBehavior.opaque,
       child: Container(
-        margin: const EdgeInsets.only(bottom: 12),
+        margin: const EdgeInsets.only(bottom: 10),
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
         decoration: BoxDecoration(
           color: Colors.grey[100],
@@ -82,10 +86,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
             Text(
               getUserName(),
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
-
-            Text(getUserEmail(), style: TextStyle(color: Colors.grey)),
+            Text(getUserEmail(), style: const TextStyle(color: Colors.grey)),
 
             const SizedBox(height: 20),
 
@@ -94,13 +97,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  "Setting",
+                  "Settings",
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
               ),
             ),
-
-            const SizedBox(height: 10),
 
             Expanded(
               child: ListView(
@@ -109,50 +110,82 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ProfileScreen._buildMenuItem(Icons.person, "My Info", () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => MyInfoScreen()),
+                      MaterialPageRoute(
+                        builder: (context) => const MyInfoScreen(),
+                      ),
                     );
                   }),
-                  FutureBuilder(
+
+                  ProfileScreen._buildMenuItem(
+                    Icons.lock,
+                    "Change Password",
+                    () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const ChangePasswordScreen(),
+                        ),
+                      );
+                    },
+                  ),
+
+                  FutureBuilder<bool>(
                     future: getSellerStatus(),
                     builder: (context, snapshot) {
-                      if (snapshot.hasData) {
-                        if (snapshot.data!) {
-                          return ProfileScreen._buildMenuItem(
-                            Icons.store,
-                            "My Store",
-                            () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => SellerScreen(),
-                                ),
-                              );
-                            },
-                          );
-                        }
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const SizedBox(height: 0);
+                      }
+                      if (snapshot.hasData && snapshot.data == true) {
+                        return ProfileScreen._buildMenuItem(
+                          Icons.store,
+                          "My Store",
+                          () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const SellerScreen(),
+                              ),
+                            );
+                          },
+                        );
                       }
                       return ProfileScreen._buildMenuItem(
-                        Icons.store,
+                        Icons.storefront,
                         "Create a Store",
-                        () {
+                        () async {
                           makeSeller();
                           setState(() {});
                         },
                       );
                     },
                   ),
+
                   ProfileScreen._buildMenuItem(
                     Icons.payment,
-                    "My Payment",
-                    () {},
-                  ),
-                  ProfileScreen._buildMenuItem(
-                    Icons.support_agent,
-                    "Help and Support",
-                    () {},
+                    "Payment Method",
+                    () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const PaymentScreen(),
+                        ),
+                      );
+                    },
                   ),
 
-                  const SizedBox(height: 20),
+                  ProfileScreen._buildMenuItem(
+                    Icons.support_agent,
+                    "Help & Support",
+                    () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const HelpSupportScreen(),
+                        ),
+                      );
+                    },
+                  ),
+                  const SizedBox(height: 30),
 
                   OutlinedButton(
                     style: OutlinedButton.styleFrom(
@@ -164,13 +197,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                     onPressed: () async {
                       await signUserOut();
+                      if (!mounted) return;
                       Navigator.of(
                         context,
                         rootNavigator: true,
                       ).pushReplacement(
                         MaterialPageRoute(
                           builder: (context) =>
-                              AuthGate(whereToGo: AuthScreen()),
+                              AuthGate(whereToGo: const AuthScreen()),
                         ),
                       );
                     },
@@ -179,8 +213,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       style: TextStyle(color: Color(0xFFFD6C00), fontSize: 16),
                     ),
                   ),
-
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 10),
                 ],
               ),
             ),
@@ -195,7 +228,6 @@ class TopHalfCircleClipper extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
     Path path = Path();
-
     path.addOval(
       Rect.fromLTWH(
         -size.width * 0.25,
@@ -204,7 +236,6 @@ class TopHalfCircleClipper extends CustomClipper<Path> {
         size.height * 2,
       ),
     );
-
     return path;
   }
 

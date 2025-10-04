@@ -1,3 +1,4 @@
+import 'package:eatzy_food_delivery/utils/snackbar_helper.dart';
 import 'package:eatzy_food_delivery/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -28,11 +29,9 @@ class CartScreen extends StatelessWidget {
                     icon: const Icon(Icons.delete_outline),
                     onPressed: () {
                       cart.clearCart();
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Cart cleared'),
-                          duration: Duration(seconds: 2),
-                        ),
+                      showSnackBar(
+                        context: context,
+                        content: Text("Cart cleaned"),
                       );
                     },
                   );
@@ -114,7 +113,10 @@ class CartScreen extends StatelessWidget {
                                     errorBuilder: (context, error, stackTrace) {
                                       return Container(
                                         color: Colors.grey[200],
-                                        child: const Icon(Icons.restaurant, color: Colors.grey),
+                                        child: const Icon(
+                                          Icons.restaurant,
+                                          color: Colors.grey,
+                                        ),
                                       );
                                     },
                                   ),
@@ -159,7 +161,9 @@ class CartScreen extends StatelessWidget {
                                         cart.removeItem(item.name);
                                       }
                                     },
-                                    icon: const Icon(Icons.remove_circle_outline),
+                                    icon: const Icon(
+                                      Icons.remove_circle_outline,
+                                    ),
                                     color: Colors.red,
                                   ),
                                   Text(
@@ -195,7 +199,7 @@ class CartScreen extends StatelessWidget {
                     color: Colors.white,
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.grey.withOpacity(0.1),
+                        color: Colors.grey.withAlpha(26),
                         spreadRadius: 1,
                         blurRadius: 5,
                         offset: const Offset(0, -2),

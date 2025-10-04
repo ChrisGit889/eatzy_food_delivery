@@ -1,4 +1,4 @@
-import 'package:eatzy_food_delivery/utils/utils_seller.dart';
+import 'package:eatzy_food_delivery/services/seller_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -27,9 +27,7 @@ class _SellerProfileState extends State<SellerProfile> {
             children: [
               CircleAvatar(
                 radius: 80,
-                backgroundImage: AssetImage(
-                  "assets/images/buatisiprofile.jpg",
-                ), //TODO: Use firebase for this
+                backgroundImage: AssetImage("assets/images/buatisiprofile.jpg"),
               ),
               Row(
                 children: [
