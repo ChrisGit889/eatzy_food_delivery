@@ -29,18 +29,17 @@ class _RestaurantDetailViewState extends State<RestaurantDetailView> {
               ),
             ),
             actions: [
-              // Shopping Cart Icon
               Consumer<CartModel>(
                 builder: (context, cart, child) {
                   return Stack(
                     children: [
                       IconButton(
-                        icon: Icon(Icons.shopping_cart),
+                        icon: const Icon(Icons.shopping_cart),
                         onPressed: () {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => CartScreen(),
+                              builder: (context) => const CartScreen(),
                             ),
                           );
                         },
@@ -50,18 +49,18 @@ class _RestaurantDetailViewState extends State<RestaurantDetailView> {
                           right: 6,
                           top: 6,
                           child: Container(
-                            padding: EdgeInsets.all(2),
+                            padding: const EdgeInsets.all(2),
                             decoration: BoxDecoration(
                               color: Colors.red,
                               borderRadius: BorderRadius.circular(10),
                             ),
-                            constraints: BoxConstraints(
+                            constraints: const BoxConstraints(
                               minWidth: 16,
                               minHeight: 16,
                             ),
                             child: Text(
                               '${cart.items.length}',
-                              style: TextStyle(
+                              style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 12,
                               ),
@@ -86,7 +85,7 @@ class _RestaurantDetailViewState extends State<RestaurantDetailView> {
                   children: [
                     Text(
                       widget.restaurant['name'] ?? 'Restaurant Name',
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
                       ),
@@ -94,20 +93,24 @@ class _RestaurantDetailViewState extends State<RestaurantDetailView> {
                     const SizedBox(height: 8),
                     Row(
                       children: [
-                        Icon(Icons.star, color: Colors.orange, size: 16),
-                        SizedBox(width: 4),
+                        const Icon(Icons.star, color: Colors.orange, size: 16),
+                        const SizedBox(width: 4),
                         widget.restaurant['rating'] != null
                             ? Text('${widget.restaurant['rating']}')
                             : Container(),
-                        SizedBox(width: 16),
-                        Icon(Icons.location_on, color: Colors.grey, size: 16),
-                        SizedBox(width: 4),
+                        const SizedBox(width: 16),
+                        const Icon(
+                          Icons.location_on,
+                          color: Colors.grey,
+                          size: 16,
+                        ),
+                        const SizedBox(width: 4),
                         Expanded(
                           child: Text(
                             widget.restaurant['address'] ??
                                 'Restaurant Address',
                             overflow: TextOverflow.ellipsis,
-                            style: TextStyle(color: Colors.grey),
+                            style: const TextStyle(color: Colors.grey),
                           ),
                         ),
                       ],
@@ -131,15 +134,17 @@ class _RestaurantDetailViewState extends State<RestaurantDetailView> {
               ),
             ),
 
-            // Menu Items List
             SliverList.builder(
               itemCount: widget.restaurant['menus']?.length ?? 5,
               itemBuilder: (context, index) {
+                final menuItem = widget.restaurant['menus'][index];
                 return Card(
-                  margin: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                  margin: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 4,
+                  ),
                   child: ListTile(
-                    contentPadding: EdgeInsets.all(12),
-                    // Dish Image
+                    contentPadding: const EdgeInsets.all(12),
                     leading: ClipRRect(
                       borderRadius: BorderRadius.circular(8),
                       child: Image.asset(
@@ -150,23 +155,21 @@ class _RestaurantDetailViewState extends State<RestaurantDetailView> {
                       ),
                     ),
 
-                    // Dish Name, Description, Price
                     title: Text(
-                      widget.restaurant['menus']?[index]['name'] ??
-                          'Dish ${index + 1}',
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                      menuItem['name'] ?? 'Dish ${index + 1}',
+                      style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
                     subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        SizedBox(height: 4),
-                        Text(widget.restaurant['menus'][index]['description']),
+                        const SizedBox(height: 4),
+                        Text(menuItem['description']),
                         const SizedBox(height: 8),
                         Text(
-                          widget.restaurant['menus']?[index]['price'] != null
-                              ? '\$${widget.restaurant['menus']?[index]['price']}'
+                          menuItem['price'] != null
+                              ? '\$${menuItem['price']}'
                               : '\$12.99',
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
                             color: Colors.orange,
@@ -175,16 +178,13 @@ class _RestaurantDetailViewState extends State<RestaurantDetailView> {
                       ],
                     ),
 
-                    // Add to Cart Button and favorite button 
                     trailing: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Consumer<FavoriteModel>(
                           builder: (context, favModel, child) {
                             final isFav = favModel.favorites.any(
-                              (item) =>
-                                  item['id'] ==
-                                  widget.restaurant['menus'][index]['id'],
+                              (item) => item['id'] == menuItem['id'],
                             );
 
                             return IconButton(
@@ -194,9 +194,7 @@ class _RestaurantDetailViewState extends State<RestaurantDetailView> {
                               ),
                               onPressed: () {
                                 favModel.toggleFav({
-                                  ...Map<String, dynamic>.from(
-                                    widget.restaurant['menus'][index],
-                                  ),
+                                  ...Map<String, dynamic>.from(menuItem),
                                   'restaurant': widget.restaurant['name'],
                                 });
 
@@ -204,8 +202,8 @@ class _RestaurantDetailViewState extends State<RestaurantDetailView> {
                                   SnackBar(
                                     content: Text(
                                       isFav
-                                          ? '${widget.restaurant['menus'][index]['name']} removed from favorites'
-                                          : '${widget.restaurant['menus'][index]['name']} added to favorites',
+                                          ? '${menuItem['name']} removed from favorites'
+                                          : '${menuItem['name']} added to favorites',
                                     ),
                                     duration: const Duration(seconds: 2),
                                   ),
@@ -215,7 +213,6 @@ class _RestaurantDetailViewState extends State<RestaurantDetailView> {
                           },
                         ),
 
-                        // Consumer Cart
                         Consumer<CartModel>(
                           builder: (context, cart, child) {
                             return Container(
@@ -229,21 +226,16 @@ class _RestaurantDetailViewState extends State<RestaurantDetailView> {
                                   color: Colors.white,
                                 ),
                                 onPressed: () {
-                                  cart.addItem({
-                                    'id':
-                                        widget
-                                            .restaurant['menus']?[index]['id'] ??
-                                        'dish_${index + 1}',
-                                    'name':
-                                        widget
-                                            .restaurant['menus']?[index]['name'] ??
-                                        'Dish ${index + 1}',
-                                    'price':
-                                        widget
-                                            .restaurant['menus']?[index]['price'] ??
-                                        12.99,
-                                    'quantity': 1,
-                                  });
+                                  final newItem = CartItem(
+                                    name:
+                                        menuItem['name'] ?? 'Dish ${index + 1}',
+                                    image: 'assets/images/pick.png',
+                                    price: (menuItem['price'] as num? ?? 12.99)
+                                        .toDouble(),
+                                    quantity: 1,
+                                  );
+                                  cart.addItem(newItem);
+
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
                                       content: Row(
@@ -254,7 +246,7 @@ class _RestaurantDetailViewState extends State<RestaurantDetailView> {
                                           ),
                                           const SizedBox(width: 8),
                                           Text(
-                                            '${widget.restaurant['menus'][index]['name']} added to cart',
+                                            '${menuItem['name']} added to cart',
                                           ),
                                         ],
                                       ),
@@ -267,7 +259,7 @@ class _RestaurantDetailViewState extends State<RestaurantDetailView> {
                                             context,
                                             MaterialPageRoute(
                                               builder: (context) =>
-                                                  CartScreen(),
+                                                  const CartScreen(),
                                             ),
                                           );
                                         },
@@ -291,23 +283,22 @@ class _RestaurantDetailViewState extends State<RestaurantDetailView> {
         ),
       ),
 
-      // Floating Action Button to View Cart (If cart is not empty)
       floatingActionButton: Consumer<CartModel>(
         builder: (context, cart, child) {
-          if (cart.isEmpty) return SizedBox.shrink();
+          if (cart.isEmpty) return const SizedBox.shrink();
 
           return FloatingActionButton.extended(
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => CartScreen()),
+                MaterialPageRoute(builder: (context) => const CartScreen()),
               );
             },
             backgroundColor: Colors.orange,
-            icon: Icon(Icons.shopping_cart),
+            icon: const Icon(Icons.shopping_cart),
             label: Text(
               'View Cart (${cart.items.length})',
-              style: TextStyle(fontWeight: FontWeight.bold),
+              style: const TextStyle(fontWeight: FontWeight.bold),
             ),
           );
         },
@@ -315,14 +306,12 @@ class _RestaurantDetailViewState extends State<RestaurantDetailView> {
     );
   }
 
-  // Show Dish Details in a Dialog
   void _showDishDetails(BuildContext context, int index) {
+    final menuItem = widget.restaurant['menus'][index];
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: widget.restaurant['menus']?[index]['name'] != null
-            ? Text(widget.restaurant['menus']?[index]['name'])
-            : Text('Dish ${index + 1}'),
+        title: Text(menuItem['name'] ?? 'Dish ${index + 1}'),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -335,23 +324,23 @@ class _RestaurantDetailViewState extends State<RestaurantDetailView> {
                 fit: BoxFit.cover,
               ),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Text(
-              widget.restaurant['menus']?[index]['description'] ??
+              menuItem['description'] ??
                   'Delicious dish made with fresh ingredients.',
-              style: TextStyle(fontSize: 16),
+              style: const TextStyle(fontSize: 16),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Padding(
                   padding: const EdgeInsets.only(right: 12.0),
                   child: Text(
-                    widget.restaurant['menus']?[index]['price'] != null
-                        ? '\$${widget.restaurant['menus']?[index]['price']}'
+                    menuItem['price'] != null
+                        ? '\$${menuItem['price']}'
                         : '\$12.99',
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 20,
                       color: Colors.orange,
@@ -365,33 +354,30 @@ class _RestaurantDetailViewState extends State<RestaurantDetailView> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text('Close'),
+            child: const Text('Close'),
           ),
           Consumer<CartModel>(
             builder: (context, cart, child) {
               return ElevatedButton(
                 onPressed: () {
-                  cart.addItem({
-                    'id':
-                        widget.restaurant['menus']?[index]['id'] ??
-                        'dish_${index + 1}',
-                    'name':
-                        widget.restaurant['menus']?[index]['name'] ??
-                        'Dish ${index + 1}',
-                    'price':
-                        widget.restaurant['menus']?[index]['price'] ?? 12.99,
-                    'quantity': 1,
-                  });
+                  final newItem = CartItem(
+                    name: menuItem['name'] ?? 'Dish ${index + 1}',
+                    image: 'assets/images/pick.png',
+                    price: (menuItem['price'] as num? ?? 12.99).toDouble(),
+                    quantity: 1,
+                  );
+                  cart.addItem(newItem);
+
                   Navigator.pop(context);
-                  ScaffoldMessenger.of(
-                    context,
-                  ).showSnackBar(SnackBar(content: Text('Added to cart!')));
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Added to cart!')),
+                  );
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.orange,
                   foregroundColor: Colors.white,
                 ),
-                child: Text('Add to Cart'),
+                child: const Text('Add to Cart'),
               );
             },
           ),

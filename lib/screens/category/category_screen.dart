@@ -26,7 +26,9 @@ class CategoryScreen extends StatelessWidget {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => CartScreen()),
+                        MaterialPageRoute(
+                          builder: (context) => const CartScreen(),
+                        ),
                       );
                     },
                   ),
@@ -60,11 +62,23 @@ class CategoryScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: FutureBuilder(
+      body: FutureBuilder<List<dynamic>>(
         future: getItemsByCategory(category["name"].toString().toLowerCase()),
         builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          if (snapshot.hasError) {
+            return Center(child: Text("Error: ${snapshot.error}"));
+          }
           if (snapshot.hasData) {
-            var data = snapshot.data!;
+            var data = snapshot.data!.cast<Map<String, dynamic>>().toList();
+
+            if (data.isEmpty) {
+              return const Center(
+                child: Text("No items found in this category."),
+              );
+            }
             return ListView.builder(
               itemCount: data.length,
               itemBuilder: (context, index) {
@@ -139,18 +153,22 @@ class CategoryScreen extends StatelessWidget {
                                               ),
                                             ),
                                             onPressed: () {
-                                              cart.addItem({
-                                                'name': food['name'],
-                                                'price': food['price'],
-                                                'type': food["type"],
-                                                'quantity': 1,
-                                              });
+                                              final newItem = CartItem(
+                                                name: food['name'],
+                                                price: (food['price'] as num)
+                                                    .toDouble(),
+                                                quantity: 1,
+                                                image: imagePathOfCategory(
+                                                  food["type"],
+                                                ),
+                                              );
+                                              cart.addItem(newItem);
 
                                               Navigator.pop(context);
                                               ScaffoldMessenger.of(
                                                 context,
                                               ).showSnackBar(
-                                                SnackBar(
+                                                const SnackBar(
                                                   content: Text(
                                                     'Added to cart!',
                                                   ),
@@ -170,14 +188,12 @@ class CategoryScreen extends StatelessWidget {
                         },
                       );
                     },
-
                     leading: imageOfCategory(food["type"], 50.0, 50.0),
                     title: Text(food['name']),
                     subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [Text(numToDollar(food["price"]))],
                     ),
-
                     trailing: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
@@ -212,7 +228,6 @@ class CategoryScreen extends StatelessWidget {
                             );
                           },
                         ),
-
                         Consumer<CartModel>(
                           builder: (context, cart, child) {
                             return Container(
@@ -226,12 +241,13 @@ class CategoryScreen extends StatelessWidget {
                                   color: Colors.white,
                                 ),
                                 onPressed: () {
-                                  cart.addItem({
-                                    'name': food['name'],
-                                    'price': food['price'],
-                                    'type': food["type"],
-                                    'quantity': 1,
-                                  });
+                                  final newItem = CartItem(
+                                    name: food['name'],
+                                    price: (food['price'] as num).toDouble(),
+                                    quantity: 1,
+                                    image: imagePathOfCategory(food["type"]),
+                                  );
+                                  cart.addItem(newItem);
 
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
@@ -260,7 +276,7 @@ class CategoryScreen extends StatelessWidget {
               },
             );
           }
-          return CircularProgressIndicator();
+          return const Center(child: CircularProgressIndicator());
         },
       ),
     );

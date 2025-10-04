@@ -1,3 +1,4 @@
+import 'package:eatzy_food_delivery/services/order_service.dart';
 import 'package:eatzy_food_delivery/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:eatzy_food_delivery/constants.dart';
@@ -6,6 +7,7 @@ import 'package:eatzy_food_delivery/data/dummy/dummy_data.dart';
 import 'package:provider/provider.dart';
 import 'package:eatzy_food_delivery/data/models/cart_model.dart';
 import 'checkout_message_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class CheckoutScreen extends StatefulWidget {
   const CheckoutScreen({super.key});
@@ -49,7 +51,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                         textAlign: TextAlign.center,
                         style: TextStyle(fontSize: 12, color: primaryText),
                       ),
-                      SizedBox(height: 9),
+                      const SizedBox(height: 9),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -91,7 +93,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 ),
                 const Divider(),
 
-                // Payment Method Section
                 Padding(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 20,
@@ -122,12 +123,14 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
+                            icon: const Icon(Icons.add),
                           ),
                         ],
                       ),
                       ListView.builder(
                         padding: EdgeInsets.zero,
                         shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
                         itemCount: DummyData.paymentArr.length,
                         itemBuilder: (context, index) {
                           return Container(
@@ -181,13 +184,11 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                     ],
                   ),
                 ),
-
                 const Divider(),
 
-                // Order Summary Section
                 Consumer<CartModel>(
                   builder: (context, cart, child) => Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 20),
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -261,7 +262,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                           ],
                         ),
                         const SizedBox(height: 8),
-                        Divider(),
+                        const Divider(),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -289,7 +290,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                   ),
                 ),
 
-                // Send Order Button
                 Consumer<CartModel>(
                   builder: (context, cart, child) => Padding(
                     padding: const EdgeInsets.symmetric(
@@ -297,18 +297,69 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                       vertical: 25,
                     ),
                     child: InkWell(
-                      onTap: () {
-                        cart.clearCart();
-                        showModalBottomSheet(
+                      onTap: () async {
+                        if (cart.isEmpty || selectMethod == -1) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              backgroundColor: Colors.red,
+                              content: Text(
+                                "Keranjang kosong atau metode pembayaran belum dipilih.",
+                              ),
+                            ),
+                          );
+                          return;
+                        }
+
+                        showDialog(
                           context: context,
-                          backgroundColor: Colors.transparent,
-                          isScrollControlled: true,
-                          isDismissible: false,
-                          enableDrag: false,
-                          builder: (BuildContext context) {
-                            return CheckoutMessageScreen();
-                          },
+                          barrierDismissible: false,
+                          builder: (context) =>
+                              const Center(child: CircularProgressIndicator()),
                         );
+
+                        try {
+                          final userId =
+                              FirebaseAuth.instance.currentUser?.uid ??
+                              'guest_user';
+                          final restaurantName =
+                              cart.items.first.name.contains("Pizza")
+                              ? "PIZZA HUT"
+                              : "KFC";
+
+                          await OrderService().placeOrder(
+                            items: cart.items,
+                            totalPrice: cart.totalPrice,
+                            userId: userId,
+                            restaurantName: restaurantName,
+                          );
+
+                          if (mounted) Navigator.of(context).pop();
+
+                          cart.clearCart();
+                          if (mounted) {
+                            showModalBottomSheet(
+                              context: context,
+                              backgroundColor: Colors.transparent,
+                              isScrollControlled: true,
+                              isDismissible: false,
+                              enableDrag: false,
+                              builder: (BuildContext context) {
+                                return const CheckoutMessageScreen();
+                              },
+                            );
+                          }
+                        } catch (e) {
+                          if (mounted) Navigator.of(context).pop();
+
+                          if (mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                backgroundColor: Colors.red,
+                                content: Text("Gagal membuat pesanan: $e"),
+                              ),
+                            );
+                          }
+                        }
                       },
                       borderRadius: BorderRadius.circular(28),
                       child: Container(
@@ -319,7 +370,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                           color: EATZY_ORANGE,
                           borderRadius: BorderRadius.circular(28),
                         ),
-                        child: Text(
+                        child: const Text(
                           'Send Order',
                           style: TextStyle(
                             color: Colors.white,
