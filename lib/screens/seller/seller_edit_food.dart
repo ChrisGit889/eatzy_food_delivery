@@ -25,178 +25,179 @@ class _SellerEditFoodState extends State<SellerEditFood> {
     return Scaffold(
       appBar: AppBar(backgroundColor: Color(0x00000000)),
       extendBodyBehindAppBar: true,
-      body: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Column(
-            children: [
-              FutureBuilder(
-                future: itemData,
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    var data = snapshot.data!;
-                    if (!isError) {
-                      nameController.text = data["name"];
-                      descController.text = data["description"];
-                      priceController.text = data["price"].toString();
-                    }
-                    if (load) {
-                      dropDownValue = data["type"];
-                      load = false;
-                    }
-                    return Column(
-                      children: [
-                        SizedBox(
-                          height: 350,
-                          width: MediaQuery.widthOf(context),
-                          child: DecoratedBox(
-                            decoration: BoxDecoration(color: EATZY_ORANGE),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                imageOfCategory(dropDownValue, 200.0, 200.0),
-                                Text(
-                                  "Editing food item",
-                                  style: TextStyle(
-                                    fontSize: 32,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(10.0),
-                                  child: Text(
-                                    "Input food information",
+      body: SingleChildScrollView(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Column(
+              children: [
+                FutureBuilder(
+                  future: itemData,
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      var data = snapshot.data!;
+                      if (!isError) {
+                        nameController.text = data["name"];
+                        descController.text = data["description"];
+                        priceController.text = data["price"].toString();
+                      }
+                      if (load) {
+                        dropDownValue = data["type"];
+                        load = false;
+                      }
+                      return Column(
+                        children: [
+                          SizedBox(
+                            height: 350,
+                            width: MediaQuery.widthOf(context),
+                            child: DecoratedBox(
+                              decoration: BoxDecoration(color: EATZY_ORANGE),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  imageOfCategory(dropDownValue, 200.0, 200.0),
+                                  Text(
+                                    "Editing food item",
                                     style: TextStyle(
-                                      fontSize: 20,
+                                      fontSize: 32,
                                       fontWeight: FontWeight.bold,
                                       color: Colors.white,
                                     ),
                                   ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(10.0),
+                                    child: Text(
+                                      "Input food information",
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 20),
+                          SizedBox(
+                            width: MediaQuery.widthOf(context) * 1 / 4,
+                            child: DropdownButton(
+                              value: dropDownValue,
+                              onChanged: (value) {
+                                setState(() {
+                                  dropDownValue = value!;
+                                  print(dropDownValue);
+                                });
+                              },
+                              items: [
+                                DropdownMenuItem<String>(
+                                  value: "pizza",
+                                  child: Text("Pizza"),
+                                ),
+                                DropdownMenuItem<String>(
+                                  value: "burger",
+                                  child: Text("Burger"),
+                                ),
+                                DropdownMenuItem<String>(
+                                  value: "snacks",
+                                  child: Text("Snacks"),
+                                ),
+                                DropdownMenuItem<String>(
+                                  value: "other",
+                                  child: Text("Others"),
+                                ),
+                                DropdownMenuItem<String>(
+                                  value: "drink",
+                                  child: Text("Drinks"),
                                 ),
                               ],
                             ),
                           ),
-                        ),
-                        SizedBox(height: 20),
-                        SizedBox(
-                          width: MediaQuery.widthOf(context) * 1 / 4,
-                          child: DropdownButton(
-                            value: dropDownValue,
-                            onChanged: (value) {
-                              setState(() {
-                                dropDownValue = value!;
-                                print(dropDownValue);
-                              });
-                            },
-                            items: [
-                              DropdownMenuItem<String>(
-                                value: "pizza",
-                                child: Text("Pizza"),
+                          SizedBox(
+                            width: MediaQuery.widthOf(context) * 3 / 4,
+                            child: TextField(
+                              controller: nameController,
+                              decoration: InputDecoration(
+                                label: Text("Food Name"),
                               ),
-                              DropdownMenuItem<String>(
-                                value: "burger",
-                                child: Text("Burger"),
-                              ),
-                              DropdownMenuItem<String>(
-                                value: "snacks",
-                                child: Text("Snacks"),
-                              ),
-                              DropdownMenuItem<String>(
-                                value: "other",
-                                child: Text("Others"),
-                              ),
-                              DropdownMenuItem<String>(
-                                value: "drink",
-                                child: Text("Drinks"),
-                              ),
-                            ],
-                          ),
-                        ),
-                        SizedBox(
-                          width: MediaQuery.widthOf(context) * 3 / 4,
-                          child: TextField(
-                            controller: nameController,
-                            decoration: InputDecoration(
-                              label: Text("Food Name"),
                             ),
                           ),
-                        ),
-                        SizedBox(
-                          width: MediaQuery.widthOf(context) * 3 / 4,
-                          child: TextField(
-                            minLines: 1,
-                            maxLines: 4,
-                            controller: descController,
-                            decoration: InputDecoration(
-                              label: Text("Food Description"),
+                          SizedBox(
+                            width: MediaQuery.widthOf(context) * 3 / 4,
+                            child: TextField(
+                              minLines: 1,
+                              maxLines: 2,
+                              controller: descController,
+                              decoration: InputDecoration(
+                                label: Text("Food Description"),
+                              ),
                             ),
                           ),
-                        ),
-                        SizedBox(
-                          width: MediaQuery.widthOf(context) * 3 / 4,
-                          child: TextField(
-                            controller: priceController,
-                            keyboardType: TextInputType.numberWithOptions(
-                              decimal: true,
-                              signed: false,
-                            ),
-                            decoration: InputDecoration(
-                              label: Text("Food Price"),
+                          SizedBox(
+                            width: MediaQuery.widthOf(context) * 3 / 4,
+                            child: TextField(
+                              controller: priceController,
+                              keyboardType: TextInputType.numberWithOptions(
+                                decimal: true,
+                                signed: false,
+                              ),
+                              decoration: InputDecoration(
+                                label: Text("Food Price"),
+                              ),
                             ),
                           ),
-                        ),
-                        isError
-                            ? Text(
-                                errorMessage,
-                                style: TextStyle(color: Colors.red),
-                              )
-                            : SizedBox(),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: TextButton(
-                            onPressed: () async {
-                              isError = false;
-                              await errorCheckInput();
-                              if (!isError && mounted) {
-                                var res = await changeFoodItemFromName(
-                                  context: context,
-                                  itemName: widget.foodIdentifier,
-                                  newName: nameController.text,
-                                  newDesc: descController.text,
-                                  newPrice: priceController.text,
-                                  newType: dropDownValue,
-                                  newImage: null,
-                                );
-                                if (res && mounted) {
-                                  Navigator.pop(context);
+                          isError
+                              ? Text(
+                                  errorMessage,
+                                  style: TextStyle(color: Colors.red),
+                                )
+                              : SizedBox(),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: TextButton(
+                              onPressed: () async {
+                                isError = false;
+                                await errorCheckInput();
+                                if (!isError && mounted) {
+                                  var res = await changeFoodItemFromName(
+                                    context: context,
+                                    itemName: widget.foodIdentifier,
+                                    newName: nameController.text,
+                                    newDesc: descController.text,
+                                    newPrice: priceController.text,
+                                    newType: dropDownValue,
+                                    newImage: null,
+                                  );
+                                  if (res && mounted) {
+                                    Navigator.pop(context);
+                                  }
                                 }
-                              }
-                              setState(() {});
-                              return;
-                            },
-                            style: ButtonStyle(
-                              backgroundColor: WidgetStateProperty.resolveWith((
-                                states,
-                              ) {
-                                return EATZY_ORANGE;
-                              }),
-                            ),
-                            child: const Text(
-                              "Submit",
-                              style: TextStyle(color: Color(0xFFFFFFFF)),
+                                setState(() {});
+                                return;
+                              },
+                              style: ButtonStyle(
+                                backgroundColor:
+                                    WidgetStateProperty.resolveWith((states) {
+                                      return EATZY_ORANGE;
+                                    }),
+                              ),
+                              child: const Text(
+                                "Submit",
+                                style: TextStyle(color: Color(0xFFFFFFFF)),
+                              ),
                             ),
                           ),
-                        ),
-                      ],
-                    );
-                  }
-                  return CircularProgressIndicator();
-                },
-              ),
-            ],
-          ),
-        ],
+                        ],
+                      );
+                    }
+                    return CircularProgressIndicator();
+                  },
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -199,7 +199,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                         ),
                                         if (isEatzyPay)
                                           Text(
-                                            'Balance: \$${payment.eatzyBalance.toStringAsFixed(2)}',
+                                            'Balance: ${numToDollar(payment.eatzyBalance)}',
                                             style: TextStyle(
                                               fontSize: 10,
                                               color: Colors.grey.shade600,
@@ -384,7 +384,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                           showSnackBar(
                             context: context,
                             content: Text(
-                              "EatzyPay balance is insufficient. Balance: \$${paymentModel.eatzyBalance.toStringAsFixed(2)}, Total: \$${cart.totalPrice.toStringAsFixed(2)}",
+                              "EatzyPay balance is insufficient. Balance: ${numToDollar(paymentModel.eatzyBalance)}, Total: ${numToDollar(cart.totalPrice)}",
                             ),
                             backgroundColor: Colors.red,
                           );

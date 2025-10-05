@@ -1,5 +1,6 @@
 import 'package:eatzy_food_delivery/data/models/favorit_model.dart';
 import 'package:eatzy_food_delivery/utils/snackbar_helper.dart';
+import 'package:eatzy_food_delivery/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:eatzy_food_delivery/data/models/cart_model.dart';
@@ -168,7 +169,7 @@ class _RestaurantDetailViewState extends State<RestaurantDetailView> {
                         const SizedBox(height: 8),
                         Text(
                           menuItem['price'] != null
-                              ? '\$${menuItem['price']}'
+                              ? numToDollar(menuItem["price"])
                               : '\$12.99',
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
@@ -339,7 +340,7 @@ class _RestaurantDetailViewState extends State<RestaurantDetailView> {
                   padding: const EdgeInsets.only(right: 12.0),
                   child: Text(
                     menuItem['price'] != null
-                        ? '\$${menuItem['price']}'
+                        ? numToDollar(menuItem["price"])
                         : '\$12.99',
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,

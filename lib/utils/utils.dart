@@ -2,18 +2,9 @@ import 'package:eatzy_food_delivery/services/seller_service.dart';
 import 'package:flutter/material.dart';
 import 'package:eatzy_food_delivery/data/dummy/dummy_data.dart';
 
-String numToRupiah(number) {
-  var temp = number.toString();
-  for (var i = 3; i < temp.length; i += 4) {
-    temp =
-        "${temp.substring(0, temp.length - i)}.${temp.substring(temp.length - i, temp.length)}";
-  }
-  return "Rp.$temp,00";
-}
-
 String numToDollar(number) {
   var num = number;
-  if (!(num is String)) {
+  if (num is! String) {
     num = number.toStringAsFixed(2).toString().replaceAll(".", ",");
   } else {
     num = double.tryParse(

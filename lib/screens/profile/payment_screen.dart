@@ -1,3 +1,5 @@
+import 'package:eatzy_food_delivery/utils/snackbar_helper.dart';
+import 'package:eatzy_food_delivery/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:eatzy_food_delivery/data/models/payment_model.dart';
@@ -11,11 +13,10 @@ class PaymentScreen extends StatefulWidget {
 
 class _PaymentScreenState extends State<PaymentScreen> {
   void _confirmPayment(PaymentModel paymentModel) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text("You selected: ${paymentModel.selectedMethod}"),
-        backgroundColor: const Color(0xFFFD6C00),
-      ),
+    showSnackBar(
+      context: context,
+      content: Text("You selected: ${paymentModel.selectedMethod}"),
+      backgroundColor: const Color(0xFFFD6C00),
     );
   }
 
@@ -37,7 +38,10 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 fontWeight: FontWeight.bold,
                 color: Color(0xFFFD6C00),
               ),
-              contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+              contentPadding: EdgeInsets.symmetric(
+                horizontal: 12,
+                vertical: 10,
+              ),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.all(Radius.circular(8)),
               ),
@@ -59,18 +63,20 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   await paymentModel.topUpBalance(amount);
                   if (mounted) {
                     Navigator.pop(context);
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(
-                          "Top Up successful! Balance: \$${paymentModel.eatzyBalance.toStringAsFixed(2)}",
-                        ),
-                        backgroundColor: const Color(0xFFFD6C00),
+                    showSnackBar(
+                      context: context,
+                      content: Text(
+                        "Top Up successful! Balance: ${numToDollar(paymentModel.eatzyBalance)}",
                       ),
+                      backgroundColor: const Color(0xFFFD6C00),
                     );
                   }
                 }
               },
-              child: const Text("Top Up", style: TextStyle(color: Colors.white)),
+              child: const Text(
+                "Top Up",
+                style: TextStyle(color: Colors.white),
+              ),
             ),
           ],
         );
@@ -78,7 +84,11 @@ class _PaymentScreenState extends State<PaymentScreen> {
     );
   }
 
-  Widget _buildPaymentOption(String title, String value, PaymentModel paymentModel) {
+  Widget _buildPaymentOption(
+    String title,
+    String value,
+    PaymentModel paymentModel,
+  ) {
     bool selected = paymentModel.selectedMethod == value;
     return GestureDetector(
       onTap: () => paymentModel.setSelectedMethod(value),
@@ -86,7 +96,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
         margin: const EdgeInsets.symmetric(vertical: 10),
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
         decoration: BoxDecoration(
-          color: selected ? const Color(0xFFFD6C00).withOpacity(0.1) : Colors.white,
+          color: selected
+              ? const Color(0xFFFD6C00).withAlpha(25)
+              : Colors.white,
           border: Border.all(
             color: selected ? const Color(0xFFFD6C00) : Colors.grey.shade300,
             width: 2,
@@ -124,7 +136,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
         margin: const EdgeInsets.symmetric(vertical: 10),
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          color: selected ? const Color(0xFFFD6C00).withOpacity(0.1) : Colors.white,
+          color: selected
+              ? const Color(0xFFFD6C00).withAlpha(25)
+              : Colors.white,
           border: Border.all(
             color: selected ? const Color(0xFFFD6C00) : Colors.grey.shade300,
             width: 2,
@@ -153,7 +167,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
             ),
             const SizedBox(height: 10),
             Text(
-              "Balance: \$${paymentModel.eatzyBalance.toStringAsFixed(2)}",
+              "Balance: ${numToDollar(paymentModel.eatzyBalance)}",
               style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
             ),
             const SizedBox(height: 10),
@@ -161,10 +175,16 @@ class _PaymentScreenState extends State<PaymentScreen> {
               alignment: Alignment.centerRight,
               child: TextButton.icon(
                 onPressed: () => _showTopUpDialog(paymentModel),
-                icon: const Icon(Icons.add_circle_outline, color: Color(0xFFFD6C00)),
+                icon: const Icon(
+                  Icons.add_circle_outline,
+                  color: Color(0xFFFD6C00),
+                ),
                 label: const Text(
                   "Top Up",
-                  style: TextStyle(color: Color(0xFFFD6C00), fontWeight: FontWeight.w600),
+                  style: TextStyle(
+                    color: Color(0xFFFD6C00),
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ),
             ),
@@ -181,9 +201,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
         if (paymentModel.isLoading) {
           return const Scaffold(
             body: Center(
-              child: CircularProgressIndicator(
-                color: Color(0xFFFD6C00),
-              ),
+              child: CircularProgressIndicator(color: Color(0xFFFD6C00)),
             ),
           );
         }
@@ -195,30 +213,42 @@ class _PaymentScreenState extends State<PaymentScreen> {
             foregroundColor: Colors.white,
             centerTitle: true,
           ),
-          body: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildPaymentOption("Cash on Delivery (COD)", "COD", paymentModel),
-                _buildEatzyPayCard(paymentModel),
-                const Spacer(),
-                ElevatedButton(
-                  onPressed: () => _confirmPayment(paymentModel),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFFD6C00),
-                    minimumSize: const Size(double.infinity, 55),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(14),
+          body: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.only(top: 20, left: 20, right: 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildPaymentOption(
+                    "Cash on Delivery (COD)",
+                    "COD",
+                    paymentModel,
+                  ),
+                  _buildEatzyPayCard(paymentModel),
+                  Expanded(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () => _confirmPayment(paymentModel),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFFFD6C00),
+                            minimumSize: const Size(double.infinity, 55),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(14),
+                            ),
+                          ),
+                          child: const Text(
+                            "Confirm Payment",
+                            style: TextStyle(color: Colors.white, fontSize: 16),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                  child: const Text(
-                    "Confirm Payment",
-                    style: TextStyle(color: Colors.white, fontSize: 16),
-                  ),
-                ),
-                const SizedBox(height: 20),
-              ],
+                  const SizedBox(height: 20),
+                ],
+              ),
             ),
           ),
         );

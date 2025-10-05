@@ -65,23 +65,25 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: PageView.builder(
-        controller: _pageController,
-        itemCount: _onboardingData.length,
-        onPageChanged: (int page) {
-          setState(() {
-            _currentPage = page;
-          });
-        },
-        itemBuilder: (context, index) {
-          return _buildOnboardingPage(
-            colors: _onboardingData[index]['colors'],
-            imagePath: _onboardingData[index]['imagePath'],
-            title: _onboardingData[index]['title'],
-            description: _onboardingData[index]['description'],
-            isLastPage: index == _onboardingData.length - 1,
-          );
-        },
+      body: SafeArea(
+        child: PageView.builder(
+          controller: _pageController,
+          itemCount: _onboardingData.length,
+          onPageChanged: (int page) {
+            setState(() {
+              _currentPage = page;
+            });
+          },
+          itemBuilder: (context, index) {
+            return _buildOnboardingPage(
+              colors: _onboardingData[index]['colors'],
+              imagePath: _onboardingData[index]['imagePath'],
+              title: _onboardingData[index]['title'],
+              description: _onboardingData[index]['description'],
+              isLastPage: index == _onboardingData.length - 1,
+            );
+          },
+        ),
       ),
     );
   }
@@ -200,10 +202,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 20),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: _buildPageIndicator(),
+                  Align(
+                    alignment: AlignmentGeometry.bottomCenter,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: _buildPageIndicator(),
+                    ),
                   ),
                 ],
               ),

@@ -1,3 +1,4 @@
+import 'package:eatzy_food_delivery/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:eatzy_food_delivery/data/models/payment_model.dart';
@@ -14,9 +15,7 @@ class EatzyBalanceCard extends StatelessWidget {
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(
-                builder: (context) => const PaymentScreen(),
-              ),
+              MaterialPageRoute(builder: (context) => const PaymentScreen()),
             );
           },
           child: Container(
@@ -26,7 +25,7 @@ class EatzyBalanceCard extends StatelessWidget {
               gradient: LinearGradient(
                 colors: [
                   const Color(0xFFFD6C00),
-                  const Color(0xFFFD6C00).withOpacity(0.8),
+                  const Color(0xFFFD6C00).withAlpha(170),
                 ],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
@@ -34,7 +33,7 @@ class EatzyBalanceCard extends StatelessWidget {
               borderRadius: BorderRadius.circular(16),
               boxShadow: [
                 BoxShadow(
-                  color: const Color(0xFFFD6C00).withOpacity(0.3),
+                  color: const Color(0xFFFD6C00).withAlpha(75),
                   blurRadius: 15,
                   offset: const Offset(0, 4),
                 ),
@@ -45,7 +44,7 @@ class EatzyBalanceCard extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.2),
+                    color: Colors.white.withAlpha(50),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: const Icon(
@@ -69,7 +68,7 @@ class EatzyBalanceCard extends StatelessWidget {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        "\$${paymentModel.eatzyBalance.toStringAsFixed(2)}",
+                        numToDollar(paymentModel.eatzyBalance),
                         style: const TextStyle(
                           color: Colors.white,
                           fontSize: 24,

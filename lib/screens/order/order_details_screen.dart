@@ -1,4 +1,5 @@
 import 'package:eatzy_food_delivery/services/order_service.dart';
+import 'package:eatzy_food_delivery/utils/snackbar_helper.dart';
 import 'package:eatzy_food_delivery/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'chat_screen.dart';
@@ -57,63 +58,70 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
           onPressed: () => Navigator.pop(context),
         ),
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  buildSupportCard(context),
-                  const SizedBox(height: 20),
-                  buildOrderStatusStepper('Delivered'),
-                  const SizedBox(height: 20),
-                  FutureBuilder(
-                    future: _initializeVideoPlayerFuture,
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.done) {
-                        return AspectRatio(
-                          aspectRatio: _videoController.value.aspectRatio,
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(15.0),
-                            child: VideoPlayer(_videoController),
-                          ),
-                        );
-                      } else {
-                        return const Center(child: CircularProgressIndicator());
-                      }
-                    },
-                  ),
-                  const SizedBox(height: 20),
-                  buildLocationInfo(
-                    pickUpPoint:
-                        widget.order['pickupPoint'] ??
-                        'KFC, Jl. Raya Lenteng Agung No. 25',
-                    deliveryPoint:
-                        widget.order['deliveryAddress'] ??
-                        'Untar 2, Grogol, Jakarta',
-                  ),
-                  const Divider(height: 30),
-                  buildItemDetails(widget.order['items'] as List),
-                  const Divider(height: 30),
-                  buildPaymentSummary(
-                    subtotal,
-                    deliveryFee,
-                    widget.order['totalPrice'],
-                  ),
-                  const Divider(height: 30),
-                  buildOrderInfo(widget.order),
-                  const SizedBox(height: 20),
-                ],
+      body: SafeArea(
+        child: Column(
+          children: [
+            Expanded(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 10,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    buildSupportCard(context),
+                    const SizedBox(height: 20),
+                    buildOrderStatusStepper('Delivered'),
+                    const SizedBox(height: 20),
+                    FutureBuilder(
+                      future: _initializeVideoPlayerFuture,
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.done) {
+                          return AspectRatio(
+                            aspectRatio: _videoController.value.aspectRatio,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(15.0),
+                              child: VideoPlayer(_videoController),
+                            ),
+                          );
+                        } else {
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        }
+                      },
+                    ),
+                    const SizedBox(height: 20),
+                    buildLocationInfo(
+                      pickUpPoint:
+                          widget.order['pickupPoint'] ??
+                          'KFC, Jl. Raya Lenteng Agung No. 25',
+                      deliveryPoint:
+                          widget.order['deliveryAddress'] ??
+                          'Untar 2, Grogol, Jakarta',
+                    ),
+                    const Divider(height: 30),
+                    buildItemDetails(widget.order['items'] as List),
+                    const Divider(height: 30),
+                    buildPaymentSummary(
+                      subtotal,
+                      deliveryFee,
+                      widget.order['totalPrice'],
+                    ),
+                    const Divider(height: 30),
+                    buildOrderInfo(widget.order),
+                    const SizedBox(height: 20),
+                  ],
+                ),
               ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(20, 10, 20, 20),
-            child: buildFinishButton(context),
-          ),
-        ],
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 10, 20, 20),
+              child: buildFinishButton(context),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -141,19 +149,17 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                   );
                   if (mounted) Navigator.pop(context);
                   if (mounted) Navigator.pop(context);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Order has been completed!'),
-                      backgroundColor: Colors.green,
-                    ),
+                  showSnackBar(
+                    context: context,
+                    content: Text('Order has been completed!'),
+                    backgroundColor: Colors.green,
                   );
                 } catch (e) {
                   if (mounted) Navigator.pop(context);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('Failed to update status: $e'),
-                      backgroundColor: Colors.red,
-                    ),
+                  showSnackBar(
+                    context: context,
+                    content: Text('Failed to update status: $e'),
+                    backgroundColor: Colors.red,
                   );
                 }
               },
