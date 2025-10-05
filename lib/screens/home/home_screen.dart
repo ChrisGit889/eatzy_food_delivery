@@ -2,6 +2,7 @@ import 'package:eatzy_food_delivery/constants.dart';
 import 'package:eatzy_food_delivery/screens/category/category_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:eatzy_food_delivery/widgets/category_cell.dart';
+import 'package:eatzy_food_delivery/widgets/balance_card.dart';
 import '../cart/cart_screen.dart';
 import '../restaurant/restaurant_detail_view.dart';
 import 'package:provider/provider.dart';
@@ -322,21 +323,6 @@ class _HomeScreenState extends State<HomeScreen> {
                             size: 24,
                           ),
                         ),
-                        suffixIcon: Container(
-                          margin: const EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            color: EATZY_ORANGE.withAlpha(25),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: IconButton(
-                            icon: Icon(
-                              Icons.tune,
-                              color: EATZY_ORANGE,
-                              size: 20,
-                            ),
-                            onPressed: () {},
-                          ),
-                        ),
                       ),
                     ),
                   ),
@@ -407,6 +393,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ],
             ),
+          ),
+
+          // Balance Card
+          const SliverToBoxAdapter(
+            child: Column(children: [SizedBox(height: 20), EatzyBalanceCard()]),
           ),
 
           // Categories Section
