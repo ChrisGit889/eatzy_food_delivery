@@ -10,6 +10,7 @@ import 'package:eatzy_food_delivery/data/models/cart_model.dart';
 import 'checkout_message_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:eatzy_food_delivery/data/models/address_model.dart';
+import 'package:eatzy_food_delivery/data/models/payment_model.dart';
 
 class CheckoutScreen extends StatefulWidget {
   const CheckoutScreen({super.key});
@@ -22,6 +23,28 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   int selectMethod = -1;
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final paymentModel = Provider.of<PaymentModel>(context, listen: false);
+      final selectedPaymentName = paymentModel.selectedMethod;
+
+      final index = DummyData.paymentArr.indexWhere(
+        (payment) =>
+            payment['name'] == selectedPaymentName ||
+            (payment['name'] == 'Cash on Delivery' &&
+                selectedPaymentName == 'COD') ||
+            (payment['name'] == 'EatzyPay' && selectedPaymentName == 'Eatzy'),
+      );
+
+      if (index != -1) {
+        setState(() {
+          selectMethod = index;
+        });
+      }
+    });
+  }
+
   Widget build(BuildContext context) {
     return SafeArea(
       top: false,
@@ -109,97 +132,123 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 ),
                 const Divider(),
 
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 20,
-                    vertical: 5,
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "Payment Method",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: primaryText,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          TextButton.icon(
-                            onPressed: () {},
-                            label: Text(
-                              "Add Card",
+                Consumer<PaymentModel>(
+                  builder: (context, payment, child) => Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 5,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "Payment Method",
+                              textAlign: TextAlign.center,
                               style: TextStyle(
-                                fontSize: 13,
-                                color: EATZY_ORANGE,
-                                fontWeight: FontWeight.w600,
+                                fontSize: 12,
+                                color: primaryText,
+                                fontWeight: FontWeight.w500,
                               ),
                             ),
-                            icon: const Icon(Icons.add),
-                          ),
-                        ],
-                      ),
-                      ListView.builder(
-                        padding: EdgeInsets.zero,
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: DummyData.paymentArr.length,
-                        itemBuilder: (context, index) {
-                          return Container(
-                            margin: const EdgeInsets.symmetric(vertical: 8),
-                            padding: const EdgeInsets.symmetric(
-                              vertical: 12,
-                              horizontal: 16,
-                            ),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8),
-                              color: Colors.grey.shade200,
-                            ),
-                            child: Row(
-                              children: [
-                                Image.asset(
-                                  DummyData.paymentArr[index]['icon'],
-                                  width: 30,
-                                  height: 30,
-                                  fit: BoxFit.contain,
-                                ),
-                                const SizedBox(width: 12),
-                                Expanded(
-                                  child: Text(
-                                    DummyData.paymentArr[index]['name'],
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w500,
-                                      color: primaryText,
+                          ],
+                        ),
+                        ListView.builder(
+                          padding: EdgeInsets.zero,
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: DummyData.paymentArr.length,
+                          itemBuilder: (context, index) {
+                            final isEatzyPay =
+                                DummyData.paymentArr[index]['name'] ==
+                                'EatzyPay';
+
+                            return Container(
+                              margin: const EdgeInsets.symmetric(vertical: 8),
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 12,
+                                horizontal: 16,
+                              ),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8),
+                                color: Colors.grey.shade200,
+                              ),
+                              child: Row(
+                                children: [
+                                  Image.asset(
+                                    DummyData.paymentArr[index]['icon'],
+                                    width: 30,
+                                    height: 30,
+                                    fit: BoxFit.contain,
+                                  ),
+                                  const SizedBox(width: 12),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          DummyData.paymentArr[index]['name'],
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w500,
+                                            color: primaryText,
+                                          ),
+                                        ),
+                                        if (isEatzyPay)
+                                          Text(
+                                            'Balance: \$${payment.eatzyBalance.toStringAsFixed(2)}',
+                                            style: TextStyle(
+                                              fontSize: 10,
+                                              color: Colors.grey.shade600,
+                                            ),
+                                          ),
+                                      ],
                                     ),
                                   ),
-                                ),
-                                InkWell(
-                                  onTap: () {
-                                    setState(() {
-                                      selectMethod = index;
-                                    });
-                                  },
-                                  child: Icon(
-                                    selectMethod == index
-                                        ? Icons.check_circle
-                                        : Icons.radio_button_off,
-                                    color: EATZY_ORANGE,
-                                    size: 20,
+                                  InkWell(
+                                    onTap: () {
+                                      setState(() {
+                                        selectMethod = index;
+                                      });
+
+                                      final paymentModel =
+                                          Provider.of<PaymentModel>(
+                                            context,
+                                            listen: false,
+                                          );
+                                      final paymentName =
+                                          DummyData.paymentArr[index]['name'];
+
+                                      String methodKey = paymentName;
+                                      if (paymentName == 'Cash on Delivery') {
+                                        methodKey = 'COD';
+                                      } else if (paymentName == 'EatzyPay') {
+                                        methodKey = 'Eatzy';
+                                      }
+
+                                      paymentModel.setSelectedMethod(methodKey);
+                                    },
+                                    child: Icon(
+                                      selectMethod == index
+                                          ? Icons.check_circle
+                                          : Icons.radio_button_off,
+                                      color: EATZY_ORANGE,
+                                      size: 20,
+                                    ),
                                   ),
-                                ),
-                              ],
-                            ),
-                          );
-                        },
-                      ),
-                    ],
+                                ],
+                              ),
+                            );
+                          },
+                        ),
+                      ],
+                    ),
                   ),
                 ),
+
                 const Divider(),
 
                 Consumer<CartModel>(
@@ -318,7 +367,24 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                           showSnackBar(
                             context: context,
                             content: const Text(
-                              "Keranjang kosong atau metode pembayaran belum dipilih.",
+                              "Cart is empty or payment method has not been selected.",
+                            ),
+                            backgroundColor: Colors.red,
+                          );
+                          return;
+                        }
+
+                        final paymentModel = Provider.of<PaymentModel>(
+                          context,
+                          listen: false,
+                        );
+                        if (paymentModel.hasInsufficientBalance(
+                          cart.totalPrice,
+                        )) {
+                          showSnackBar(
+                            context: context,
+                            content: Text(
+                              "EatzyPay balance is insufficient. Balance: \$${paymentModel.eatzyBalance.toStringAsFixed(2)}, Total: \$${cart.totalPrice.toStringAsFixed(2)}",
                             ),
                             backgroundColor: Colors.red,
                           );
@@ -341,13 +407,16 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                               ? "PIZZA HUT"
                               : "KFC";
 
-                          // DIUBAH: Panggil fungsi melalui OrderService()
                           await OrderService().placeOrder(
                             items: cart.items,
                             totalPrice: cart.totalPrice,
                             userId: userId,
                             restaurantName: restaurantName,
                           );
+
+                          if (paymentModel.selectedMethod == 'Eatzy') {
+                            await paymentModel.deductBalance(cart.totalPrice);
+                          }
 
                           if (mounted) Navigator.of(context).pop();
 

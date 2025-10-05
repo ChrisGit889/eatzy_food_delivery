@@ -8,9 +8,8 @@ class DummyData {
   ];
 
   static List paymentArr = [
-    {"name": "Cash on delivery", "icon": "assets/images/pick.png"},
-    {"name": "**** **** **** 2187", "icon": "assets/images/pick.png"},
-    {"name": "test@gmail.com", "icon": "assets/images/pick.png"},
+    {"name": "Cash on Delivery", "icon": "assets/images/cod.png"},
+    {"name": "EatzyPay", "icon": "assets/images/EATZY.png"},
   ];
 
   List<String> foodImages = [

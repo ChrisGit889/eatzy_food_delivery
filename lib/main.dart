@@ -1,6 +1,7 @@
 import 'package:eatzy_food_delivery/constants.dart';
 import 'package:eatzy_food_delivery/data/models/favorit_model.dart';
 import 'package:eatzy_food_delivery/data/models/address_model.dart';
+import 'package:eatzy_food_delivery/data/models/payment_model.dart';
 import 'package:eatzy_food_delivery/screens/onboarding/onboarding_screen.dart';
 import 'package:eatzy_food_delivery/services/firebase_options.dart';
 import 'package:eatzy_food_delivery/screens/auth/auth_gate.dart';
@@ -43,7 +44,12 @@ class EatzyApp extends StatelessWidget {
             AddressModel addressModel = AddressModel();
             addressModel.loadAddress();
             return addressModel;
-
+        }),
+        ChangeNotifierProvider(
+          create: (context) { 
+            PaymentModel paymentModel = PaymentModel();
+            paymentModel.loadSavedData();
+            return paymentModel;
         }),
       ],
       child: MaterialApp(

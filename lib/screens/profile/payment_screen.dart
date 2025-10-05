@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:provider/provider.dart';
+import 'package:eatzy_food_delivery/data/models/payment_model.dart';
 
 class PaymentScreen extends StatefulWidget {
   const PaymentScreen({super.key});
@@ -9,50 +10,16 @@ class PaymentScreen extends StatefulWidget {
 }
 
 class _PaymentScreenState extends State<PaymentScreen> {
-  String _selectedMethod = "COD";
-  double _eatzyBalance = 0.0;
-
-  @override
-  void initState() {
-    super.initState();
-    _loadSavedData();
-  }
-
-  Future<void> _loadSavedData() async {
-    final prefs = await SharedPreferences.getInstance();
-    setState(() {
-      _selectedMethod = prefs.getString('selected_method') ?? "COD";
-      _eatzyBalance = prefs.getDouble('eatzy_balance') ?? 0.0;
-    });
-  }
-
-  Future<void> _saveSelectedMethod(String method) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('selected_method', method);
-  }
-
-  Future<void> _saveEatzyBalance(double balance) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setDouble('eatzy_balance', balance);
-  }
-
-  void _selectMethod(String method) {
-    setState(() {
-      _selectedMethod = method;
-    });
-    _saveSelectedMethod(method);
-  }
-
-  void _confirmPayment() {
+  void _confirmPayment(PaymentModel paymentModel) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text("You selected: $_selectedMethod"),
+        content: Text("You selected: ${paymentModel.selectedMethod}"),
         backgroundColor: const Color(0xFFFD6C00),
       ),
     );
   }
 
-  void _showTopUpDialog() {
+  void _showTopUpDialog(PaymentModel paymentModel) {
     final TextEditingController amountController = TextEditingController();
 
     showDialog(
@@ -86,22 +53,21 @@ class _PaymentScreenState extends State<PaymentScreen> {
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFFFD6C00),
               ),
-              onPressed: () {
+              onPressed: () async {
                 final amount = double.tryParse(amountController.text);
                 if (amount != null && amount > 0) {
-                  setState(() {
-                    _eatzyBalance += amount;
-                  });
-                  _saveEatzyBalance(_eatzyBalance);
-                  Navigator.pop(context);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(
-                        "Top Up successful! Balance: \$${_eatzyBalance.toStringAsFixed(2)}",
+                  await paymentModel.topUpBalance(amount);
+                  if (mounted) {
+                    Navigator.pop(context);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          "Top Up successful! Balance: \$${paymentModel.eatzyBalance.toStringAsFixed(2)}",
+                        ),
+                        backgroundColor: const Color(0xFFFD6C00),
                       ),
-                      backgroundColor: const Color(0xFFFD6C00),
-                    ),
-                  );
+                    );
+                  }
                 }
               },
               child: const Text("Top Up", style: TextStyle(color: Colors.white)),
@@ -112,10 +78,10 @@ class _PaymentScreenState extends State<PaymentScreen> {
     );
   }
 
-  Widget _buildPaymentOption(String title, String value) {
-    bool selected = _selectedMethod == value;
+  Widget _buildPaymentOption(String title, String value, PaymentModel paymentModel) {
+    bool selected = paymentModel.selectedMethod == value;
     return GestureDetector(
-      onTap: () => _selectMethod(value),
+      onTap: () => paymentModel.setSelectedMethod(value),
       child: Container(
         margin: const EdgeInsets.symmetric(vertical: 10),
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
@@ -149,11 +115,11 @@ class _PaymentScreenState extends State<PaymentScreen> {
     );
   }
 
-  Widget _buildEatzyPayCard() {
-    bool selected = _selectedMethod == "Eatzy";
+  Widget _buildEatzyPayCard(PaymentModel paymentModel) {
+    bool selected = paymentModel.selectedMethod == "Eatzy";
 
     return GestureDetector(
-      onTap: () => _selectMethod("Eatzy"),
+      onTap: () => paymentModel.setSelectedMethod("Eatzy"),
       child: Container(
         margin: const EdgeInsets.symmetric(vertical: 10),
         padding: const EdgeInsets.all(20),
@@ -187,14 +153,14 @@ class _PaymentScreenState extends State<PaymentScreen> {
             ),
             const SizedBox(height: 10),
             Text(
-              "Balance: \$${_eatzyBalance.toStringAsFixed(2)}",
+              "Balance: \$${paymentModel.eatzyBalance.toStringAsFixed(2)}",
               style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
             ),
             const SizedBox(height: 10),
             Align(
               alignment: Alignment.centerRight,
               child: TextButton.icon(
-                onPressed: _showTopUpDialog,
+                onPressed: () => _showTopUpDialog(paymentModel),
                 icon: const Icon(Icons.add_circle_outline, color: Color(0xFFFD6C00)),
                 label: const Text(
                   "Top Up",
@@ -210,39 +176,53 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Payment Method"),
-        backgroundColor: const Color(0xFFFD6C00),
-        foregroundColor: Colors.white,
-        centerTitle: true,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildPaymentOption("Cash on Delivery (COD)", "COD"),
-            _buildEatzyPayCard(),
-            const Spacer(),
-            ElevatedButton(
-              onPressed: _confirmPayment,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFFD6C00),
-                minimumSize: const Size(double.infinity, 55),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(14),
-                ),
-              ),
-              child: const Text(
-                "Confirm Payment",
-                style: TextStyle(color: Colors.white, fontSize: 16),
+    return Consumer<PaymentModel>(
+      builder: (context, paymentModel, child) {
+        if (paymentModel.isLoading) {
+          return const Scaffold(
+            body: Center(
+              child: CircularProgressIndicator(
+                color: Color(0xFFFD6C00),
               ),
             ),
-            const SizedBox(height: 20),
-          ],
-        ),
-      ),
+          );
+        }
+
+        return Scaffold(
+          appBar: AppBar(
+            title: const Text("Payment Method"),
+            backgroundColor: const Color(0xFFFD6C00),
+            foregroundColor: Colors.white,
+            centerTitle: true,
+          ),
+          body: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildPaymentOption("Cash on Delivery (COD)", "COD", paymentModel),
+                _buildEatzyPayCard(paymentModel),
+                const Spacer(),
+                ElevatedButton(
+                  onPressed: () => _confirmPayment(paymentModel),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFFFD6C00),
+                    minimumSize: const Size(double.infinity, 55),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(14),
+                    ),
+                  ),
+                  child: const Text(
+                    "Confirm Payment",
+                    style: TextStyle(color: Colors.white, fontSize: 16),
+                  ),
+                ),
+                const SizedBox(height: 20),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }

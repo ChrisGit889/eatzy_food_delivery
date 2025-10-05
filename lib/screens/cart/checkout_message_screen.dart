@@ -61,11 +61,13 @@ class _CheckoutMessageScreenState extends State<CheckoutMessageScreen> {
           const SizedBox(height: 35),
           InkWell(
             onTap: () {
-              Navigator.pushReplacement(
+              Navigator.pop(context);
+              Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(
                   builder: (context) => const MainScreen(initialIndex: 1),
                 ),
+                (route) => false,
               );
             },
             child: Container(
@@ -89,9 +91,11 @@ class _CheckoutMessageScreenState extends State<CheckoutMessageScreen> {
           const SizedBox(height: 8),
           TextButton(
             onPressed: () {
-              Navigator.pushReplacement(
+              Navigator.pop(context);
+              Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(builder: (context) => const MainScreen()),
+                (route) => false,
               );
             },
             child: Text(
