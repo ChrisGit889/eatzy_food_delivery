@@ -67,7 +67,7 @@ Aplikasi kami dilengkapi dengan berbagai fitur komprehensif untuk pengguna maupu
 
 1. **Clone repository ini**
 ```bash
-   git clone https://github.com/your-repo/eatzyfood.git
+   git clone https://github.com/ChrisGit889/eatzy_food_delivery.git
    cd eatzyfood
 ```
 
