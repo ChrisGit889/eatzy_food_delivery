@@ -63,22 +63,58 @@ Aplikasi kami dilengkapi dengan berbagai fitur komprehensif untuk pengguna maupu
 
 ---
 
-## 🚀 Cara Menjalankan Aplikasi
+## 🚀 Cara Setup dan Menjalankan Aplikasi
 
-1. **Clone repository ini**
+### Prasyarat
+- Flutter SDK (versi terbaru)
+- Android SDK
+- VS Code atau Android Studio
+- Git
+- Akun Firebase
+
+### Langkah-langkah Setup
+
+1. **Install Flutter SDK**
+   
+   Install Flutter SDK sesuai dengan instruksi yang diberikan pada [dokumentasi resmi Flutter](https://docs.flutter.dev/install)
+
+2. **Setup Android SDK**
+   
+   Untuk pembuatan APK Android, lakukan penginstalan Android SDK versi terbaru
+
+3. **Install dan Login Firebase CLI**
+   
+   Install Firebase CLI sesuai dengan instruksi yang diberikan pada [dokumentasi Firebase](https://firebase.google.com/docs/cli)
 ```bash
-   git clone https://github.com/ChrisGit889/eatzy_food_delivery.git
-   cd eatzyfood
+   # Login ke Firebase
+   firebase login
 ```
 
-2. **Clone repository ini**
+4. **Install FlutterFire CLI**
+
+   Install FlutterFire CLI sesuai dengan instruksi yang diberikan pada [dokumentasi FlutterFire](https://firebase.flutter.dev/docs/overview/)
 ```bash
-  flutter pub get
+   # Aktifkan FlutterFire CLI secara global
+   dart pub global activate flutterfire_cli
+```
+5. **Clone Repository**
+```bash
+   git clone https://github.com/ChrisGit889/eatzy_food_delivery
+   cd eatzy_food_delivery
 ```
 
-3. **Jalankan aplikasi**
+6. **Install Dependencies**
 ```bash
-  flutter run
+   flutter pub get
+```
+
+7. **Setup Platform Target**
+   Pilih platform pembuatan aplikasi pada VS Code, gunakan perangkat Android asli dengan USB debugging atau emulator untuk membuat APK Android.
+
+8. **Jalankan Aplikasi**
+```bash
+   # Atau jalankan melalui terminal
+   flutter run
 ```
 
 ---
