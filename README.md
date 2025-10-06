@@ -76,40 +76,52 @@ Aplikasi kami dilengkapi dengan berbagai fitur komprehensif untuk pengguna maupu
 
 1. **Install Flutter SDK**
    
-   Install Flutter SDK sesuai dengan instruksi yang diberikan pada [dokumentasi resmi Flutter](https://docs.flutter.dev/install)
+   Install Flutter SDK sesuai dengan instruksi yang diberikan pada [dokumentasi resmi Flutter](https://docs.flutter.dev/install).
+<br>
 
 2. **Setup Android SDK**
    
-   Untuk pembuatan APK Android, lakukan penginstalan Android SDK versi terbaru
+   Untuk pembuatan APK Android, lakukan penginstalan Android SDK versi terbaru.
+<br>
 
 3. **Install dan Login Firebase CLI**
    
-   Install Firebase CLI sesuai dengan instruksi yang diberikan pada [dokumentasi Firebase](https://firebase.google.com/docs/cli)
+   Install Firebase CLI sesuai dengan instruksi yang diberikan pada [dokumentasi Firebase](https://firebase.google.com/docs/cli).
 ```bash
    # Login ke Firebase
    firebase login
 ```
+<br>
 
 4. **Install FlutterFire CLI**
 
-   Install FlutterFire CLI sesuai dengan instruksi yang diberikan pada [dokumentasi FlutterFire](https://firebase.flutter.dev/docs/overview/)
+   Install FlutterFire CLI sesuai dengan instruksi yang diberikan pada [dokumentasi FlutterFire](https://firebase.flutter.dev/docs/overview/).
 ```bash
    # Aktifkan FlutterFire CLI secara global
    dart pub global activate flutterfire_cli
 ```
+
+<br>
+
 5. **Clone Repository**
 ```bash
    git clone https://github.com/ChrisGit889/eatzy_food_delivery
    cd eatzy_food_delivery
 ```
 
+<br>
+
 6. **Install Dependencies**
 ```bash
    flutter pub get
 ```
 
+<br>
+
 7. **Setup Platform Target**
    Pilih platform pembuatan aplikasi pada VS Code, gunakan perangkat Android asli dengan USB debugging atau emulator untuk membuat APK Android.
+
+<br>
 
 8. **Jalankan Aplikasi**
 ```bash
